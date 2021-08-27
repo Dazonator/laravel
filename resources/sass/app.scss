@@ -1,21 +1,45 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+//@import url('https://fonts.googleapis.com/css?family=Nunito');
 
 // Variables
-@import 'variables';
+//@import 'variables';
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/bootstrap';
+
+@import '~vuetify/dist/vuetify.min.css';
+
+.theme--light.v-application{
+    background-color: #F8FAFB !important;
+}
+
+
+.row{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.bg{
+    flex-grow: 1;
+    background-color: #fff;
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+}
 
 .aside{
-    max-width: 120px;
+    height: 100vh;
+    &.col{
+        max-width: 120px;
+    }
 }
+
+
 
 .left-menu{
     background-color: #fff;
+    //box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
     border-radius: 20px;
-    min-height: 700px;
-
+    //min-height: 700px;
+    height: 100%;
     .nav{
         //height: 100%;
         //flex: 1;
@@ -23,18 +47,20 @@
             font-weight: bold;
             font-size: 10px;
             line-height: 12px;
-            color: #B0BCC8;
-            fill: #B0BCC8;
+            color: rgba(0,0,0,.6);
+            fill: rgba(0,0,0,.6);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             background-color: #fff;
             text-transform: uppercase;
             width: 75px;
             height: 75px;
             border-radius: 15px;
             margin-bottom: 10px;
+            text-decoration: none;
 
             svg{
                 display: block;
@@ -44,7 +70,7 @@
             }
 
             &:hover,
-            &.active{
+            &.router-link-active{
                 background-color: #DB3F1F;
                 color: #fff;
                 fill: #fff;
@@ -54,11 +80,11 @@
     }
 
     .user-img{
-        border: 1px solid green;
+        border: 2px solid rgba(0,0,0,.6);
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        img{
+        width: 60px;
+        height: 60px;
+        .v-image__image{
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -70,8 +96,8 @@
         font-weight: bold;
         font-size: 10px;
         line-height: 12px;
-        color: #B0BCC8;
-        fill: #B0BCC8;
+        color: rgba(0,0,0,.6);
+        fill: rgba(0,0,0,.6);
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -90,7 +116,7 @@
         }
 
         &:hover,
-        &.active{
+        &.router-link-active{
             background-color: #DB3F1F;
             color: #fff;
             fill: #fff;
@@ -98,16 +124,10 @@
     }
 }
 
-.add-task{
+.add-task.col{
     display: flex;
     flex-direction: column;
     max-width: 400px;
-
-    .bg{
-        flex-grow: 1;
-        border-radius: 20px;
-        background-color: #fff;
-    }
 
     label{
         margin-bottom: 2px;
@@ -117,7 +137,31 @@
     input,
     textarea,
     select{
-        border-color: #F8FAFB;
-        background-color: #F8FAFB;
+        //border-color: #F8FAFB;
+        //background-color: #F8FAFB;
+    }
+    button{
+        flex: none;
+    }
+}
+
+.profile{
+    &__img{
+        .v-image__image{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,.6);
+        }
+        a{
+            display: block;
+        }
+    }
+    &__information{
+        .value{
+            background: #F8FAFB;
+            border-radius: 10px;
+        }
     }
 }

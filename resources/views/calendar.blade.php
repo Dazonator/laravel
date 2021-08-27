@@ -2,7 +2,8 @@
 
 @section('content')
     <main class="col py-4">
-        <h1>calendar</h1>
+
+        <calendar-component></calendar-component>
     </main>
 
 @endsection

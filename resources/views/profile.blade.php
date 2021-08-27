@@ -4,5 +4,7 @@
     <main class="col py-4">
         <h1>profile</h1>
     </main>
-    @include('templates.add-task')
+{{--        @csrf--}}
+        <add-task></add-task>
+{{--    @include('templates.add-task')--}}
 @endsection

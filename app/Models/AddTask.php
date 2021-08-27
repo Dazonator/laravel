@@ -5,7 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tasks extends Model
+class AddTask extends Model
 {
 //    use HasFactory;
+//    protected $flights = ['title', 'text'];
+    protected $table = ['add_tasks'];
+
 }
+

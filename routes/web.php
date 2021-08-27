@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,37 +14,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route::get('index', 'HomeController@index');
 
-Route::get('/', function () {
+//Route::get('/{any}', function () {
+//    if (Auth::check()) {
+//        return view('home');
+//    }
+//    return view('auth.login');
+//})->where('any', '.*');
+
+Route::get('{any}', function () {
     return view('home');
-});
+})->where('any', '.*');
 
-Route::get('/calendar', function () {
-    return view('calendar');
-});
+Route::get('/tasks', 'AddTaskController@index');
 
-Route::get('/tasks', function () {
-    return view('tasks');
-});
 
-Route::get('/messages', function () {
-    return view('messages');
-});
+//Route::group(['prefix' => 'tasks'], function () {
+//    Route::post('add', 'BookController@add');
+//    Route::get('edit/{id}', 'BookController@edit');
+//    Route::post('update/{id}', 'BookController@update');
+//    Route::delete('delete/{id}', 'BookController@delete');
+//});
 
-Route::get('/team', function () {
-    return view('team');
-});
 
-Route::get('/structure', function () {
-    return view('structure');
-});
 
-Route::get('/profile', function () {
-    return view('profile');
-});
+Route::post('/add-task', [App\Http\Controllers\AddTaskController::class, 'submit']);
+
+
 
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
