@@ -1,10 +1,10 @@
 <template>
-
     <main class="col py-4">
-        <div>
+        <div v-for="task in tasks" :key='task.id'>
             <h5>dawd</h5>
-<!--            <pre v-html="tasks"></pre>-->
-            <pre>{{tasks}}</pre>
+           <pre>{{ task.id }}</pre>
+           <pre>{{ task.title }}</pre>
+            <!-- <pre>{{tasks}}</pre> -->
         </div>
     </main>
 </template>
@@ -17,12 +17,10 @@ export default {
         }
     },
     created() {
-        this.axios.get('/tasks').then(response => {
-            console.log(response);
+        this.axios.get('/add-tasks-get').then(response => {
+            console.log(response.data);
             this.tasks = response.data;
         });
-
-
     },
     methods: {
     },
