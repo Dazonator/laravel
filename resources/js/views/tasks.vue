@@ -3,7 +3,8 @@
     <main class="col py-4">
         <div>
             <h5>dawd</h5>
-            <pre v-html="tasks"></pre>
+<!--            <pre v-html="tasks"></pre>-->
+            <pre>{{tasks}}</pre>
         </div>
     </main>
 </template>
@@ -20,6 +21,7 @@ export default {
             console.log(response);
             this.tasks = response.data;
         });
+
 
     },
     methods: {

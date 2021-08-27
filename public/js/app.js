@@ -2464,6 +2464,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5221,7 +5222,7 @@ var render = function() {
     _c("div", [
       _c("h5", [_vm._v("dawd")]),
       _vm._v(" "),
-      _c("pre", { domProps: { innerHTML: _vm._s(_vm.tasks) } })
+      _c("pre", [_vm._v(_vm._s(_vm.tasks))])
     ])
   ])
 }

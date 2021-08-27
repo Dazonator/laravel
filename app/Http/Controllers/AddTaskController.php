@@ -31,7 +31,9 @@ class AddTaskController extends Controller
 //        $tasks = AddTask::all();
 //        return $tasks;
 ////        return view('home', $tasks);
-        return view('tasks');
+//        return view('tasks');
+        $tasks = AddTask::all()->toArray();
+        return array_reverse($tasks);
     }
 
 }
