@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AddTaskController;
 
 
 /*
@@ -23,13 +24,14 @@ use Illuminate\Support\Facades\Route;
 //    return view('auth.login');
 //})->where('any', '.*');
 
-Route::get('{any}', function () {
-    return view('home');
-})->where('any', '.*');
+// Route::get('{any}', function () {
+//     return view('home');
+// })->where('any', '.*');
 
 
 
-Route::get('/tasks', 'AddTaskController@index');
+Route::get('/tasks', [AddTaskController::class, 'index']);
+Route::get('/add-tasks-get', [AddTaskController::class, 'getAddTasks']);
 
 
 //Route::group(['prefix' => 'tasks'], function () {
@@ -41,12 +43,12 @@ Route::get('/tasks', 'AddTaskController@index');
 
 
 
-Route::post('/add-task', [App\Http\Controllers\AddTaskController::class, 'submit']);
+// Route::post('/add-task', [AddTaskController::class, 'submit']);
 
 
 
 
-Auth::routes();
+
 
 //Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
