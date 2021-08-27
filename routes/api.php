@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\AddTaskController;
+use \App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-
-//Route::get('/tasks', 'AddTaskController@index');
+Route::apiResources([
+    'tasks' => AddTaskController::class,
+    'user' => UserController::class
+]);

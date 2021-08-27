@@ -13,27 +13,38 @@ import home from "./views/home";
 
 const routes = [
     {
+        path: "/",
+        name: 'home',
+        component: home
+    },
+    {
         path: "/calendar",
+        name: 'calendar',
         component: calendar
     },
     {
         path: "/messages",
+        name: 'messages',
         component: messages
     },
     {
         path: "/profile",
+        name: 'profile',
         component: profile
     },
     {
         path: "/structure",
+        name: 'structure',
         component: structure
     },
     {
         path: "/tasks",
+        name: 'tasks',
         component: tasks
     },
     {
         path: "/team",
+        name: 'team',
         component: team
     }
 ];

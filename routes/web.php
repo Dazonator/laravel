@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AddTaskController;
+use \App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,23 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('index', 'HomeController@index');
 
-//Route::get('/{any}', function () {
-//    if (Auth::check()) {
-//        return view('home');
-//    }
-//    return view('auth.login');
-//})->where('any', '.*');
-
-Route::get('{any}', function () {
-    return view('home');
+Route::get('/{any}', function () {
+    if (Auth::check()) {
+        return view('home');
+    }
+    return view('auth.login');
 })->where('any', '.*');
 
+//Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
 
 
-Route::get('/tasks', 'AddTaskController@index');
 
+
+//Route::get('/tasks', [AddTaskController::class, 'index']);
+//Route::get('/add-tasks-get', [AddTaskController::class, 'getAddTasks']);
 
 //Route::group(['prefix' => 'tasks'], function () {
 //    Route::post('add', 'BookController@add');
@@ -41,7 +40,7 @@ Route::get('/tasks', 'AddTaskController@index');
 
 
 
-Route::post('/add-task', [App\Http\Controllers\AddTaskController::class, 'submit']);
+//Route::post('/add-task', [AddTaskController::class, 'submit']);
 
 
 

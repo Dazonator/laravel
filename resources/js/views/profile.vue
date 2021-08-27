@@ -73,7 +73,14 @@
 export default {
     data(){
         return{
+            tasks: []
         }
     },
+    mounted(){
+        this.axios.get('/api/user').then(response => {
+            console.log(response);
+            this.tasks = response.data;
+        });
+    }
 }
 </script>
