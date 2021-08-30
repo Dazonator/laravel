@@ -74,7 +74,6 @@
                                     action="/profile/change-password"
                                     v-show="changePassword"
                                 >
-                                    <input type="hidden" name="_token" :value="csrf" />
                                     <div class="col-6">
                                         <label class="form-label">Старый пароль</label>
                                         <input type="password" class="form-control" name="old-password">
@@ -105,11 +104,10 @@ export default {
         return{
             user: [],
             changePassword: false,
-            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         }
     },
-    mounted(){
-        this.axios.post('/api/profile').then(response => {
+    created(){
+        axios.post('/api/profile').then(response => {
             console.log(response.data);
             this.user = response.data;
         });

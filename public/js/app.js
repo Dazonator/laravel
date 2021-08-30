@@ -2187,7 +2187,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var srcs = {
@@ -2253,8 +2252,7 @@ __webpack_require__.r(__webpack_exports__);
       date: null,
       date2: null,
       menu: false,
-      menu2: false,
-      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      menu2: false
     };
   },
   watch: {
@@ -2446,19 +2444,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       user: [],
-      changePassword: false,
-      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      changePassword: false
     };
   },
-  mounted: function mounted() {
+  created: function created() {
     var _this = this;
 
-    this.axios.post('/api/profile').then(function (response) {
+    axios.post('/api/profile').then(function (response) {
       console.log(response.data);
       _this.user = response.data;
     });
@@ -2642,6 +2638,9 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 vue__WEBPACK_IMPORTED_MODULE_4__.default.use((vuetify__WEBPACK_IMPORTED_MODULE_5___default()));
 vue__WEBPACK_IMPORTED_MODULE_4__.default.use((vue_axios__WEBPACK_IMPORTED_MODULE_1___default()), (axios__WEBPACK_IMPORTED_MODULE_0___default()));
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var token = document.head.querySelector('meta[name="csrf-token"]');
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -39775,11 +39774,6 @@ var render = function() {
         "div",
         { staticClass: "bg pa-4 mb-4" },
         [
-          _c("input", {
-            attrs: { type: "hidden", name: "_token" },
-            domProps: { value: _vm.csrf }
-          }),
-          _vm._v(" "),
           _c("v-text-field", {
             attrs: {
               disabled: _vm.isUpdating,
@@ -40451,18 +40445,7 @@ var render = function() {
                         action: "/profile/change-password"
                       }
                     },
-                    [
-                      _c("input", {
-                        attrs: { type: "hidden", name: "_token" },
-                        domProps: { value: _vm.csrf }
-                      }),
-                      _vm._v(" "),
-                      _vm._m(3),
-                      _vm._v(" "),
-                      _vm._m(4),
-                      _vm._v(" "),
-                      _vm._m(5)
-                    ]
+                    [_vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._m(5)]
                   )
                 ])
               ])

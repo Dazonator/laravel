@@ -1,7 +1,6 @@
 <template>
     <form class="col add-task" method="post" action="/add-task">
         <div class="bg pa-4 mb-4">
-            <input type="hidden" name="_token" :value="csrf" />
             <v-text-field
                 :disabled="isUpdating"
                 solo
@@ -239,7 +238,6 @@ export default {
             date2: null,
             menu: false,
             menu2: false,
-            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         }
     },
 

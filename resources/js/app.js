@@ -16,6 +16,11 @@ import router from "./router";
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
+
+window.axios = require('axios');
+const token  = document.head.querySelector('meta[name="csrf-token"]');
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

@@ -16,39 +16,17 @@ use \App\Http\Controllers\HomeController;
 */
 
 
-Route::get('/{any}', function () {
-    if (Auth::check()) {
-        return view('home');
-    }
-    return view('auth.login');
-})->where('any', '.*');
+//Route::get('/{any}', function () {
+//    if (Auth::check()) {
+//        return view('home');
+//    }
+//    return view('auth.login');
+//})->where('any', '.*');
 
-//Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
-
-
-//'profile' => UserController::class
+Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
 
 
 
 
-//Route::get('/tasks', [AddTaskController::class, 'index']);
-//Route::get('/add-tasks-get', [AddTaskController::class, 'getAddTasks']);
+//Auth::routes();
 
-//Route::group(['prefix' => 'tasks'], function () {
-//    Route::post('add', 'BookController@add');
-//    Route::get('edit/{id}', 'BookController@edit');
-//    Route::post('update/{id}', 'BookController@update');
-//    Route::delete('delete/{id}', 'BookController@delete');
-//});
-
-
-
-//Route::post('/add-task', [AddTaskController::class, 'submit']);
-
-
-
-
-Auth::routes();
-
-//Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

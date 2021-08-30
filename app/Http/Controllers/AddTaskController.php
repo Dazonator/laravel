@@ -12,7 +12,7 @@ class AddTaskController extends Controller
 {
     public function submit(AddTaskRequest $request){
 
-        DB::table('add_tasks')->insert([
+        DB::table('add_tasks')->create([
             'title' => $request->title,
             'text' => $request->text,
             'performers' => $request->performers,
