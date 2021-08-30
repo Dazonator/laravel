@@ -2417,18 +2417,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      tasks: []
+      user: [],
+      changePassword: false,
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
   mounted: function mounted() {
     var _this = this;
 
-    this.axios.get('/api/user').then(function (response) {
-      console.log(response);
-      _this.tasks = response.data;
+    this.axios.post('/api/profile').then(function (response) {
+      console.log(response.data);
+      _this.user = response.data;
     });
   }
 });
@@ -40316,7 +40348,7 @@ var render = function() {
       { staticClass: "row" },
       [
         _c("div", { staticClass: "col" }, [
-          _c("h2", { staticClass: "mb-4" }, [_vm._v("Profile vue")]),
+          _c("h2", { staticClass: "mb-4" }, [_vm._v(_vm._s(_vm.user.name))]),
           _vm._v(" "),
           _c("div", { staticClass: "bg pa-4" }, [
             _c("div", { staticClass: "row profile" }, [
@@ -40338,7 +40370,102 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _vm._m(0)
+              _c("div", { staticClass: "col-9 profile__information" }, [
+                _c("div", { staticClass: "row mb-6" }, [
+                  _c("div", { staticClass: "col-12" }, [
+                    _c(
+                      "div",
+                      { staticClass: "text-sm-body-2 font-weight-bold" },
+                      [
+                        _vm._v(
+                          "\n                                    Имя\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value py-2 px-4" }, [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(_vm.user.name) +
+                          "\n                                "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "div",
+                      { staticClass: "text-sm-body-2 font-weight-bold" },
+                      [
+                        _vm._v(
+                          "\n                                    E-mail\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value py-2 px-4" }, [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(_vm.user.email) +
+                          "\n                                "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "change-password" }, [
+                  _c("div", { staticClass: "change-password__title mb-4 " }, [
+                    _c(
+                      "span",
+                      {
+                        on: {
+                          click: function($event) {
+                            _vm.changePassword = !_vm.changePassword
+                          }
+                        }
+                      },
+                      [_vm._v("Сменить пароль")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "form",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.changePassword,
+                          expression: "changePassword"
+                        }
+                      ],
+                      staticClass: "row change-password__form",
+                      attrs: {
+                        method: "post",
+                        action: "/profile/change-password"
+                      }
+                    },
+                    [
+                      _c("input", {
+                        attrs: { type: "hidden", name: "_token" },
+                        domProps: { value: _vm.csrf }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _vm._m(4),
+                      _vm._v(" "),
+                      _vm._m(5)
+                    ]
+                  )
+                ])
+              ])
             ])
           ])
         ]),
@@ -40354,78 +40481,92 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-9 profile__information" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-12" }, [
-          _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-            _vm._v(
-              "\n                                    Имя\n                                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "value py-2 px-4" }, [
-            _vm._v(
-              "\n                                    Марина Маринова\n                                "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-6" }, [
-          _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-            _vm._v(
-              "\n                                    Должность\n                                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "value py-2 px-4" }, [
-            _vm._v(
-              "\n                                    Менеджер\n                                "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-6" }, [
-          _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-            _vm._v(
-              "\n                                    Отдел\n                                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "value py-2 px-4" }, [
-            _vm._v(
-              "\n                                    Дизайнер\n                                "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-6" }, [
-          _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-            _vm._v(
-              "\n                                    Телефон\n                                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "value py-2 px-4" }, [
-            _vm._v(
-              "\n                                    +375 29 6538974\n                                "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-6" }, [
-          _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-            _vm._v(
-              "\n                                    E-mail\n                                "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "value py-2 px-4" }, [
-            _vm._v(
-              "\n                                    katya_solnyshko86@yandex.by\n                                "
-            )
-          ])
-        ])
+    return _c("div", { staticClass: "col-6" }, [
+      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
+        _vm._v(
+          "\n                                    Должность\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "value py-2 px-4" }, [
+        _vm._v(
+          "\n                                    Менеджер\n                                "
+        )
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
+        _vm._v(
+          "\n                                    Отдел\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "value py-2 px-4" }, [
+        _vm._v(
+          "\n                                    Дизайнер\n                                "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
+        _vm._v(
+          "\n                                    Телефон\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "value py-2 px-4" }, [
+        _vm._v(
+          "\n                                    +375 29 6538974\n                                "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Старый пароль")]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "password", name: "old-password" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Новый пароль")]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "password", name: "new-password" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary d-block", attrs: { type: "submit" } },
+        [_vm._v("Изменить пароль")]
+      )
     ])
   }
 ]

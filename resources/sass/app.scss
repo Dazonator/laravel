@@ -164,4 +164,20 @@
             border-radius: 10px;
         }
     }
+    .change-password{
+
+        &__title{
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 17px;
+            text-decoration-line: underline;
+            color: #DB3F1F;
+            cursor: pointer;
+
+        }
+
+        button{
+            width: 100%;
+        }
+    }
 }

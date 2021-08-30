@@ -26,6 +26,9 @@ Route::get('/{any}', function () {
 //Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
 
 
+//'profile' => UserController::class
+
+
 
 
 //Route::get('/tasks', [AddTaskController::class, 'index']);

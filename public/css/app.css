@@ -10137,3 +10137,15 @@ h3 {
   background: #F8FAFB;
   border-radius: 10px;
 }
+.profile .change-password__title {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+  color: #DB3F1F;
+  cursor: pointer;
+}
+.profile .change-password button {
+  width: 100%;
+}

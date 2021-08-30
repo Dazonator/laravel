@@ -14,9 +14,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $email = Auth::user()->email;
-//        return User::find('id', Auth::user()->id);
-        return $email;
+        return User::where('id', Auth::user()->id)->first();
 
     }
+
+
 }
