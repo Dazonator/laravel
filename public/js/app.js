@@ -2197,6 +2197,8 @@ __webpack_require__.r(__webpack_exports__);
       5: 'https://cdn.vuetifyjs.com/images/lists/5.jpg'
     };
     return {
+      fields: {},
+      errors: {},
       autoUpdate: true,
       friends: [],
       isUpdating: false,
@@ -2270,6 +2272,18 @@ __webpack_require__.r(__webpack_exports__);
     remove: function remove(item) {
       var index = this.friends.indexOf(item.name);
       if (index >= 0) this.friends.splice(index, 1);
+    },
+    submit: function submit() {
+      var _this2 = this;
+
+      this.errors = {};
+      axios.post('/api/add-task', this.fields).then(function (response) {
+        alert('Message sent!');
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          _this2.errors = error.response.data.errors || {};
+        }
+      });
     }
   }
 });
@@ -2454,7 +2468,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    axios.post('/api/profile').then(function (response) {
+    axios.get('/api/profile').then(function (response) {
       console.log(response.data);
       _this.user = response.data;
     });
@@ -2511,16 +2525,15 @@ __webpack_require__.r(__webpack_exports__);
       tasks: []
     };
   },
-  created: function created() {},
-  methods: {},
-  mounted: function mounted() {
+  created: function created() {
     var _this = this;
 
-    this.axios.get('/api/tasks').then(function (response) {
+    axios.get('/api/tasks').then(function (response) {
       console.log(response.data);
       _this.tasks = response.data;
     });
-  }
+  },
+  methods: {}
 });
 
 /***/ }),
@@ -39767,7 +39780,12 @@ var render = function() {
     "form",
     {
       staticClass: "col add-task",
-      attrs: { method: "post", action: "/add-task" }
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.submit.apply(null, arguments)
+        }
+      }
     },
     [
       _c(
@@ -40342,7 +40360,9 @@ var render = function() {
       { staticClass: "row" },
       [
         _c("div", { staticClass: "col" }, [
-          _c("h2", { staticClass: "mb-4" }, [_vm._v(_vm._s(_vm.user.name))]),
+          _c("h2", { staticClass: "mb-4" }, [
+            _vm._v(_vm._s(_vm.user.name) + " " + _vm._s(_vm.user.lastname))
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "bg pa-4" }, [
             _c("div", { staticClass: "row profile" }, [
@@ -40351,12 +40371,7 @@ var render = function() {
                 { staticClass: "col-3 text-center profile__img" },
                 [
                   _c("v-img", {
-                    attrs: {
-                      src:
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU",
-                      alt: "",
-                      "aspect-ratio": 1 / 1
-                    }
+                    attrs: { src: _vm.user.img, alt: "", "aspect-ratio": 1 / 1 }
                   }),
                   _vm._v(" "),
                   _c("a", { attrs: { href: "" } }, [_vm._v("Изменить фото")])
@@ -40381,16 +40396,72 @@ var render = function() {
                       _vm._v(
                         "\n                                    " +
                           _vm._s(_vm.user.name) +
+                          " " +
+                          _vm._s(_vm.user.lastname) +
                           "\n                                "
                       )
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(0),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "div",
+                      { staticClass: "text-sm-body-2 font-weight-bold" },
+                      [
+                        _vm._v(
+                          "\n                                    Должность\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value py-2 px-4" }, [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(_vm.user.position) +
+                          "\n                                "
+                      )
+                    ])
+                  ]),
                   _vm._v(" "),
-                  _vm._m(1),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "div",
+                      { staticClass: "text-sm-body-2 font-weight-bold" },
+                      [
+                        _vm._v(
+                          "\n                                    Отдел\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value py-2 px-4" }, [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(_vm.user.department) +
+                          "\n                                "
+                      )
+                    ])
+                  ]),
                   _vm._v(" "),
-                  _vm._m(2),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "div",
+                      { staticClass: "text-sm-body-2 font-weight-bold" },
+                      [
+                        _vm._v(
+                          "\n                                    Телефон\n                                "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value py-2 px-4" }, [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(_vm.user.phone) +
+                          "\n                                "
+                      )
+                    ])
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-6" }, [
                     _c(
@@ -40445,7 +40516,7 @@ var render = function() {
                         action: "/profile/change-password"
                       }
                     },
-                    [_vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._m(5)]
+                    [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)]
                   )
                 ])
               ])
@@ -40460,60 +40531,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-6" }, [
-      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-        _vm._v(
-          "\n                                    Должность\n                                "
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value py-2 px-4" }, [
-        _vm._v(
-          "\n                                    Менеджер\n                                "
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-6" }, [
-      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-        _vm._v(
-          "\n                                    Отдел\n                                "
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value py-2 px-4" }, [
-        _vm._v(
-          "\n                                    Дизайнер\n                                "
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-6" }, [
-      _c("div", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-        _vm._v(
-          "\n                                    Телефон\n                                "
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value py-2 px-4" }, [
-        _vm._v(
-          "\n                                    +375 29 6538974\n                                "
-        )
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40608,7 +40625,7 @@ var render = function() {
         _vm._v(" "),
         _vm._l(_vm.tasks, function(task) {
           return _c("div", { key: task.id }, [
-            _vm._v("\n                " + _vm._s(task) + "\n            ")
+            _vm._v("\n                " + _vm._s(_vm.tasks) + "\n            ")
           ])
         })
       ],

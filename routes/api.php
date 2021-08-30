@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\AddTaskController;
 use \App\Http\Controllers\UserController;
+use \App\Http\Controllers\TasksController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,20 @@ use \App\Http\Controllers\UserController;
 //    return $request->user();
 //});
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::post('/profile', 'UserController@index');
-});
+//Route::group(['middleware' => 'auth'], function () {
+
+Route::get('/profile', [UserController::class, 'index']);
+
+Route::get('/tasks', [TasksController::class, 'index']);
+Route::post('/add-task', [TasksController::class, 'submit']);
+
+
+//Route::post('/add-task', [AddTaskController::class, 'submit']);
+
+
+
+
+//});
 
 //Route::apiResources([
 //    'tasks' => AddTaskController::class,

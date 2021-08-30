@@ -24,7 +24,13 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
+            'img' => $this->faker->imageUrl($width = 400, $height = 400),
+            'login' => $this->faker->lexify('???????'),
+            'name' => $this->faker->firstName(),
+            'lastname' => $this->faker->lastName(),
+            'phone' => $this->faker->e164PhoneNumber(),
+            'position' => 'Дизайнер',
+            'department' => 1,
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('11111111'),

@@ -14,8 +14,15 @@ class UserController extends Controller
 
     public function index()
     {
-        return User::where('id', Auth::user()->id)->first();
+
+        return User::where('id', 1)->first();
+
     }
+
+    public function chengePassword(Request $request){
+
+    }
+
 
 
 }

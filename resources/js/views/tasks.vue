@@ -4,7 +4,7 @@
         <div>
             <h5></h5>
 <!--            <pre v-html="tasks"></pre>-->
-            <div v-for="task in tasks" :key='task.id'>
+            <div v-for="task in tasks">
                 {{ task }}
             </div>
         </div>
@@ -18,17 +18,13 @@ export default {
             tasks: []
         }
     },
-    created() {
-
-
-    },
-    methods: {
-    },
-    mounted(){
-        this.axios.get('/api/tasks').then(response => {
+    created(){
+        axios.get('/api/tasks').then(response => {
             console.log(response.data);
             this.tasks = response.data;
         });
-    }
+    },
+    methods: {
+    },
 }
 </script>

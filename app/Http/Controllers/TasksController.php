@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTaskRequest;
+use App\Models\Tasks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function GuzzleHttp\Promise\all;
-use App\Models\AddTask;
 
-class AddTaskController extends Controller
+class TasksController extends Controller
 {
     public function submit(AddTaskRequest $request){
 
-        DB::table('add_tasks')->create([
+        DB::table('tasks')->create([
             'title' => $request->title,
             'text' => $request->text,
             'performers' => $request->performers,
@@ -28,7 +27,8 @@ class AddTaskController extends Controller
 
     public function index()
     {
-        return AddTask::all();
+        return Tasks::get()->all();
     }
+
 
 }

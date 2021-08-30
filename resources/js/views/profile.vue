@@ -2,12 +2,12 @@
     <main class="col py-4">
         <div class="row">
             <div class="col">
-                <h2 class="mb-4">{{user.name}}</h2>
+                <h2 class="mb-4">{{user.name}} {{user.lastname}}</h2>
                 <div class="bg pa-4">
                     <div class="row profile">
                         <div class="col-3 text-center profile__img">
                             <v-img
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU"
+                                :src=user.img
                                 alt=""
                                 :aspect-ratio="1/1"
                             >
@@ -21,7 +21,7 @@
                                         Имя
                                     </div>
                                     <div class="value py-2 px-4">
-                                        {{user.name}}
+                                        {{user.name}} {{user.lastname}}
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -29,7 +29,7 @@
                                         Должность
                                     </div>
                                     <div class="value py-2 px-4">
-                                        Менеджер
+                                        {{user.position}}
                                     </div>
 
                                 </div>
@@ -38,7 +38,7 @@
                                         Отдел
                                     </div>
                                     <div class="value py-2 px-4">
-                                        Дизайнер
+                                        {{user.department}}
                                     </div>
 
                                 </div>
@@ -47,7 +47,7 @@
                                         Телефон
                                     </div>
                                     <div class="value py-2 px-4">
-                                        +375 29 6538974
+                                        {{user.phone}}
                                     </div>
 
                                 </div>
@@ -107,7 +107,7 @@ export default {
         }
     },
     created(){
-        axios.post('/api/profile').then(response => {
+        axios.get('/api/profile').then(response => {
             console.log(response.data);
             this.user = response.data;
         });

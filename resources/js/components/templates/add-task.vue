@@ -1,5 +1,5 @@
 <template>
-    <form class="col add-task" method="post" action="/add-task">
+    <form class="col add-task" @submit.prevent="submit">
         <div class="bg pa-4 mb-4">
             <v-text-field
                 :disabled="isUpdating"
@@ -216,6 +216,8 @@ export default {
         }
 
         return {
+            fields: {},
+            errors: {},
             autoUpdate: true,
             friends: [],
             isUpdating: false,
@@ -253,6 +255,16 @@ export default {
         remove (item) {
             const index = this.friends.indexOf(item.name)
             if (index >= 0) this.friends.splice(index, 1)
+        },
+        submit() {
+            this.errors = {};
+            axios.post('/api/add-task', this.fields).then(response => {
+                alert('Message sent!');
+            }).catch(error => {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data.errors || {};
+                }
+            });
         },
     },
 }

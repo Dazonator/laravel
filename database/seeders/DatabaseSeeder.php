@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Faker\Core\Number;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,13 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->truncate();
 
         DB::table('users')->insert([
-            'name' => 'admin',
+            'img' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU',
+            'login' => 'admin',
+            'name' => 'administrator',
+            'lastname' => 'superadmin',
+            'phone' => '+37529123456789',
+            'position' => 'Дизайнер',
+            'department' => 1,
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('11111111'),
         ]);
