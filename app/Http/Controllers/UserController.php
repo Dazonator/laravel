@@ -15,7 +15,9 @@ class UserController extends Controller
     public function index()
     {
         return Auth::user();
+//        return User::where('id', 1)->first();
     }
+
 
     public function employees()
     {

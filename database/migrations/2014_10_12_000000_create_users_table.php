@@ -21,11 +21,11 @@ class CreateUsersTable extends Migration
             $table->string('lastname');
             $table->char('phone');
 
-            $table->tinyInteger('position');
-//            $table->foreign('position')->references('id')->on('positions');
+//            $table->tinyInteger('position');
+//            $table->tinyInteger('department');
 
-            $table->tinyInteger('department');
-//            $table->foreign('department')->references('id')->on('departments');
+            $table->integer('position_id')->unsigned()->nullable();
+            $table->integer('department_id')->unsigned()->nullable();
 
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

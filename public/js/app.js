@@ -40442,7 +40442,7 @@ var render = function() {
                     _c("div", { staticClass: "value py-2 px-4" }, [
                       _vm._v(
                         "\n                                    " +
-                          _vm._s(_vm.user.position) +
+                          _vm._s(_vm.user.position_id) +
                           "\n                                "
                       )
                     ])
@@ -40462,7 +40462,7 @@ var render = function() {
                     _c("div", { staticClass: "value py-2 px-4" }, [
                       _vm._v(
                         "\n                                    " +
-                          _vm._s(_vm.user.department) +
+                          _vm._s(_vm.user.department_id) +
                           "\n                                "
                       )
                     ])

@@ -29,4 +29,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function position() {
+        return $this->hasOne('App\Models\Positions', 'position_id');
+    }
+
+    public function department() {
+        return $this->hasOne('App\Models\Departments', 'department_id');
+    }
+
 }

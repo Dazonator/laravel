@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'administrator',
             'lastname' => 'superadmin',
             'phone' => '+37529123456789',
-            'position' => 'Дизайнер',
-            'department' => 1,
+            'position_id' => 2,
+            'department_id' => 2,
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('11111111'),
         ]);
