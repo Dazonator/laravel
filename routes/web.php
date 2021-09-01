@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\TasksController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddTaskController;
 use \App\Http\Controllers\HomeController;
@@ -16,17 +18,20 @@ use \App\Http\Controllers\HomeController;
 */
 
 
-//Route::get('/{any}', function () {
-//    if (Auth::check()) {
-//        return view('home');
-//    }
-//    return view('auth.login');
-//})->where('any', '.*');
-
-Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
-
+Route::get('/{any}', function () {
+    if (Auth::check()) {
+        return view('home');
+//        return Auth::user();
+    }
+    return view('auth.login');
+})->where('any', '.*');
 
 
 
-//Auth::routes();
+//Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
+
+
+
+
+Auth::routes();
 

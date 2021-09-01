@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tasks extends Model
 {
-//    use HasFactory;
-    protected $table = 'tasks';
+
+    protected $fillable = [
+        'title',
+        'text',
+        'performers',
+        'initiator',
+        'priority',
+        'deadline',
+        'startdate'
+    ];
+
+    protected $casts   = [
+        'performers' => 'json'
+    ];
 }

@@ -1,24 +1,28 @@
 <template>
     <form class="col add-task" @submit.prevent="submit">
         <div class="bg pa-4 mb-4">
+            {{errors.title}}
             <v-text-field
-                :disabled="isUpdating"
                 solo
                 label="Название"
                 name="title"
+                v-model="fields.title"
+
             ></v-text-field>
 
+            {{errors.text}}
             <v-textarea
                 solo
                 name="text"
                 label="Описание задачи"
                 value=""
+                v-model="fields.text"
+
             ></v-textarea>
 
+            {{errors.performers}}
             <v-autocomplete
-                v-model="friends"
-                :disabled="isUpdating"
-                :items="people"
+                :items="employees"
                 solo
                 chips
                 label="Исполнители"
@@ -26,6 +30,8 @@
                 item-value="id"
                 multiple
                 name="performers"
+                v-model=fields.performers
+
             >
                 <template v-slot:selection="data">
                     <v-chip
@@ -57,15 +63,16 @@
                 </template>
             </v-autocomplete>
 
+            {{errors.initiator}}
             <v-autocomplete
-                :disabled="isUpdating"
-                :items="people"
+                :items="employees"
                 solo
                 chips
                 label="Инициатор"
                 item-text="name"
                 item-value="id"
                 name="initiator"
+                v-model="fields.initiator"
             >
                 <template v-slot:selection="data">
                     <v-chip
@@ -97,102 +104,67 @@
                 </template>
             </v-autocomplete>
 
+            {{errors.priority}}
             <v-select
                 :items="priority"
                 solo
                 label="Приоритет"
                 dense
                 name="priority"
+                v-model="fields.priority"
             ></v-select>
 
-
+            {{errors.deadline}}
             <v-menu
-                ref="menu"
-                v-model="menu"
+                v-model="menu2"
                 :close-on-content-click="false"
-                :return-value.sync="date"
+                :nudge-right="40"
                 transition="scale-transition"
                 offset-y
                 min-width="auto"
+
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        solo
-                        v-model="date"
-                        label="Дедлайн"
+                        v-model="fields.deadline"
+                        label="Picker without buttons"
                         prepend-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
-                        name="deadline"
                     ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date"
-                    no-title
-                    scrollable
-                >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="menu = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.menu.save(date)"
-                    >
-                        OK
-                    </v-btn>
-                </v-date-picker>
+                    v-model="fields.deadline"
+                    @input="menu2 = false"
+                ></v-date-picker>
             </v-menu>
 
+
+            {{errors.startdate}}
             <v-menu
-                solo
-                ref="menu2"
-                v-model="menu2"
+                v-model="menu"
                 :close-on-content-click="false"
-                :return-value.sync="date2"
+                :nudge-right="40"
                 transition="scale-transition"
                 offset-y
                 min-width="auto"
+
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        v-model="date2"
+                        v-model="fields.startdate"
                         label="Дата старта"
                         prepend-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
-                        solo
-                        name="startdate"
                     ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date2"
-                    no-title
-                    scrollable
-                >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="menu2 = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.menu2.save(date2)"
-                    >
-                        OK
-                    </v-btn>
-                </v-date-picker>
+                    v-model="fields.startdate"
+                    @input="menu = false"
+                ></v-date-picker>
             </v-menu>
         </div>
         <v-btn
@@ -221,6 +193,7 @@ export default {
             autoUpdate: true,
             friends: [],
             isUpdating: false,
+            employees: [],
             people: [
                 { header: 'Программисты' },
                 { name: 'Захаров Андрей', group: 'Программисты', id: 111, avatar: srcs[1] },
@@ -234,6 +207,7 @@ export default {
                 { name: 'John Smith', group: 'Дизайнеры', id: 777, avatar: srcs[1] },
                 { name: 'Sandra Williams', group: 'Дизайнеры', id: 888, avatar: srcs[3] },
             ],
+
             priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
             title: 'Название',
             date: null,
@@ -264,6 +238,12 @@ export default {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors || {};
                 }
+            });
+        },
+        created(){
+            axios.get('/api/employees').then(response => {
+                this.employees = response.data;
+                console.log(this.employees);
             });
         },
     },

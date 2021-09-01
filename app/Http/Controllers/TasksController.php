@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\DB;
 class TasksController extends Controller
 {
     public function submit(AddTaskRequest $request){
-
-        DB::table('tasks')->create([
+        Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
             'performers' => $request->performers,
@@ -19,7 +18,6 @@ class TasksController extends Controller
             'priority' => $request->priority,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
-
         ]);
 
         return view('tasks');
@@ -27,7 +25,7 @@ class TasksController extends Controller
 
     public function index()
     {
-        return Tasks::get()->all();
+        return Tasks::whereJsonContains('performers', 111)->get();
     }
 
 

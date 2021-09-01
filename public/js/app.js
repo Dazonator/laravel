@@ -1963,8 +1963,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      user: [],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/api/profile').then(function (response) {
+      // console.log(response.data);
+      _this.user = response.data;
+    });
   }
 });
 
@@ -2159,34 +2168,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var srcs = {
@@ -2202,6 +2183,7 @@ __webpack_require__.r(__webpack_exports__);
       autoUpdate: true,
       friends: [],
       isUpdating: false,
+      employees: [],
       people: [{
         header: 'Программисты'
       }, {
@@ -2283,6 +2265,14 @@ __webpack_require__.r(__webpack_exports__);
         if (error.response.status === 422) {
           _this2.errors = error.response.data.errors || {};
         }
+      });
+    },
+    created: function created() {
+      var _this3 = this;
+
+      axios.get('/api/employees').then(function (response) {
+        _this3.employees = response.data;
+        console.log(_this3.employees);
       });
     }
   }
@@ -2469,7 +2459,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/profile').then(function (response) {
-      console.log(response.data);
+      // console.log(response.data);
       _this.user = response.data;
     });
   }
@@ -2519,17 +2509,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      tasks: []
+      expanded: [],
+      singleExpand: true,
+      tasks: [],
+      search: '',
+      headers: [{
+        text: 'Название',
+        align: 'start',
+        sortable: true,
+        value: 'title'
+      }, {
+        text: 'Постановщик',
+        value: 'initiator',
+        sortable: true
+      }, {
+        text: 'Задача создана',
+        value: 'startdate',
+        sortable: true
+      }, {
+        text: 'Приоритет',
+        value: 'priority',
+        sortable: true
+      }, {
+        text: '',
+        value: 'data-table-expand'
+      }]
     };
   },
   created: function created() {
     var _this = this;
 
     axios.get('/api/tasks').then(function (response) {
-      console.log(response.data);
+      // console.log(response.data);
       _this.tasks = response.data;
     });
   },
@@ -39479,12 +39538,7 @@ var render = function() {
                 { staticClass: "user-img d-block", attrs: { to: "/profile" } },
                 [
                   _c("v-img", {
-                    attrs: {
-                      src:
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU",
-                      alt: "",
-                      "aspect-ratio": 1 / 1
-                    }
+                    attrs: { src: _vm.user.img, alt: "", "aspect-ratio": 1 / 1 }
                   })
                 ],
                 1
@@ -39792,28 +39846,37 @@ var render = function() {
         "div",
         { staticClass: "bg pa-4 mb-4" },
         [
+          _vm._v("\n        " + _vm._s(_vm.errors.title) + "\n        "),
           _c("v-text-field", {
-            attrs: {
-              disabled: _vm.isUpdating,
-              solo: "",
-              label: "Название",
-              name: "title"
+            attrs: { solo: "", label: "Название", name: "title" },
+            model: {
+              value: _vm.fields.title,
+              callback: function($$v) {
+                _vm.$set(_vm.fields, "title", $$v)
+              },
+              expression: "fields.title"
             }
           }),
-          _vm._v(" "),
+          _vm._v("\n\n        " + _vm._s(_vm.errors.text) + "\n        "),
           _c("v-textarea", {
             attrs: {
               solo: "",
               name: "text",
               label: "Описание задачи",
               value: ""
+            },
+            model: {
+              value: _vm.fields.text,
+              callback: function($$v) {
+                _vm.$set(_vm.fields, "text", $$v)
+              },
+              expression: "fields.text"
             }
           }),
-          _vm._v(" "),
+          _vm._v("\n\n        " + _vm._s(_vm.errors.performers) + "\n        "),
           _c("v-autocomplete", {
             attrs: {
-              disabled: _vm.isUpdating,
-              items: _vm.people,
+              items: _vm.employees,
               solo: "",
               chips: "",
               label: "Исполнители",
@@ -39895,18 +39958,17 @@ var render = function() {
               }
             ]),
             model: {
-              value: _vm.friends,
+              value: _vm.fields.performers,
               callback: function($$v) {
-                _vm.friends = $$v
+                _vm.$set(_vm.fields, "performers", $$v)
               },
-              expression: "friends"
+              expression: "fields.performers"
             }
           }),
-          _vm._v(" "),
+          _vm._v("\n\n        " + _vm._s(_vm.errors.initiator) + "\n        "),
           _c("v-autocomplete", {
             attrs: {
-              disabled: _vm.isUpdating,
-              items: _vm.people,
+              items: _vm.employees,
               solo: "",
               chips: "",
               label: "Инициатор",
@@ -39985,9 +40047,16 @@ var render = function() {
                   ]
                 }
               }
-            ])
+            ]),
+            model: {
+              value: _vm.fields.initiator,
+              callback: function($$v) {
+                _vm.$set(_vm.fields, "initiator", $$v)
+              },
+              expression: "fields.initiator"
+            }
           }),
-          _vm._v(" "),
+          _vm._v("\n\n        " + _vm._s(_vm.errors.priority) + "\n        "),
           _c("v-select", {
             attrs: {
               items: _vm.priority,
@@ -39995,27 +40064,25 @@ var render = function() {
               label: "Приоритет",
               dense: "",
               name: "priority"
+            },
+            model: {
+              value: _vm.fields.priority,
+              callback: function($$v) {
+                _vm.$set(_vm.fields, "priority", $$v)
+              },
+              expression: "fields.priority"
             }
           }),
-          _vm._v(" "),
+          _vm._v("\n\n        " + _vm._s(_vm.errors.deadline) + "\n        "),
           _c(
             "v-menu",
             {
-              ref: "menu",
               attrs: {
                 "close-on-content-click": false,
-                "return-value": _vm.date,
+                "nudge-right": 40,
                 transition: "scale-transition",
                 "offset-y": "",
                 "min-width": "auto"
-              },
-              on: {
-                "update:returnValue": function($event) {
-                  _vm.date = $event
-                },
-                "update:return-value": function($event) {
-                  _vm.date = $event
-                }
               },
               scopedSlots: _vm._u([
                 {
@@ -40030,133 +40097,16 @@ var render = function() {
                           _vm._b(
                             {
                               attrs: {
-                                solo: "",
-                                label: "Дедлайн",
+                                label: "Picker without buttons",
                                 "prepend-icon": "mdi-calendar",
-                                readonly: "",
-                                name: "deadline"
+                                readonly: ""
                               },
                               model: {
-                                value: _vm.date,
+                                value: _vm.fields.deadline,
                                 callback: function($$v) {
-                                  _vm.date = $$v
+                                  _vm.$set(_vm.fields, "deadline", $$v)
                                 },
-                                expression: "date"
-                              }
-                            },
-                            "v-text-field",
-                            attrs,
-                            false
-                          ),
-                          on
-                        )
-                      )
-                    ]
-                  }
-                }
-              ]),
-              model: {
-                value: _vm.menu,
-                callback: function($$v) {
-                  _vm.menu = $$v
-                },
-                expression: "menu"
-              }
-            },
-            [
-              _vm._v(" "),
-              _c(
-                "v-date-picker",
-                {
-                  attrs: { "no-title": "", scrollable: "" },
-                  model: {
-                    value: _vm.date,
-                    callback: function($$v) {
-                      _vm.date = $$v
-                    },
-                    expression: "date"
-                  }
-                },
-                [
-                  _c("v-spacer"),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { text: "", color: "primary" },
-                      on: {
-                        click: function($event) {
-                          _vm.menu = false
-                        }
-                      }
-                    },
-                    [_vm._v("\n                    Cancel\n                ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { text: "", color: "primary" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$refs.menu.save(_vm.date)
-                        }
-                      }
-                    },
-                    [_vm._v("\n                    OK\n                ")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-menu",
-            {
-              ref: "menu2",
-              attrs: {
-                solo: "",
-                "close-on-content-click": false,
-                "return-value": _vm.date2,
-                transition: "scale-transition",
-                "offset-y": "",
-                "min-width": "auto"
-              },
-              on: {
-                "update:returnValue": function($event) {
-                  _vm.date2 = $event
-                },
-                "update:return-value": function($event) {
-                  _vm.date2 = $event
-                }
-              },
-              scopedSlots: _vm._u([
-                {
-                  key: "activator",
-                  fn: function(ref) {
-                    var on = ref.on
-                    var attrs = ref.attrs
-                    return [
-                      _c(
-                        "v-text-field",
-                        _vm._g(
-                          _vm._b(
-                            {
-                              attrs: {
-                                label: "Дата старта",
-                                "prepend-icon": "mdi-calendar",
-                                readonly: "",
-                                solo: "",
-                                name: "startdate"
-                              },
-                              model: {
-                                value: _vm.date2,
-                                callback: function($$v) {
-                                  _vm.date2 = $$v
-                                },
-                                expression: "date2"
+                                expression: "fields.deadline"
                               }
                             },
                             "v-text-field",
@@ -40180,49 +40130,96 @@ var render = function() {
             },
             [
               _vm._v(" "),
-              _c(
-                "v-date-picker",
-                {
-                  attrs: { "no-title": "", scrollable: "" },
-                  model: {
-                    value: _vm.date2,
-                    callback: function($$v) {
-                      _vm.date2 = $$v
-                    },
-                    expression: "date2"
+              _c("v-date-picker", {
+                on: {
+                  input: function($event) {
+                    _vm.menu2 = false
                   }
                 },
-                [
-                  _c("v-spacer"),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { text: "", color: "primary" },
-                      on: {
-                        click: function($event) {
-                          _vm.menu2 = false
-                        }
-                      }
-                    },
-                    [_vm._v("\n                    Cancel\n                ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { text: "", color: "primary" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$refs.menu2.save(_vm.date2)
-                        }
-                      }
-                    },
-                    [_vm._v("\n                    OK\n                ")]
-                  )
-                ],
-                1
-              )
+                model: {
+                  value: _vm.fields.deadline,
+                  callback: function($$v) {
+                    _vm.$set(_vm.fields, "deadline", $$v)
+                  },
+                  expression: "fields.deadline"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(
+            "\n\n\n        " + _vm._s(_vm.errors.startdate) + "\n        "
+          ),
+          _c(
+            "v-menu",
+            {
+              attrs: {
+                "close-on-content-click": false,
+                "nudge-right": 40,
+                transition: "scale-transition",
+                "offset-y": "",
+                "min-width": "auto"
+              },
+              scopedSlots: _vm._u([
+                {
+                  key: "activator",
+                  fn: function(ref) {
+                    var on = ref.on
+                    var attrs = ref.attrs
+                    return [
+                      _c(
+                        "v-text-field",
+                        _vm._g(
+                          _vm._b(
+                            {
+                              attrs: {
+                                label: "Дата старта",
+                                "prepend-icon": "mdi-calendar",
+                                readonly: ""
+                              },
+                              model: {
+                                value: _vm.fields.startdate,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.fields, "startdate", $$v)
+                                },
+                                expression: "fields.startdate"
+                              }
+                            },
+                            "v-text-field",
+                            attrs,
+                            false
+                          ),
+                          on
+                        )
+                      )
+                    ]
+                  }
+                }
+              ]),
+              model: {
+                value: _vm.menu,
+                callback: function($$v) {
+                  _vm.menu = $$v
+                },
+                expression: "menu"
+              }
+            },
+            [
+              _vm._v(" "),
+              _c("v-date-picker", {
+                on: {
+                  input: function($event) {
+                    _vm.menu = false
+                  }
+                },
+                model: {
+                  value: _vm.fields.startdate,
+                  callback: function($$v) {
+                    _vm.$set(_vm.fields, "startdate", $$v)
+                  },
+                  expression: "fields.startdate"
+                }
+              })
             ],
             1
           )
@@ -40618,19 +40615,115 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("main", { staticClass: "col py-4" }, [
-    _c(
-      "div",
-      [
-        _c("h5"),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col" }, [
+        _c("h1", [_vm._v("Задачи")]),
         _vm._v(" "),
-        _vm._l(_vm.tasks, function(task) {
-          return _c("div", { key: task.id }, [
-            _vm._v("\n                " + _vm._s(_vm.tasks) + "\n            ")
-          ])
-        })
-      ],
-      2
-    )
+        _c(
+          "div",
+          { staticClass: "bg pa-4" },
+          [
+            [
+              _c("v-data-table", {
+                staticClass: "elevation-1",
+                attrs: {
+                  headers: _vm.headers,
+                  items: _vm.tasks,
+                  "single-expand": _vm.singleExpand,
+                  expanded: _vm.expanded,
+                  "show-expand": "",
+                  search: _vm.search
+                },
+                on: {
+                  "update:expanded": function($event) {
+                    _vm.expanded = $event
+                  }
+                },
+                scopedSlots: _vm._u([
+                  {
+                    key: "top",
+                    fn: function() {
+                      return [
+                        _c(
+                          "v-toolbar",
+                          { attrs: { flat: "" } },
+                          [
+                            _c(
+                              "v-btn",
+                              {
+                                staticClass: "mb-2",
+                                attrs: { color: "primary", dark: "" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    Создать задачу\n                                "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c("v-text-field", {
+                              attrs: {
+                                "append-icon": "mdi-magnify",
+                                label: "Поиск...",
+                                "single-line": "",
+                                "hide-details": ""
+                              },
+                              model: {
+                                value: _vm.search,
+                                callback: function($$v) {
+                                  _vm.search = $$v
+                                },
+                                expression: "search"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ]
+                    },
+                    proxy: true
+                  },
+                  {
+                    key: "item.title",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c("a", { attrs: { href: "tasks/" + item.id } }, [
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(item.title) +
+                              "\n                            "
+                          )
+                        ])
+                      ]
+                    }
+                  },
+                  {
+                    key: "expanded-item",
+                    fn: function(ref) {
+                      var headers = ref.headers
+                      var item = ref.item
+                      return [
+                        _c("td", { attrs: { colspan: headers.length } }, [
+                          _vm._v(
+                            "\n                                More info about " +
+                              _vm._s(item.text) +
+                              "\n                            "
+                          )
+                        ])
+                      ]
+                    }
+                  }
+                ])
+              })
+            ]
+          ],
+          2
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = []

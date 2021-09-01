@@ -4,7 +4,7 @@
             <v-flex class="left-menu bg py-4 d-flex flex-column justify-space-between align-center">
                 <router-link to="/profile" class="user-img d-block">
                     <v-img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU"
+                        :src=user.img
                         alt=""
                         :aspect-ratio="1/1"
                     >
@@ -64,7 +64,14 @@
 <script>
 export default {
     data: () => ({
+        user: [],
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     }),
+    created(){
+        axios.get('/api/profile').then(response => {
+            // console.log(response.data);
+            this.user = response.data;
+        });
+    }
 }
 </script>

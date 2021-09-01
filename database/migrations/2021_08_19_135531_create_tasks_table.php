@@ -17,10 +17,10 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('text');
-            $table->string('performers');
+            $table->json('performers');
             $table->integer('initiator');
             $table->string('priority');
-            $table->date('deadline');
+            $table->date('deadline')->nullable();
             $table->date('startdate');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
