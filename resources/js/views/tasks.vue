@@ -13,17 +13,16 @@
                             :single-expand="singleExpand"
                             :expanded.sync="expanded"
                             show-expand
-                            class="elevation-1"
                             :search="search"
                         >
                             <template v-slot:top>
                                 <v-toolbar flat>
                                     <v-btn
                                         color="primary"
-                                        dark
                                         class="mb-2"
+                                        @click="addTask = !addTask"
                                     >
-                                        Создать задачу
+                                        Добавить задачу
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-text-field
@@ -43,15 +42,16 @@
 
                             <template v-slot:expanded-item="{ headers, item }">
                                 <td :colspan="headers.length">
-                                    More info about {{ item.text }}
+                                    {{ item.text }}
                                 </td>
                             </template>
                         </v-data-table>
                     </template>
                 </div>
-
-
             </div>
+            <add-task
+                v-show="addTask"
+            ></add-task>
         </div>
     </main>
 </template>
@@ -60,6 +60,7 @@
 export default {
     data() {
         return {
+            addTask: false,
             expanded: [],
             singleExpand: true,
             tasks: [],
@@ -78,7 +79,7 @@ export default {
                 },
                 {
                     text: 'Задача создана',
-                    value: 'startdate',
+                    value: 'created_at',
                     sortable: true,
                 },
                 {
@@ -95,7 +96,7 @@ export default {
     },
     created(){
         axios.get('/api/tasks').then(response => {
-            // console.log(response.data);
+            console.log(response.data);
             this.tasks = response.data;
         });
     },

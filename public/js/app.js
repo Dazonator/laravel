@@ -2168,6 +2168,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var srcs = {
@@ -2261,20 +2267,21 @@ __webpack_require__.r(__webpack_exports__);
       this.errors = {};
       axios.post('/api/add-task', this.fields).then(function (response) {
         alert('Message sent!');
+        window.location.href = "/tasks";
       })["catch"](function (error) {
         if (error.response.status === 422) {
           _this2.errors = error.response.data.errors || {};
         }
       });
-    },
-    created: function created() {
-      var _this3 = this;
-
-      axios.get('/api/employees').then(function (response) {
-        _this3.employees = response.data;
-        console.log(_this3.employees);
-      });
     }
+  },
+  created: function created() {
+    var _this3 = this;
+
+    axios.get('/api/employees').then(function (response) {
+      _this3.employees = response.data;
+      console.log(_this3.employees);
+    });
   }
 });
 
@@ -2459,7 +2466,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/profile').then(function (response) {
-      // console.log(response.data);
+      console.log(response.data);
       _this.user = response.data;
     });
   }
@@ -2557,6 +2564,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      addTask: false,
       expanded: [],
       singleExpand: true,
       tasks: [],
@@ -2572,7 +2580,7 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true
       }, {
         text: 'Задача создана',
-        value: 'startdate',
+        value: 'created_at',
         sortable: true
       }, {
         text: 'Приоритет',
@@ -2588,7 +2596,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/tasks').then(function (response) {
-      // console.log(response.data);
+      console.log(response.data);
       _this.tasks = response.data;
     });
   },
@@ -39910,12 +39918,12 @@ var render = function() {
                         _c(
                           "v-avatar",
                           { attrs: { left: "" } },
-                          [_c("v-img", { attrs: { src: data.item.avatar } })],
+                          [_c("v-img", { attrs: { src: data.item.img } })],
                           1
                         ),
                         _vm._v(
                           "\n                    " +
-                            _vm._s(data.item.name) +
+                            _vm._s(data.item.lastname) +
                             "\n                "
                         )
                       ],
@@ -39935,19 +39943,34 @@ var render = function() {
                           })
                         ]
                       : [
-                          _c("v-list-item-avatar", [
-                            _c("img", { attrs: { src: data.item.avatar } })
-                          ]),
+                          _c(
+                            "v-list-item-avatar",
+                            [
+                              _c("v-img", {
+                                attrs: {
+                                  src: data.item.img,
+                                  "aspect-ratio": 1 / 1
+                                }
+                              })
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
                           _c(
                             "v-list-item-content",
                             [
                               _c("v-list-item-title", {
-                                domProps: { innerHTML: _vm._s(data.item.name) }
+                                domProps: {
+                                  innerHTML: _vm._s(
+                                    data.item.name + " " + data.item.lastname
+                                  )
+                                }
                               }),
                               _vm._v(" "),
                               _c("v-list-item-subtitle", {
-                                domProps: { innerHTML: _vm._s(data.item.group) }
+                                domProps: {
+                                  innerHTML: _vm._s(data.item.position)
+                                }
                               })
                             ],
                             1
@@ -40001,12 +40024,12 @@ var render = function() {
                         _c(
                           "v-avatar",
                           { attrs: { left: "" } },
-                          [_c("v-img", { attrs: { src: data.item.avatar } })],
+                          [_c("v-img", { attrs: { src: data.item.img } })],
                           1
                         ),
                         _vm._v(
                           "\n                    " +
-                            _vm._s(data.item.name) +
+                            _vm._s(data.item.lastname) +
                             "\n                "
                         )
                       ],
@@ -40026,19 +40049,34 @@ var render = function() {
                           })
                         ]
                       : [
-                          _c("v-list-item-avatar", [
-                            _c("img", { attrs: { src: data.item.avatar } })
-                          ]),
+                          _c(
+                            "v-list-item-avatar",
+                            [
+                              _c("v-img", {
+                                attrs: {
+                                  src: data.item.img,
+                                  "aspect-ratio": 1 / 1
+                                }
+                              })
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
                           _c(
                             "v-list-item-content",
                             [
                               _c("v-list-item-title", {
-                                domProps: { innerHTML: _vm._s(data.item.name) }
+                                domProps: {
+                                  innerHTML: _vm._s(
+                                    data.item.name + " " + data.item.lastname
+                                  )
+                                }
                               }),
                               _vm._v(" "),
                               _c("v-list-item-subtitle", {
-                                domProps: { innerHTML: _vm._s(data.item.group) }
+                                domProps: {
+                                  innerHTML: _vm._s(data.item.position)
+                                }
                               })
                             ],
                             1
@@ -40227,19 +40265,9 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "v-btn",
-        {
-          attrs: {
-            type: "submit",
-            block: "",
-            large: "",
-            color: "green accent-3",
-            elevation: "2"
-          }
-        },
-        [_vm._v("Добавить задачу")]
-      )
+      _c("v-btn", { attrs: { type: "submit", color: "primary", large: "" } }, [
+        _vm._v("Добавить задачу")
+      ])
     ],
     1
   )
@@ -40615,115 +40643,135 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("main", { staticClass: "col py-4" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col" }, [
-        _c("h1", [_vm._v("Задачи")]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "bg pa-4" },
-          [
+    _c(
+      "div",
+      { staticClass: "row" },
+      [
+        _c("div", { staticClass: "col" }, [
+          _c("h1", [_vm._v("Задачи")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "bg pa-4" },
             [
-              _c("v-data-table", {
-                staticClass: "elevation-1",
-                attrs: {
-                  headers: _vm.headers,
-                  items: _vm.tasks,
-                  "single-expand": _vm.singleExpand,
-                  expanded: _vm.expanded,
-                  "show-expand": "",
-                  search: _vm.search
-                },
-                on: {
-                  "update:expanded": function($event) {
-                    _vm.expanded = $event
-                  }
-                },
-                scopedSlots: _vm._u([
-                  {
-                    key: "top",
-                    fn: function() {
-                      return [
-                        _c(
-                          "v-toolbar",
-                          { attrs: { flat: "" } },
-                          [
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mb-2",
-                                attrs: { color: "primary", dark: "" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                    Создать задачу\n                                "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c("v-spacer"),
-                            _vm._v(" "),
-                            _c("v-text-field", {
-                              attrs: {
-                                "append-icon": "mdi-magnify",
-                                label: "Поиск...",
-                                "single-line": "",
-                                "hide-details": ""
-                              },
-                              model: {
-                                value: _vm.search,
-                                callback: function($$v) {
-                                  _vm.search = $$v
+              [
+                _c("v-data-table", {
+                  attrs: {
+                    headers: _vm.headers,
+                    items: _vm.tasks,
+                    "single-expand": _vm.singleExpand,
+                    expanded: _vm.expanded,
+                    "show-expand": "",
+                    search: _vm.search
+                  },
+                  on: {
+                    "update:expanded": function($event) {
+                      _vm.expanded = $event
+                    }
+                  },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "top",
+                      fn: function() {
+                        return [
+                          _c(
+                            "v-toolbar",
+                            { attrs: { flat: "" } },
+                            [
+                              _c(
+                                "v-btn",
+                                {
+                                  staticClass: "mb-2",
+                                  attrs: { color: "primary" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.addTask = !_vm.addTask
+                                    }
+                                  }
                                 },
-                                expression: "search"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ]
+                                [
+                                  _vm._v(
+                                    "\n                                    Добавить задачу\n                                "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("v-spacer"),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  "append-icon": "mdi-magnify",
+                                  label: "Поиск...",
+                                  "single-line": "",
+                                  "hide-details": ""
+                                },
+                                model: {
+                                  value: _vm.search,
+                                  callback: function($$v) {
+                                    _vm.search = $$v
+                                  },
+                                  expression: "search"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]
+                      },
+                      proxy: true
                     },
-                    proxy: true
-                  },
-                  {
-                    key: "item.title",
-                    fn: function(ref) {
-                      var item = ref.item
-                      return [
-                        _c("a", { attrs: { href: "tasks/" + item.id } }, [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(item.title) +
-                              "\n                            "
-                          )
-                        ])
-                      ]
+                    {
+                      key: "item.title",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          _c("a", { attrs: { href: "tasks/" + item.id } }, [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(item.title) +
+                                "\n                            "
+                            )
+                          ])
+                        ]
+                      }
+                    },
+                    {
+                      key: "expanded-item",
+                      fn: function(ref) {
+                        var headers = ref.headers
+                        var item = ref.item
+                        return [
+                          _c("td", { attrs: { colspan: headers.length } }, [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(item.text) +
+                                "\n                            "
+                            )
+                          ])
+                        ]
+                      }
                     }
-                  },
-                  {
-                    key: "expanded-item",
-                    fn: function(ref) {
-                      var headers = ref.headers
-                      var item = ref.item
-                      return [
-                        _c("td", { attrs: { colspan: headers.length } }, [
-                          _vm._v(
-                            "\n                                More info about " +
-                              _vm._s(item.text) +
-                              "\n                            "
-                          )
-                        ])
-                      ]
-                    }
-                  }
-                ])
-              })
-            ]
-          ],
-          2
-        )
-      ])
-    ])
+                  ])
+                })
+              ]
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("add-task", {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.addTask,
+              expression: "addTask"
+            }
+          ]
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []

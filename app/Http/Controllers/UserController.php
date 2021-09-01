@@ -20,7 +20,7 @@ class UserController extends Controller
     public function employees()
     {
 
-        return User::all()->get();
+        return User::all();
 
     }
 

@@ -15,7 +15,9 @@ class Tasks extends Model
         'initiator',
         'priority',
         'deadline',
-        'startdate'
+        'startdate',
+        'created_at',
+        'update_at',
     ];
 
     protected $casts   = [

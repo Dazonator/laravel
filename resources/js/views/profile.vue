@@ -108,7 +108,7 @@ export default {
     },
     created(){
         axios.get('/api/profile').then(response => {
-            // console.log(response.data);
+            console.log(response.data);
             this.user = response.data;
         });
     }

@@ -42,9 +42,9 @@
                         @click:close="remove(data.item)"
                     >
                         <v-avatar left>
-                            <v-img :src="data.item.avatar"></v-img>
+                            <v-img :src="data.item.img"></v-img>
                         </v-avatar>
-                        {{ data.item.name }}
+                        {{ data.item.lastname }}
                     </v-chip>
                 </template>
                 <template v-slot:item="data">
@@ -53,11 +53,15 @@
                     </template>
                     <template v-else>
                         <v-list-item-avatar>
-                            <img :src="data.item.avatar">
+                            <v-img
+                                :src="data.item.img"
+                                :aspect-ratio="1/1"
+                            >
+                            </v-img>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                            <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                            <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+                            <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
+                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
                         </v-list-item-content>
                     </template>
                 </template>
@@ -83,9 +87,9 @@
                         @click:close="remove(data.item)"
                     >
                         <v-avatar left>
-                            <v-img :src="data.item.avatar"></v-img>
+                            <v-img :src="data.item.img"></v-img>
                         </v-avatar>
-                        {{ data.item.name }}
+                        {{ data.item.lastname }}
                     </v-chip>
                 </template>
                 <template v-slot:item="data">
@@ -94,11 +98,15 @@
                     </template>
                     <template v-else>
                         <v-list-item-avatar>
-                            <img :src="data.item.avatar">
+                            <v-img
+                                :src="data.item.img"
+                                :aspect-ratio="1/1"
+                            >
+                            </v-img>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                            <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                            <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+                            <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
+                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
                         </v-list-item-content>
                     </template>
                 </template>
@@ -169,10 +177,8 @@
         </div>
         <v-btn
             type="submit"
-            block
+            color="primary"
             large
-            color="green accent-3"
-            elevation="2"
         >Добавить задачу</v-btn>
     </form>
 </template>
@@ -234,18 +240,19 @@ export default {
             this.errors = {};
             axios.post('/api/add-task', this.fields).then(response => {
                 alert('Message sent!');
+                window.location.href = "/tasks"
             }).catch(error => {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors || {};
                 }
             });
         },
-        created(){
-            axios.get('/api/employees').then(response => {
-                this.employees = response.data;
-                console.log(this.employees);
-            });
-        },
+    },
+    created(){
+        axios.get('/api/employees').then(response => {
+            this.employees = response.data;
+            console.log(this.employees);
+        });
     },
 }
 </script>

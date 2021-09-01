@@ -29,7 +29,7 @@ Route::get('/profile', [UserController::class, 'index']);
 Route::get('/employees', [UserController::class, 'employees']);
 
 
-Route::get('/tasks', [TasksController::class, 'index']);
+Route::get('/tasks', [TasksController::class, 'userTasks']);
 Route::post('/add-task', [TasksController::class, 'submit']);
 
 

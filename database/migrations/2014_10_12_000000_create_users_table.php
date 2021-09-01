@@ -20,8 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('lastname');
             $table->char('phone');
-            $table->char('position');
-            $table->char('department');
+
+            $table->tinyInteger('position');
+//            $table->foreign('position')->references('id')->on('positions');
+
+            $table->tinyInteger('department');
+//            $table->foreign('department')->references('id')->on('departments');
+
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

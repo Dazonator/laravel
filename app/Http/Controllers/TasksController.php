@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddTaskRequest;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TasksController extends Controller
@@ -23,9 +24,9 @@ class TasksController extends Controller
         return view('tasks');
     }
 
-    public function index()
+    public function userTasks()
     {
-        return Tasks::whereJsonContains('performers', 111)->get();
+        return Tasks::whereJsonContains('performers', Auth::user()->id)->get();
     }
 
 

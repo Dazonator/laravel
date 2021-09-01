@@ -17,7 +17,7 @@ class CreateAddTasksTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('text');
-            $table->string('performers');
+            $table->json('performers');
             $table->integer('initiator');
             $table->string('priority');
             $table->date('deadline')->nullable();
