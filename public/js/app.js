@@ -39969,7 +39969,7 @@ var render = function() {
                               _vm._v(" "),
                               _c("v-list-item-subtitle", {
                                 domProps: {
-                                  innerHTML: _vm._s(data.item.position)
+                                  innerHTML: _vm._s(data.item.position.position)
                                 }
                               })
                             ],
@@ -40075,7 +40075,7 @@ var render = function() {
                               _vm._v(" "),
                               _c("v-list-item-subtitle", {
                                 domProps: {
-                                  innerHTML: _vm._s(data.item.position)
+                                  innerHTML: _vm._s(data.item.position.position)
                                 }
                               })
                             ],
@@ -40442,7 +40442,7 @@ var render = function() {
                     _c("div", { staticClass: "value py-2 px-4" }, [
                       _vm._v(
                         "\n                                    " +
-                          _vm._s(_vm.user.position_id) +
+                          _vm._s(_vm.user.position.position) +
                           "\n                                "
                       )
                     ])
@@ -40462,7 +40462,7 @@ var render = function() {
                     _c("div", { staticClass: "value py-2 px-4" }, [
                       _vm._v(
                         "\n                                    " +
-                          _vm._s(_vm.user.department_id) +
+                          _vm._s(_vm.user.department.department) +
                           "\n                                "
                       )
                     ])

@@ -61,7 +61,7 @@
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
-                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
+                            <v-list-item-subtitle v-html="data.item.position.position"></v-list-item-subtitle>
                         </v-list-item-content>
                     </template>
                 </template>
@@ -106,7 +106,7 @@
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
-                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
+                            <v-list-item-subtitle v-html="data.item.position.position"></v-list-item-subtitle>
                         </v-list-item-content>
                     </template>
                 </template>

@@ -30,11 +30,11 @@ class User extends Authenticatable
     ];
 
     public function position() {
-        return $this->hasOne('App\Models\Positions', 'position_id');
+        return $this->belongsTo(Positions::class, 'id');
     }
 
     public function department() {
-        return $this->hasOne('App\Models\Departments', 'department_id');
+        return $this->belongsTo(Departments::class, 'id');
     }
 
 }

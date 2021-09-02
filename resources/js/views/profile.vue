@@ -29,7 +29,7 @@
                                         Должность
                                     </div>
                                     <div class="value py-2 px-4">
-                                        {{user.position_id}}
+                                        {{user.position.position}}
                                     </div>
 
                                 </div>
@@ -38,7 +38,7 @@
                                         Отдел
                                     </div>
                                     <div class="value py-2 px-4">
-                                        {{user.department_id}}
+                                        {{user.department.department}}
                                     </div>
 
                                 </div>

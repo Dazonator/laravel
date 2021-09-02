@@ -14,15 +14,17 @@ class UserController extends Controller
 
     public function index()
     {
-        return Auth::user();
+        $user = User::where('id', Auth::user()->id)->with(['position', 'department'])->first();
+//        return Auth::user();
+//    print_r($user->position);
+        return $user;
 //        return User::where('id', 1)->first();
     }
 
 
     public function employees()
     {
-
-        return User::all();
+        return User::with(['position', 'department'])->get();
 
     }
 
