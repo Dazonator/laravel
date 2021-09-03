@@ -24,11 +24,10 @@ class AddTaskRequest extends FormRequest
     public function messages() {
         return [
             'title.required'    => 'Обязательно для заполнения',
-            'title.required' => 'Обязательно для заполнения',
             'text.required' => 'Обязательно для заполнения',
-            'performers.required' => 'Обязательно для заполнения',
-            'initiator.required' => 'Обязательно для заполнения',
-            'priority.required' => 'Обязательно для заполнения',
+            'performers_id.required' => 'Обязательно для заполнения',
+            'initiator_id.required' => 'Обязательно для заполнения',
+            'priority_id.required' => 'Обязательно для заполнения',
             'startdate.required' => 'Обязательно для заполнения',
         ];
     }
@@ -38,9 +37,9 @@ class AddTaskRequest extends FormRequest
         return [
             'title' => 'required|min:5|max:255',
             'text' => 'required',
-            'performers' => 'required',
-            'initiator' => 'required',
-            'priority' => 'required',
+            'performers_id' => 'required',
+            'initiator_id' => 'required',
+            'priority_id' => 'required',
             'startdate' => 'required',
         ];
     }

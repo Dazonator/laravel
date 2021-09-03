@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,12 +30,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function position() {
-        return $this->belongsTo(Positions::class, 'id');
+    public function position()
+    {
+        return $this->hasOne(Positions::class, 'id', 'position_id');
     }
 
-    public function department() {
-        return $this->belongsTo(Departments::class, 'id');
+    public function department()
+    {
+        return $this->hasOne(Departments::class, 'id', 'department_id');
     }
 
 }

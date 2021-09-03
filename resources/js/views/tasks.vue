@@ -40,6 +40,18 @@
                                 </a>
                             </template>
 
+                            <template #item.initiator="{ item }">
+                                <v-chip
+                                >
+                                    <v-avatar left>
+                                        <v-img :src="item.initiator.img"></v-img>
+                                    </v-avatar>
+                                    {{item.initiator.name}}
+                                    {{item.initiator.lastname}}
+
+                                </v-chip>
+                            </template>
+
                             <template v-slot:expanded-item="{ headers, item }">
                                 <td :colspan="headers.length">
                                     {{ item.text }}
@@ -73,18 +85,28 @@ export default {
                     value: 'title',
                 },
                 {
+                    text: 'Ответственные',
+                    value: 'performers',
+                    sortable: true,
+                },
+                {
                     text: 'Постановщик',
                     value: 'initiator',
                     sortable: true,
                 },
                 {
-                    text: 'Задача создана',
-                    value: 'created_at',
+                    text: 'Дедлайн',
+                    value: 'deadline',
                     sortable: true,
                 },
                 {
                     text: 'Приоритет',
-                    value: 'priority',
+                    value: 'priority.priority',
+                    sortable: true,
+                },
+                {
+                    text: 'Статус',
+                    value: 'status.status',
                     sortable: true,
                 },
                 {

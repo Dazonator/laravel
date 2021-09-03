@@ -2174,6 +2174,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var srcs = {
@@ -2190,53 +2193,7 @@ __webpack_require__.r(__webpack_exports__);
       friends: [],
       isUpdating: false,
       employees: [],
-      people: [{
-        header: 'Программисты'
-      }, {
-        name: 'Захаров Андрей',
-        group: 'Программисты',
-        id: 111,
-        avatar: srcs[1]
-      }, {
-        name: 'Ali Connors',
-        group: 'Программисты',
-        id: 222,
-        avatar: srcs[2]
-      }, {
-        name: 'Trevor Hansen',
-        group: 'Программисты',
-        id: 333,
-        avatar: srcs[3]
-      }, {
-        name: 'Tucker Smith',
-        group: 'Программисты',
-        id: 444,
-        avatar: srcs[2]
-      }, {
-        divider: true
-      }, {
-        header: 'Дизайнеры'
-      }, {
-        name: 'Britta Holt',
-        group: 'Дизайнеры',
-        id: 555,
-        avatar: srcs[4]
-      }, {
-        name: 'Jane Smith ',
-        group: 'Дизайнеры',
-        id: 666,
-        avatar: srcs[5]
-      }, {
-        name: 'John Smith',
-        group: 'Дизайнеры',
-        id: 777,
-        avatar: srcs[1]
-      }, {
-        name: 'Sandra Williams',
-        group: 'Дизайнеры',
-        id: 888,
-        avatar: srcs[3]
-      }],
+      priorities: [],
       priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
       title: 'Название',
       date: null,
@@ -2281,6 +2238,10 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('/api/employees').then(function (response) {
       _this3.employees = response.data;
       console.log(_this3.employees);
+    });
+    axios.get('/api/priorities').then(function (response) {
+      _this3.priorities = response.data;
+      console.log(_this3.priorities);
     });
   }
 });
@@ -2455,11 +2416,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       user: [],
-      changePassword: false
+      changePassword: false,
+      loaded: false
     };
   },
   created: function created() {
@@ -2468,6 +2431,7 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('/api/profile').then(function (response) {
       console.log(response.data);
       _this.user = response.data;
+      _this.loaded = true;
     });
   }
 });
@@ -2561,6 +2525,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2575,16 +2551,24 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true,
         value: 'title'
       }, {
+        text: 'Ответственные',
+        value: 'performers',
+        sortable: true
+      }, {
         text: 'Постановщик',
         value: 'initiator',
         sortable: true
       }, {
-        text: 'Задача создана',
-        value: 'created_at',
+        text: 'Дедлайн',
+        value: 'deadline',
         sortable: true
       }, {
         text: 'Приоритет',
-        value: 'priority',
+        value: 'priority.priority',
+        sortable: true
+      }, {
+        text: 'Статус',
+        value: 'status.status',
         sortable: true
       }, {
         text: '',
@@ -39881,7 +39865,9 @@ var render = function() {
               expression: "fields.text"
             }
           }),
-          _vm._v("\n\n        " + _vm._s(_vm.errors.performers) + "\n        "),
+          _vm._v(
+            "\n\n        " + _vm._s(_vm.errors.performers_id) + "\n        "
+          ),
           _c("v-autocomplete", {
             attrs: {
               items: _vm.employees,
@@ -39891,7 +39877,7 @@ var render = function() {
               "item-text": "name",
               "item-value": "id",
               multiple: "",
-              name: "performers"
+              name: "performers_id"
             },
             scopedSlots: _vm._u([
               {
@@ -39981,11 +39967,11 @@ var render = function() {
               }
             ]),
             model: {
-              value: _vm.fields.performers,
+              value: _vm.fields.performers_id,
               callback: function($$v) {
-                _vm.$set(_vm.fields, "performers", $$v)
+                _vm.$set(_vm.fields, "performers_id", $$v)
               },
-              expression: "fields.performers"
+              expression: "fields.performers_id"
             }
           }),
           _vm._v("\n\n        " + _vm._s(_vm.errors.initiator) + "\n        "),
@@ -40087,28 +40073,31 @@ var render = function() {
               }
             ]),
             model: {
-              value: _vm.fields.initiator,
+              value: _vm.fields.initiator_id,
               callback: function($$v) {
-                _vm.$set(_vm.fields, "initiator", $$v)
+                _vm.$set(_vm.fields, "initiator_id", $$v)
               },
-              expression: "fields.initiator"
+              expression: "fields.initiator_id"
             }
           }),
           _vm._v("\n\n        " + _vm._s(_vm.errors.priority) + "\n        "),
           _c("v-select", {
             attrs: {
-              items: _vm.priority,
+              items: _vm.priorities,
+              "item-text": "priority",
+              "item-selection": "priority",
+              "item-value": "id",
               solo: "",
               label: "Приоритет",
               dense: "",
-              name: "priority"
+              name: "priority_id"
             },
             model: {
-              value: _vm.fields.priority,
+              value: _vm.fields.priority_id,
               callback: function($$v) {
-                _vm.$set(_vm.fields, "priority", $$v)
+                _vm.$set(_vm.fields, "priority_id", $$v)
               },
-              expression: "fields.priority"
+              expression: "fields.priority_id"
             }
           }),
           _vm._v("\n\n        " + _vm._s(_vm.errors.deadline) + "\n        "),
@@ -40389,164 +40378,182 @@ var render = function() {
             _vm._v(_vm._s(_vm.user.name) + " " + _vm._s(_vm.user.lastname))
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "bg pa-4" }, [
-            _c("div", { staticClass: "row profile" }, [
-              _c(
-                "div",
-                { staticClass: "col-3 text-center profile__img" },
-                [
-                  _c("v-img", {
-                    attrs: { src: _vm.user.img, alt: "", "aspect-ratio": 1 / 1 }
-                  }),
+          _vm.loaded
+            ? _c("div", { staticClass: "bg pa-4" }, [
+                _c("div", { staticClass: "row profile" }, [
+                  _c(
+                    "div",
+                    { staticClass: "col-3 text-center profile__img" },
+                    [
+                      _c("v-img", {
+                        attrs: {
+                          src: _vm.user.img,
+                          alt: "",
+                          "aspect-ratio": 1 / 1
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("a", { attrs: { href: "" } }, [
+                        _vm._v("Изменить фото")
+                      ])
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("a", { attrs: { href: "" } }, [_vm._v("Изменить фото")])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-9 profile__information" }, [
-                _c("div", { staticClass: "row mb-6" }, [
-                  _c("div", { staticClass: "col-12" }, [
-                    _c(
-                      "div",
-                      { staticClass: "text-sm-body-2 font-weight-bold" },
-                      [
-                        _vm._v(
-                          "\n                                    Имя\n                                "
-                        )
-                      ]
-                    ),
+                  _c("div", { staticClass: "col-9 profile__information" }, [
+                    _c("div", { staticClass: "row mb-6" }, [
+                      _c("div", { staticClass: "col-12" }, [
+                        _c(
+                          "div",
+                          { staticClass: "text-sm-body-2 font-weight-bold" },
+                          [
+                            _vm._v(
+                              "\n                                    Имя\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value py-2 px-4" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.user.name) +
+                              " " +
+                              _vm._s(_vm.user.lastname) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          { staticClass: "text-sm-body-2 font-weight-bold" },
+                          [
+                            _vm._v(
+                              "\n                                    Должность\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value py-2 px-4" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.user.position.position) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          { staticClass: "text-sm-body-2 font-weight-bold" },
+                          [
+                            _vm._v(
+                              "\n                                    Отдел\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value py-2 px-4" }, [
+                          _vm._v(
+                            "\n\n                                    " +
+                              _vm._s(_vm.user.department.department) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          { staticClass: "text-sm-body-2 font-weight-bold" },
+                          [
+                            _vm._v(
+                              "\n                                    Телефон\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value py-2 px-4" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.user.phone) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          { staticClass: "text-sm-body-2 font-weight-bold" },
+                          [
+                            _vm._v(
+                              "\n                                    E-mail\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value py-2 px-4" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.user.email) +
+                              "\n                                "
+                          )
+                        ])
+                      ])
+                    ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "value py-2 px-4" }, [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(_vm.user.name) +
-                          " " +
-                          _vm._s(_vm.user.lastname) +
-                          "\n                                "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    _c(
-                      "div",
-                      { staticClass: "text-sm-body-2 font-weight-bold" },
-                      [
-                        _vm._v(
-                          "\n                                    Должность\n                                "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value py-2 px-4" }, [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(_vm.user.position.position) +
-                          "\n                                "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    _c(
-                      "div",
-                      { staticClass: "text-sm-body-2 font-weight-bold" },
-                      [
-                        _vm._v(
-                          "\n                                    Отдел\n                                "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value py-2 px-4" }, [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(_vm.user.department.department) +
-                          "\n                                "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    _c(
-                      "div",
-                      { staticClass: "text-sm-body-2 font-weight-bold" },
-                      [
-                        _vm._v(
-                          "\n                                    Телефон\n                                "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value py-2 px-4" }, [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(_vm.user.phone) +
-                          "\n                                "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    _c(
-                      "div",
-                      { staticClass: "text-sm-body-2 font-weight-bold" },
-                      [
-                        _vm._v(
-                          "\n                                    E-mail\n                                "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value py-2 px-4" }, [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(_vm.user.email) +
-                          "\n                                "
+                    _c("div", { staticClass: "change-password" }, [
+                      _c(
+                        "div",
+                        { staticClass: "change-password__title mb-4 " },
+                        [
+                          _c(
+                            "span",
+                            {
+                              on: {
+                                click: function($event) {
+                                  _vm.changePassword = !_vm.changePassword
+                                }
+                              }
+                            },
+                            [_vm._v("Сменить пароль")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "form",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.changePassword,
+                              expression: "changePassword"
+                            }
+                          ],
+                          staticClass: "row change-password__form",
+                          attrs: {
+                            method: "post",
+                            action: "/profile/change-password"
+                          }
+                        },
+                        [
+                          _vm._m(0),
+                          _vm._v(" "),
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _vm._m(2)
+                        ]
                       )
                     ])
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "change-password" }, [
-                  _c("div", { staticClass: "change-password__title mb-4 " }, [
-                    _c(
-                      "span",
-                      {
-                        on: {
-                          click: function($event) {
-                            _vm.changePassword = !_vm.changePassword
-                          }
-                        }
-                      },
-                      [_vm._v("Сменить пароль")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "form",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.changePassword,
-                          expression: "changePassword"
-                        }
-                      ],
-                      staticClass: "row change-password__form",
-                      attrs: {
-                        method: "post",
-                        action: "/profile/change-password"
-                      }
-                    },
-                    [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)]
-                  )
                 ])
               ])
-            ])
-          ])
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("add-task")
@@ -40732,6 +40739,37 @@ var render = function() {
                                 "\n                            "
                             )
                           ])
+                        ]
+                      }
+                    },
+                    {
+                      key: "item.initiator",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          _c(
+                            "v-chip",
+                            [
+                              _c(
+                                "v-avatar",
+                                { attrs: { left: "" } },
+                                [
+                                  _c("v-img", {
+                                    attrs: { src: item.initiator.img }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(item.initiator.name) +
+                                  "\n                                " +
+                                  _vm._s(item.initiator.lastname) +
+                                  "\n\n                            "
+                              )
+                            ],
+                            1
+                          )
                         ]
                       }
                     },

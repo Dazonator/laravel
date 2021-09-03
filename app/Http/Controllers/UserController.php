@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Priority;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,16 +16,22 @@ class UserController extends Controller
     public function index()
     {
         $user = User::where('id', Auth::user()->id)->with(['position', 'department'])->first();
+//        return $user;
 //        return Auth::user();
-//    print_r($user->position);
         return $user;
-//        return User::where('id', 1)->first();
     }
 
 
     public function employees()
     {
-        return User::with(['position', 'department'])->get();
+        return User::select('id', 'img', 'name', 'lastname', 'position_id')->with(['position'])->get();
+
+    }
+
+
+    public function priorities()
+    {
+        return Priority::all();
 
     }
 

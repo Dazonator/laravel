@@ -15,8 +15,8 @@ class AddTaskController extends Controller
         DB::table('add_tasks')->create([
             'title' => $request->title,
             'text' => $request->text,
-            'performers' => $request->performers,
-            'initiator' => $request->initiator,
+            'performers_id' => $request->performers_id,
+            'initiator_id' => $request->initiator_id,
             'priority' => $request->priority,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col">
                 <h2 class="mb-4">{{user.name}} {{user.lastname}}</h2>
-                <div class="bg pa-4">
+                <div class="bg pa-4" v-if="loaded">
                     <div class="row profile">
                         <div class="col-3 text-center profile__img">
                             <v-img
@@ -38,6 +38,7 @@
                                         Отдел
                                     </div>
                                     <div class="value py-2 px-4">
+
                                         {{user.department.department}}
                                     </div>
 
@@ -104,12 +105,14 @@ export default {
         return{
             user: [],
             changePassword: false,
+            loaded: false,
         }
     },
     created(){
         axios.get('/api/profile').then(response => {
             console.log(response.data);
             this.user = response.data;
+            this.loaded = true;
         });
     }
 }

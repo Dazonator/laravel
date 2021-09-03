@@ -20,7 +20,7 @@
 
             ></v-textarea>
 
-            {{errors.performers}}
+            {{errors.performers_id}}
             <v-autocomplete
                 :items="employees"
                 solo
@@ -29,8 +29,8 @@
                 item-text="name"
                 item-value="id"
                 multiple
-                name="performers"
-                v-model=fields.performers
+                name="performers_id"
+                v-model=fields.performers_id
 
             >
                 <template v-slot:selection="data">
@@ -76,7 +76,7 @@
                 item-text="name"
                 item-value="id"
                 name="initiator"
-                v-model="fields.initiator"
+                v-model="fields.initiator_id"
             >
                 <template v-slot:selection="data">
                     <v-chip
@@ -114,12 +114,15 @@
 
             {{errors.priority}}
             <v-select
-                :items="priority"
+                :items=priorities
+                item-text="priority"
+                item-selection="priority"
+                item-value="id"
                 solo
                 label="Приоритет"
                 dense
-                name="priority"
-                v-model="fields.priority"
+                name="priority_id"
+                v-model="fields.priority_id"
             ></v-select>
 
             {{errors.deadline}}
@@ -200,19 +203,7 @@ export default {
             friends: [],
             isUpdating: false,
             employees: [],
-            people: [
-                { header: 'Программисты' },
-                { name: 'Захаров Андрей', group: 'Программисты', id: 111, avatar: srcs[1] },
-                { name: 'Ali Connors', group: 'Программисты', id: 222, avatar: srcs[2] },
-                { name: 'Trevor Hansen', group: 'Программисты', id: 333, avatar: srcs[3] },
-                { name: 'Tucker Smith', group: 'Программисты', id: 444, avatar: srcs[2] },
-                { divider: true },
-                { header: 'Дизайнеры' },
-                { name: 'Britta Holt', group: 'Дизайнеры', id: 555, avatar: srcs[4] },
-                { name: 'Jane Smith ', group: 'Дизайнеры', id: 666, avatar: srcs[5] },
-                { name: 'John Smith', group: 'Дизайнеры', id: 777, avatar: srcs[1] },
-                { name: 'Sandra Williams', group: 'Дизайнеры', id: 888, avatar: srcs[3] },
-            ],
+            priorities: [],
 
             priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
             title: 'Название',
@@ -252,6 +243,10 @@ export default {
         axios.get('/api/employees').then(response => {
             this.employees = response.data;
             console.log(this.employees);
+        });
+        axios.get('/api/priorities').then(response => {
+            this.priorities = response.data;
+            console.log(this.priorities);
         });
     },
 }

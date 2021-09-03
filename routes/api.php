@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //
 Route::get('/profile', [UserController::class, 'index']);
 Route::get('/employees', [UserController::class, 'employees']);
+Route::get('/priorities', [UserController::class, 'priorities']);
 
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);

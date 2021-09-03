@@ -15,9 +15,9 @@ class TasksController extends Controller
         Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
-            'performers' => $request->performers,
-            'initiator' => $request->initiator,
-            'priority' => $request->priority,
+            'performers_id' => $request->performers_id,
+            'initiator_id' => $request->initiator_id,
+            'priority_id' => $request->priority_id,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
         ]);
@@ -27,7 +27,7 @@ class TasksController extends Controller
 
     public function userTasks()
     {
-        return Tasks::whereJsonContains('performers', Auth::user()->id)->get();
+        return Tasks::whereJsonContains('performers_id', Auth::user()->id)->with(['priority', 'status', 'initiator', 'performers'])->get();
     }
 
 
