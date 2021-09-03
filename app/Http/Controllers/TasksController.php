@@ -22,12 +22,22 @@ class TasksController extends Controller
             'startdate' => $request->startdate,
         ]);
 
+//        DB::table('tasks_user')::create([
+//
+//        ]);
+//
+
         return view('tasks');
     }
 
     public function userTasks()
     {
-        return Tasks::whereJsonContains('performers_id', Auth::user()->id)->with(['priority', 'status', 'initiator', 'performers'])->get();
+//        return Tasks::whereJsonContains('performers_id', Auth::user()->id)->with(['priority', 'status', 'initiator'])->get();
+
+        return User::find(Auth::user()->id)->tasks()->get();
+
+
+//        $tasks = User::find(Auth::user()->id)->performers()->orderBy('title')->get();
     }
 
 

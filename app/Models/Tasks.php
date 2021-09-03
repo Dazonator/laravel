@@ -39,8 +39,9 @@ class Tasks extends Model
         return $this->hasOne(User::class, 'id', 'initiator_id')->select( 'id', 'img', 'name', 'lastname');
     }
 
-    public function performers()
+    public function users()
     {
-        return $this->hasOne(User::class, 'id', 'performers_id')->select( 'id', 'img');
+        return $this->belongsToMany(User::class)->with(['position', 'department']);
     }
+
 }

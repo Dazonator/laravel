@@ -86,7 +86,7 @@ export default {
                 },
                 {
                     text: 'Ответственные',
-                    value: 'performers',
+                    value: 'performers_id',
                     sortable: true,
                 },
                 {

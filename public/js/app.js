@@ -2236,12 +2236,10 @@ __webpack_require__.r(__webpack_exports__);
     var _this3 = this;
 
     axios.get('/api/employees').then(function (response) {
-      _this3.employees = response.data;
-      console.log(_this3.employees);
+      _this3.employees = response.data; // console.log(this.employees);
     });
     axios.get('/api/priorities').then(function (response) {
-      _this3.priorities = response.data;
-      console.log(_this3.priorities);
+      _this3.priorities = response.data; // console.log(this.priorities);
     });
   }
 });
@@ -2552,7 +2550,7 @@ __webpack_require__.r(__webpack_exports__);
         value: 'title'
       }, {
         text: 'Ответственные',
-        value: 'performers',
+        value: 'performers_id',
         sortable: true
       }, {
         text: 'Постановщик',

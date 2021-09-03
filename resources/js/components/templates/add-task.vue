@@ -242,11 +242,11 @@ export default {
     created(){
         axios.get('/api/employees').then(response => {
             this.employees = response.data;
-            console.log(this.employees);
+            // console.log(this.employees);
         });
         axios.get('/api/priorities').then(response => {
             this.priorities = response.data;
-            console.log(this.priorities);
+            // console.log(this.priorities);
         });
     },
 }
