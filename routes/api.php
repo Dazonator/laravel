@@ -31,6 +31,8 @@ Route::get('/priorities', [UserController::class, 'priorities']);
 
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);
+Route::get('/tasks/{id}', [TasksController::class, 'getTask']);
+
 Route::post('/add-task', [TasksController::class, 'submit']);
 
 

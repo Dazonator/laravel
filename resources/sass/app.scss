@@ -1,13 +1,27 @@
- //Fonts
+//Fonts
 //@import url('https://fonts.googleapis.com/css?family=Nunito');
 
- //Variables
+//Variables
 @import 'variables';
 
- //Bootstrap
+//Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
 @import '~vuetify/dist/vuetify.min.css';
+
+.priority-1{
+    color: #CCCCCC;
+}
+.priority-2{
+    color: #535353;
+
+}
+.priority-3{
+    color: #9D3A25;
+}
+.priority-4{
+    color: #DB3F1F;
+}
 
 .theme--light.v-application{
     background-color: #F8FAFB !important;
@@ -179,6 +193,52 @@
 
         button{
             width: 100%;
+        }
+    }
+}
+
+.task-page{
+    &__title{
+
+    }
+
+    &__deadline{
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+        font-weight: 600;
+    }
+
+    &__text{
+        font-size: 0.875rem;
+        color: #242432;
+        margin-bottom: 0.35rem;
+    }
+
+    &__priority{
+        font-size: 0.8rem;
+        margin-bottom: 1.25rem;
+        font-weight: 600;
+        color: #db3f1f;
+    }
+    .responsibles{
+
+        &__title{
+            font-weight: 600;
+            font-size: 0.8rem;
+            //line-height: 14px;
+        }
+        &__items{
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            padding-left: 0;
+            li{
+                margin-right: 5px;
+                border: 1px solid green;
+                //box-shadow: 0px 0px 0px 2px #fff;
+                border-radius: 50%;
+                //margin-left: -20px;
+            }
         }
     }
 }

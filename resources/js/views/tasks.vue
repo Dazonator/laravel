@@ -14,6 +14,8 @@
                             :expanded.sync="expanded"
                             show-expand
                             :search="search"
+                            :loading="tableloading"
+                            loading-text="Загрузка задач..."
                         >
                             <template v-slot:top>
                                 <v-toolbar flat>
@@ -35,8 +37,18 @@
                                 </v-toolbar>
                             </template>
                             <template #item.title="{ item }">
-                                <a :href="`tasks/${item.id}`">
+                                <router-link :to="{ path: '/${item.id}'}" append>
                                     {{ item.title }}
+                                </router-link>
+                            </template>
+
+                            <template #item.responsibles="{ item }">
+                                <a href="" v-for="i in item.responsibles">
+                                    <v-chip>
+                                        <v-avatar left>
+                                            <v-img :src="i.img"></v-img>
+                                        </v-avatar>
+                                    </v-chip>
                                 </a>
                             </template>
 
@@ -73,6 +85,7 @@ export default {
     data() {
         return {
             addTask: false,
+            tableloading: true,
             expanded: [],
             singleExpand: true,
             tasks: [],
@@ -86,7 +99,7 @@ export default {
                 },
                 {
                     text: 'Ответственные',
-                    value: 'performers_id',
+                    value: 'responsibles',
                     sortable: true,
                 },
                 {
@@ -120,6 +133,7 @@ export default {
         axios.get('/api/tasks').then(response => {
             console.log(response.data);
             this.tasks = response.data;
+            this.tableloading = false;
         });
     },
     methods: {

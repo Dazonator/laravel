@@ -8,6 +8,7 @@ import profile from './views/profile';
 import messages from "./views/messages";
 import structure from "./views/structure";
 import tasks from "./views/tasks";
+import task from "./views/tasks/task";
 import team from "./views/team";
 import home from "./views/home";
 
@@ -41,6 +42,11 @@ const routes = [
         path: "/tasks",
         name: 'tasks',
         component: tasks
+    },
+    {
+        path: "/tasks/:id",
+        name: 'task',
+        component: task,
     },
     {
         path: "/team",

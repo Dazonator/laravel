@@ -138,7 +138,7 @@
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                         v-model="fields.deadline"
-                        label="Picker without buttons"
+                        label="Дедлайн"
                         prepend-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"

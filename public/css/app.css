@@ -10010,6 +10010,22 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.priority-1 {
+  color: #CCCCCC;
+}
+
+.priority-2 {
+  color: #535353;
+}
+
+.priority-3 {
+  color: #9D3A25;
+}
+
+.priority-4 {
+  color: #DB3F1F;
+}
+
 .theme--light.v-application {
   background-color: #F8FAFB !important;
 }
@@ -10149,4 +10165,36 @@ h3 {
 }
 .profile .change-password button {
   width: 100%;
+}
+
+.task-page__deadline {
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+.task-page__text {
+  font-size: 0.875rem;
+  color: #242432;
+  margin-bottom: 0.35rem;
+}
+.task-page__priority {
+  font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+  color: #db3f1f;
+}
+.task-page .responsibles__title {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.task-page .responsibles__items {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
+}
+.task-page .responsibles__items li {
+  margin-right: 5px;
+  border: 1px solid green;
+  border-radius: 50%;
 }

@@ -36,12 +36,12 @@ class Tasks extends Model
 
     public function initiator()
     {
-        return $this->hasOne(User::class, 'id', 'initiator_id')->select( 'id', 'img', 'name', 'lastname');
+        return $this->hasOne(User::class, 'id', 'initiator_id');
     }
 
-    public function users()
+    public function responsibles()
     {
-        return $this->belongsToMany(User::class)->with(['position', 'department']);
+        return $this->belongsToMany(User::class);
     }
 
 }

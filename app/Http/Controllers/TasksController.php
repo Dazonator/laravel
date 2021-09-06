@@ -12,7 +12,13 @@ use Illuminate\Support\Facades\DB;
 class TasksController extends Controller
 {
     public function submit(AddTaskRequest $request){
-        Tasks::create([
+
+        $task = new Tasks();
+        $performers = $request->performers_id;
+
+        print_r($performers);
+
+        $task::create([
             'title' => $request->title,
             'text' => $request->text,
             'performers_id' => $request->performers_id,
@@ -20,24 +26,29 @@ class TasksController extends Controller
             'priority_id' => $request->priority_id,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
-        ]);
-
-//        DB::table('tasks_user')::create([
-//
-//        ]);
-//
+        ])->responsibles()->sync($performers);
 
         return view('tasks');
     }
 
     public function userTasks()
     {
-//        return Tasks::whereJsonContains('performers_id', Auth::user()->id)->with(['priority', 'status', 'initiator'])->get();
 
-        return User::find(Auth::user()->id)->tasks()->get();
+        return Auth::user()->tasks()->with([
+            'priority',
+            'status',
+            'initiator' => function($q) {
+                $q->select('id', 'img', 'name', 'lastname');
+            },
+            'responsibles' => function($q) {
+                $q->select('id', 'img', 'name', 'lastname');
+            },
+        ])->get();
 
+    }
 
-//        $tasks = User::find(Auth::user()->id)->performers()->orderBy('title')->get();
+    public function getTask($id){
+        return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator'])->first();
     }
 
 

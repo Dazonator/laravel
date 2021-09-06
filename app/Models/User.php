@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->belongsToMany(Tasks::class)->with(['priority', 'status', 'initiator']);
+        return $this->belongsToMany(Tasks::class);
     }
 
 }
