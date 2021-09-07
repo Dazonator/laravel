@@ -23,6 +23,7 @@ class CreateTasksTable extends Migration
             $table->date('deadline')->nullable();
             $table->date('startdate');
             $table->tinyInteger('status_id')->default(1);
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
     }

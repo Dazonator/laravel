@@ -2177,7 +2177,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    parent_id: Number
+  },
   data: function data() {
     var srcs = {
       1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -2241,6 +2246,12 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('/api/priorities').then(function (response) {
       _this3.priorities = response.data; // console.log(this.priorities);
     });
+
+    if (this.parent_id) {
+      this.fields.parent_id = this.parent_id;
+    }
+
+    ;
   }
 });
 
@@ -2547,6 +2558,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2663,11 +2677,62 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       loaded: false,
-      id: this.$route.params.id,
+      id: Number(this.$route.params.id),
       task: []
     };
   },
@@ -2938,7 +3003,8 @@ var routes = [{
 }, {
   path: "/tasks/:id",
   name: 'task',
-  component: _views_tasks_task__WEBPACK_IMPORTED_MODULE_7__.default
+  component: _views_tasks_task__WEBPACK_IMPORTED_MODULE_7__.default,
+  props: true
 }, {
   path: "/team",
   name: 'team',
@@ -40349,7 +40415,13 @@ var render = function() {
             1
           ),
           _vm._v(
-            "\n\n\n        " + _vm._s(_vm.errors.startdate) + "\n        "
+            "\n\n\n        " +
+              _vm._s(_vm.errors.startdate) +
+              "\n        " +
+              _vm._s(_vm.parent_id) +
+              "\n        " +
+              _vm._s(_vm.fields) +
+              "\n        "
           ),
           _c(
             "v-menu",
@@ -40910,9 +40982,7 @@ var render = function() {
                         return [
                           _c(
                             "router-link",
-                            {
-                              attrs: { to: { path: "/${item.id}" }, append: "" }
-                            },
+                            { attrs: { to: "/tasks/" + item.id } },
                             [
                               _vm._v(
                                 "\n                                " +
@@ -41071,7 +41141,7 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("div", {}, [
+              _c("div", { staticClass: "task-page__created" }, [
                 _vm._v(
                   "\n                    Создано 12/02/2021 Менеджеры №123\n                "
                 )
@@ -41079,7 +41149,10 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "responsibles" }, [
                 _c("h6", { staticClass: "responsibles__title" }, [
-                  _vm._v("7 исполнителей в этой задаче")
+                  _vm._v(
+                    "Исполнителей в этой задаче: " +
+                      _vm._s(_vm.task.responsibles.length)
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
@@ -41108,11 +41181,151 @@ var render = function() {
                   }),
                   0
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _vm.task.parent
+                ? _c("div", { staticClass: "parent-tasks mb-12" }, [
+                    _c("h5", { staticClass: "parent-tasks__title" }, [
+                      _vm._v("Родительская задача")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "parent-tasks-table" },
+                      [
+                        _c("v-simple-table", {
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function() {
+                                  return [
+                                    _c("tbody", [
+                                      _c("tr", [
+                                        _c(
+                                          "td",
+                                          [
+                                            _c(
+                                              "router-link",
+                                              {
+                                                attrs: {
+                                                  to:
+                                                    "/tasks/" +
+                                                    _vm.task.parent.id
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            " +
+                                                    _vm._s(
+                                                      _vm.task.parent.title
+                                                    ) +
+                                                    "\n                                        "
+                                                )
+                                              ]
+                                            )
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _vm._v(
+                                            "\n                                        " +
+                                              _vm._s(_vm.task.parent.text) +
+                                              "\n                                    "
+                                          )
+                                        ])
+                                      ])
+                                    ])
+                                  ]
+                                },
+                                proxy: true
+                              }
+                            ],
+                            null,
+                            false,
+                            2070201371
+                          )
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.task.children
+                ? _c("div", { staticClass: "subtasks" }, [
+                    _c("h5", { staticClass: "subtasks__title" }, [
+                      _vm._v("Подзадачи")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "subtasks-table" },
+                      [
+                        _c("v-simple-table", {
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function() {
+                                  return [
+                                    _c(
+                                      "tbody",
+                                      _vm._l(_vm.task.children, function(item) {
+                                        return _c("tr", [
+                                          _c(
+                                            "td",
+                                            [
+                                              _c(
+                                                "router-link",
+                                                {
+                                                  attrs: {
+                                                    to: "/tasks/" + item.id
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                                " +
+                                                      _vm._s(item.title) +
+                                                      "\n                                            "
+                                                  )
+                                                ]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(item.text) +
+                                                "\n                                        "
+                                            )
+                                          ])
+                                        ])
+                                      }),
+                                      0
+                                    )
+                                  ]
+                                },
+                                proxy: true
+                              }
+                            ],
+                            null,
+                            false,
+                            789018430
+                          )
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e()
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c("add-task")
+        _c("add-task", { attrs: { parent_id: _vm.id } })
       ],
       1
     )

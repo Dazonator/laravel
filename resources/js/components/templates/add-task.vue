@@ -153,6 +153,8 @@
 
 
             {{errors.startdate}}
+            {{parent_id}}
+            {{fields}}
             <v-menu
                 v-model="menu"
                 :close-on-content-click="false"
@@ -187,6 +189,9 @@
 </template>
 <script>
 export default {
+    props: {
+        parent_id: Number
+    },
     data () {
         const srcs = {
             1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -229,6 +234,7 @@ export default {
         },
         submit() {
             this.errors = {};
+
             axios.post('/api/add-task', this.fields).then(response => {
                 alert('Message sent!');
                 window.location.href = "/tasks"
@@ -248,6 +254,9 @@ export default {
             this.priorities = response.data;
             // console.log(this.priorities);
         });
+        if (this.parent_id){
+            this.fields.parent_id = this.parent_id;
+        };
     },
 }
 </script>

@@ -40,12 +40,6 @@ class User extends Authenticatable
         return $this->hasOne(Departments::class, 'id', 'department_id');
     }
 
-
-//    public function performers()
-//    {
-//        return $this->belongsToMany(Tasks::class);
-//    }
-
     public function tasks()
     {
         return $this->belongsToMany(Tasks::class);

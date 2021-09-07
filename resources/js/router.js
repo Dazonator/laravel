@@ -47,6 +47,7 @@ const routes = [
         path: "/tasks/:id",
         name: 'task',
         component: task,
+        props: true
     },
     {
         path: "/team",

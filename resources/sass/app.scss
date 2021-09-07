@@ -197,6 +197,8 @@
     }
 }
 
+
+
 .task-page{
     &__title{
 
@@ -211,7 +213,7 @@
     &__text{
         font-size: 0.875rem;
         color: #242432;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.3rem !important;
     }
 
     &__priority{
@@ -220,8 +222,16 @@
         font-weight: 600;
         color: #db3f1f;
     }
-    .responsibles{
 
+    &__created{
+        font-size: 0.8rem;
+        margin-bottom: 2.9rem;
+        font-weight: 600;
+
+    }
+
+    .responsibles{
+        margin-bottom: 2.5rem;
         &__title{
             font-weight: 600;
             font-size: 0.8rem;

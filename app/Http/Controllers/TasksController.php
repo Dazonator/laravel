@@ -11,13 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class TasksController extends Controller
 {
-    public function submit(AddTaskRequest $request){
+    public function submitTask(AddTaskRequest $request){
 
         $task = new Tasks();
         $performers = $request->performers_id;
-
-        print_r($performers);
-
         $task::create([
             'title' => $request->title,
             'text' => $request->text,
@@ -26,10 +23,28 @@ class TasksController extends Controller
             'priority_id' => $request->priority_id,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
+            'parent_id' => $request->parent_id,
         ])->responsibles()->sync($performers);
 
         return view('tasks');
     }
+
+//    public function submitSubtask(AddTaskRequest $request){
+//
+//        $task = new Tasks();
+//        $parent = $request->parent_id;
+//        $task::create([
+//            'title' => $request->title,
+//            'text' => $request->text,
+//            'performers_id' => $request->performers_id,
+//            'initiator_id' => $request->initiator_id,
+//            'priority_id' => $request->priority_id,
+//            'deadline' => $request->deadline,
+//            'startdate' => $request->startdate,
+//        ])->parent()->sync($parent);
+//
+//        return view('tasks');
+//    }
 
     public function userTasks()
     {
@@ -48,7 +63,7 @@ class TasksController extends Controller
     }
 
     public function getTask($id){
-        return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator'])->first();
+        return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator', 'parent', 'children'])->first();
     }
 
 

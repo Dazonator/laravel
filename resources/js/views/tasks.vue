@@ -37,7 +37,10 @@
                                 </v-toolbar>
                             </template>
                             <template #item.title="{ item }">
-                                <router-link :to="{ path: '/${item.id}'}" append>
+                                <router-link
+
+                                    :to="'/tasks/' + item.id"
+                                >
                                     {{ item.title }}
                                 </router-link>
                             </template>
