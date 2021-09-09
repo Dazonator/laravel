@@ -25,26 +25,23 @@ class TasksController extends Controller
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
         ])->responsibles()->sync($performers);
-
-        return view('tasks');
     }
-
-//    public function submitSubtask(AddTaskRequest $request){
-//
-//        $task = new Tasks();
-//        $parent = $request->parent_id;
-//        $task::create([
-//            'title' => $request->title,
-//            'text' => $request->text,
-//            'performers_id' => $request->performers_id,
-//            'initiator_id' => $request->initiator_id,
-//            'priority_id' => $request->priority_id,
-//            'deadline' => $request->deadline,
-//            'startdate' => $request->startdate,
-//        ])->parent()->sync($parent);
-//
-//        return view('tasks');
-//    }
+    public function updateTask(AddTaskRequest $request){
+        $id = $request->id;
+        $performers = $request->performers_id;
+        $task = Tasks::find($id);
+        $task->update([
+            'title' => $request->title,
+            'text' => $request->text,
+            'performers_id' => $request->performers_id,
+            'initiator_id' => $request->initiator_id,
+            'priority_id' => $request->priority_id,
+            'deadline' => $request->deadline,
+            'startdate' => $request->startdate,
+            'parent_id' => $request->parent_id,
+        ]);
+        $task->responsibles()->sync($performers);
+    }
 
     public function userTasks()
     {
@@ -60,6 +57,10 @@ class TasksController extends Controller
             },
         ])->get();
 
+    }
+
+    public function editTask($id){
+        return Tasks::where('id', $id)->first();
     }
 
     public function getTask($id){

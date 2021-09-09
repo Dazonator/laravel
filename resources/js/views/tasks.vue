@@ -3,7 +3,7 @@
     <main class="col py-4">
         <div class="row">
             <div class="col">
-                <h1>Задачи</h1>
+                <h1>Мои задачи</h1>
                 <!--            <pre v-html="tasks"></pre>-->
                 <div class="bg pa-4">
                     <template>

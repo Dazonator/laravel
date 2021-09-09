@@ -1,5 +1,9 @@
 <template>
-    <form class="col add-task" @submit.prevent="submit">
+
+    <form class="col add-task"
+        @submit.prevent="submit"
+    >
+
         <div class="bg pa-4 mb-4">
             {{errors.title}}
             <v-text-field
@@ -31,7 +35,6 @@
                 multiple
                 name="performers_id"
                 v-model=fields.performers_id
-
             >
                 <template v-slot:selection="data">
                     <v-chip
@@ -39,7 +42,7 @@
                         :input-value="data.selected"
                         close
                         @click="data.select"
-                        @click:close="remove(data.item)"
+                        @click:close="removePerformers(data.item)"
                     >
                         <v-avatar left>
                             <v-img :src="data.item.img"></v-img>
@@ -84,7 +87,7 @@
                         :input-value="data.selected"
                         close
                         @click="data.select"
-                        @click:close="remove(data.item)"
+                        @click:close="removeInitiator()"
                     >
                         <v-avatar left>
                             <v-img :src="data.item.img"></v-img>
@@ -153,7 +156,9 @@
 
 
             {{errors.startdate}}
-            {{parent_id}}
+            {{isedit}}
+            {{issubtask}}
+<!--            {{foredit}}-->
             {{fields}}
             <v-menu
                 v-model="menu"
@@ -184,14 +189,16 @@
             type="submit"
             color="primary"
             large
-        >Добавить задачу</v-btn>
+        >
+            {{(isedit == true) ? 'Сохранить изменения' : ''}}
+            {{(issubtask == true) ? 'Создать подзадачу'  : ''}}
+            {{(isedit !== true && issubtask !==true) ? 'Создать задачу'  : ''}}
+        </v-btn>
     </form>
 </template>
 <script>
 export default {
-    props: {
-        parent_id: Number
-    },
+    props: ['parent_id', 'isedit', 'issubtask', 'foredit'],
     data () {
         const srcs = {
             1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -225,24 +232,72 @@ export default {
                 setTimeout(() => (this.isUpdating = false), 3000)
             }
         },
+        isedit: function ($val){
+            if (this.isedit){
+                axios.get('/api/tasks/edit/'+this.parent_id).then(response => {
+                    this.fields = response.data;
+                    // console.log(this.priorities);
+                });
+            }
+        },
+        issubtask: function ($val) {
+            if (this.issubtask){
+                this.fields = {};
+                console.log(this.fields);
+                this.fields.parent_id = this.parent_id;
+                console.log(this.fields);
+            }
+        }
     },
 
     methods: {
-        remove (item) {
-            const index = this.friends.indexOf(item.name)
-            if (index >= 0) this.friends.splice(index, 1)
+        removePerformers (item) {
+            // console.log(item);
+            const index = this.fields.performers_id.indexOf(item.id);
+            // console.log(index);
+            if (index >= 0) {
+                this.fields.performers_id.splice(index, 1)
+            }
+        },
+        removeInitiator () {
+            this.fields.initiator_id = null;
         },
         submit() {
             this.errors = {};
 
-            axios.post('/api/add-task', this.fields).then(response => {
-                alert('Message sent!');
-                window.location.href = "/tasks"
-            }).catch(error => {
-                if (error.response.status === 422) {
-                    this.errors = error.response.data.errors || {};
-                }
-            });
+            if(this.isedit == true){
+                axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
+                    // alert('Задача изменена!');
+                    window.location.href = `/tasks/${this.fields.id}`;
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+            } else {
+                axios.post('/api/tasks/create', this.fields).then(response => {
+                    // alert('Задача добавлена!!!');
+                    window.location.href = "/tasks";
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+            }
+        },
+        deleteTask() {
+            this.errors = {};
+
+            if(this.isedit == true){
+                axios.post(`/api/tasks/delete/${this.id}`, this.id).then(response => {
+                    alert('Message sent!');
+                    window.location.href = "/tasks";
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+            }
         },
     },
     created(){

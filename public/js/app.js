@@ -2179,10 +2179,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: {
-    parent_id: Number
-  },
+  props: ['parent_id', 'isedit', 'issubtask', 'foredit'],
   data: function data() {
     var srcs = {
       1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -2216,35 +2223,87 @@ __webpack_require__.r(__webpack_exports__);
           return _this.isUpdating = false;
         }, 3000);
       }
+    },
+    isedit: function isedit($val) {
+      var _this2 = this;
+
+      if (this.isedit) {
+        axios.get('/api/tasks/edit/' + this.parent_id).then(function (response) {
+          _this2.fields = response.data; // console.log(this.priorities);
+        });
+      }
+    },
+    issubtask: function issubtask($val) {
+      if (this.issubtask) {
+        this.fields = {};
+        console.log(this.fields);
+        this.fields.parent_id = this.parent_id;
+        console.log(this.fields);
+      }
     }
   },
   methods: {
-    remove: function remove(item) {
-      var index = this.friends.indexOf(item.name);
-      if (index >= 0) this.friends.splice(index, 1);
+    removePerformers: function removePerformers(item) {
+      // console.log(item);
+      var index = this.fields.performers_id.indexOf(item.id); // console.log(index);
+
+      if (index >= 0) {
+        this.fields.performers_id.splice(index, 1);
+      }
+    },
+    removeInitiator: function removeInitiator() {
+      this.fields.initiator_id = null;
     },
     submit: function submit() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.errors = {};
-      axios.post('/api/add-task', this.fields).then(function (response) {
-        alert('Message sent!');
-        window.location.href = "/tasks";
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this2.errors = error.response.data.errors || {};
-        }
-      });
+
+      if (this.isedit == true) {
+        axios.post("/api/tasks/update/".concat(this.fields.id), this.fields).then(function (response) {
+          // alert('Задача изменена!');
+          window.location.href = "/tasks/".concat(_this3.fields.id);
+        })["catch"](function (error) {
+          if (error.response.status === 422) {
+            _this3.errors = error.response.data.errors || {};
+          }
+        });
+      } else {
+        axios.post('/api/tasks/create', this.fields).then(function (response) {
+          // alert('Задача добавлена!!!');
+          window.location.href = "/tasks";
+        })["catch"](function (error) {
+          if (error.response.status === 422) {
+            _this3.errors = error.response.data.errors || {};
+          }
+        });
+      }
+    },
+    deleteTask: function deleteTask() {
+      var _this4 = this;
+
+      this.errors = {};
+
+      if (this.isedit == true) {
+        axios.post("/api/tasks/delete/".concat(this.id), this.id).then(function (response) {
+          alert('Message sent!');
+          window.location.href = "/tasks";
+        })["catch"](function (error) {
+          if (error.response.status === 422) {
+            _this4.errors = error.response.data.errors || {};
+          }
+        });
+      }
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this5 = this;
 
     axios.get('/api/employees').then(function (response) {
-      _this3.employees = response.data; // console.log(this.employees);
+      _this5.employees = response.data; // console.log(this.employees);
     });
     axios.get('/api/priorities').then(function (response) {
-      _this3.priorities = response.data; // console.log(this.priorities);
+      _this5.priorities = response.data; // console.log(this.priorities);
     });
 
     if (this.parent_id) {
@@ -2728,24 +2787,75 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      isedit: false,
+      issubtask: false,
+      foredit: [],
       loaded: false,
+      showform: false,
       id: Number(this.$route.params.id),
       task: []
     };
   },
   created: function created() {
-    var _this = this;
-
-    axios.get("/api/tasks/".concat(this.id)).then(function (response) {
-      console.log(response.data);
-      _this.task = response.data;
-      _this.loaded = true;
-    });
+    this.init();
   },
-  methods: {}
+  watch: {
+    $route: function $route(to, from) {
+      this.id = Number(this.$route.params.id);
+      this.init();
+    }
+  },
+  methods: {
+    init: function init() {
+      var _this = this;
+
+      axios.get("/api/tasks/".concat(this.id)).then(function (response) {
+        console.log(response.data);
+        _this.task = response.data;
+        _this.loaded = true;
+      });
+    },
+    edit: function edit() {
+      this.isedit = true;
+      this.issubtask = false;
+      this.foredit = this.task;
+      this.showform = true;
+    },
+    subtask: function subtask() {
+      this.isedit = false;
+      this.issubtask = true;
+      this.foredit = [];
+      this.showform = true;
+    }
+  }
 });
 
 /***/ }),
@@ -40078,7 +40188,9 @@ var render = function() {
         "div",
         { staticClass: "bg pa-4 mb-4" },
         [
-          _vm._v("\n        " + _vm._s(_vm.errors.title) + "\n        "),
+          _vm._v(
+            "\n            " + _vm._s(_vm.errors.title) + "\n            "
+          ),
           _c("v-text-field", {
             attrs: { solo: "", label: "Название", name: "title" },
             model: {
@@ -40089,7 +40201,9 @@ var render = function() {
               expression: "fields.title"
             }
           }),
-          _vm._v("\n\n        " + _vm._s(_vm.errors.text) + "\n        "),
+          _vm._v(
+            "\n\n            " + _vm._s(_vm.errors.text) + "\n            "
+          ),
           _c("v-textarea", {
             attrs: {
               solo: "",
@@ -40106,7 +40220,9 @@ var render = function() {
             }
           }),
           _vm._v(
-            "\n\n        " + _vm._s(_vm.errors.performers_id) + "\n        "
+            "\n\n            " +
+              _vm._s(_vm.errors.performers_id) +
+              "\n            "
           ),
           _c("v-autocomplete", {
             attrs: {
@@ -40132,7 +40248,7 @@ var render = function() {
                           on: {
                             click: data.select,
                             "click:close": function($event) {
-                              return _vm.remove(data.item)
+                              return _vm.removePerformers(data.item)
                             }
                           }
                         },
@@ -40148,9 +40264,9 @@ var render = function() {
                           1
                         ),
                         _vm._v(
-                          "\n                    " +
+                          "\n                        " +
                             _vm._s(data.item.lastname) +
-                            "\n                "
+                            "\n                    "
                         )
                       ],
                       1
@@ -40214,7 +40330,9 @@ var render = function() {
               expression: "fields.performers_id"
             }
           }),
-          _vm._v("\n\n        " + _vm._s(_vm.errors.initiator) + "\n        "),
+          _vm._v(
+            "\n\n            " + _vm._s(_vm.errors.initiator) + "\n            "
+          ),
           _c("v-autocomplete", {
             attrs: {
               items: _vm.employees,
@@ -40238,7 +40356,7 @@ var render = function() {
                           on: {
                             click: data.select,
                             "click:close": function($event) {
-                              return _vm.remove(data.item)
+                              return _vm.removeInitiator()
                             }
                           }
                         },
@@ -40254,9 +40372,9 @@ var render = function() {
                           1
                         ),
                         _vm._v(
-                          "\n                    " +
+                          "\n                        " +
                             _vm._s(data.item.lastname) +
-                            "\n                "
+                            "\n                    "
                         )
                       ],
                       1
@@ -40320,7 +40438,9 @@ var render = function() {
               expression: "fields.initiator_id"
             }
           }),
-          _vm._v("\n\n        " + _vm._s(_vm.errors.priority) + "\n        "),
+          _vm._v(
+            "\n\n            " + _vm._s(_vm.errors.priority) + "\n            "
+          ),
           _c("v-select", {
             attrs: {
               items: _vm.priorities,
@@ -40340,7 +40460,9 @@ var render = function() {
               expression: "fields.priority_id"
             }
           }),
-          _vm._v("\n\n        " + _vm._s(_vm.errors.deadline) + "\n        "),
+          _vm._v(
+            "\n\n            " + _vm._s(_vm.errors.deadline) + "\n            "
+          ),
           _c(
             "v-menu",
             {
@@ -40415,14 +40537,15 @@ var render = function() {
             1
           ),
           _vm._v(
-            "\n\n\n        " +
+            "\n\n\n            " +
               _vm._s(_vm.errors.startdate) +
-              "\n        " +
-              _vm._s(_vm.parent_id) +
-              "\n        " +
-              _vm._s(_vm.fields) +
-              "\n        "
+              "\n            " +
+              _vm._s(_vm.isedit) +
+              "\n            " +
+              _vm._s(_vm.issubtask) +
+              "\n"
           ),
+          _vm._v("\n            " + _vm._s(_vm.fields) + "\n            "),
           _c(
             "v-menu",
             {
@@ -40501,7 +40624,19 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("v-btn", { attrs: { type: "submit", color: "primary", large: "" } }, [
-        _vm._v("Добавить задачу")
+        _vm._v(
+          "\n            " +
+            _vm._s(_vm.isedit == true ? "Сохранить изменения" : "") +
+            "\n            " +
+            _vm._s(_vm.issubtask == true ? "Создать подзадачу" : "") +
+            "\n            " +
+            _vm._s(
+              _vm.isedit !== true && _vm.issubtask !== true
+                ? "Создать задачу"
+                : ""
+            ) +
+            "\n        "
+        )
       ])
     ],
     1
@@ -40901,7 +41036,7 @@ var render = function() {
       { staticClass: "row" },
       [
         _c("div", { staticClass: "col" }, [
-          _c("h1", [_vm._v("Задачи")]),
+          _c("h1", [_vm._v("Мои задачи")]),
           _vm._v(" "),
           _c(
             "div",
@@ -41183,6 +41318,47 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-6" },
+                [
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "success", dark: "" },
+                      on: {
+                        click: function($event) {
+                          return _vm.edit()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Редактировать\n                    "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "primary", dark: "" },
+                      on: {
+                        click: function($event) {
+                          return _vm.subtask()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Создать подзадачу\n                    "
+                      )
+                    ]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
               _vm.task.parent
                 ? _c("div", { staticClass: "parent-tasks mb-12" }, [
                     _c("h5", { staticClass: "parent-tasks__title" }, [
@@ -41216,11 +41392,11 @@ var render = function() {
                                               },
                                               [
                                                 _vm._v(
-                                                  "\n                                            " +
+                                                  "\n                                                " +
                                                     _vm._s(
                                                       _vm.task.parent.title
                                                     ) +
-                                                    "\n                                        "
+                                                    "\n                                            "
                                                 )
                                               ]
                                             )
@@ -41230,9 +41406,9 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                                            " +
                                               _vm._s(_vm.task.parent.text) +
-                                              "\n                                    "
+                                              "\n                                        "
                                           )
                                         ])
                                       ])
@@ -41244,7 +41420,7 @@ var render = function() {
                             ],
                             null,
                             false,
-                            2070201371
+                            767096091
                           )
                         })
                       ],
@@ -41253,7 +41429,7 @@ var render = function() {
                   ])
                 : _vm._e(),
               _vm._v(" "),
-              _vm.task.children
+              _vm.task.children.length !== 0
                 ? _c("div", { staticClass: "subtasks" }, [
                     _c("h5", { staticClass: "subtasks__title" }, [
                       _vm._v("Подзадачи")
@@ -41325,7 +41501,22 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c("add-task", { attrs: { parent_id: _vm.id } })
+        _c("add-task", {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showform,
+              expression: "showform"
+            }
+          ],
+          attrs: {
+            isedit: _vm.isedit,
+            issubtask: _vm.issubtask,
+            parent_id: _vm.id,
+            foredit: _vm.foredit
+          }
+        })
       ],
       1
     )

@@ -46,7 +46,7 @@ class Tasks extends Model
     }
 
 
-    /* Связь для получения родительской задачи */
+    /* Связь для получения ответственных по задаче */
     public function responsibles()
     {
         return $this->belongsToMany(User::class);

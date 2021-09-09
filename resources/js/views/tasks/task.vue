@@ -40,31 +40,49 @@
                     </ul>
                 </div>
 
+                <div class="mb-6">
+
+                    <v-btn
+                        color="success"
+                        dark
+                        @click="edit()"
+                    >
+                        Редактировать
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        dark
+                        @click="subtask()"
+                    >
+                        Создать подзадачу
+                    </v-btn>
+                </div>
+
                 <div class="parent-tasks mb-12" v-if="task.parent">
                     <h5 class="parent-tasks__title">Родительская задача</h5>
                     <div class="parent-tasks-table">
                         <v-simple-table>
                             <template v-slot:default>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <router-link
-                                            :to="'/tasks/' + task.parent.id"
-                                        >
-                                            {{task.parent.title}}
-                                        </router-link>
-                                    </td>
-                                    <td>
-                                        {{ task.parent.text }}
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <router-link
+                                                :to="'/tasks/' + task.parent.id"
+                                            >
+                                                {{task.parent.title}}
+                                            </router-link>
+                                        </td>
+                                        <td>
+                                            {{ task.parent.text }}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </template>
                         </v-simple-table>
                     </div>
                 </div>
 
-                <div class="subtasks" v-if="task.children">
+                <div class="subtasks" v-if="task.children.length!==0">
                     <h5 class="subtasks__title">Подзадачи</h5>
                     <div class="subtasks-table">
                         <v-simple-table>
@@ -90,12 +108,19 @@
                     </div>
                 </div>
 
-
 <!--                <div class="bg pa-4">-->
 
 <!--                </div>-->
             </div>
-            <add-task :parent_id="id"></add-task>
+
+            <add-task
+                v-show="showform"
+                :isedit="isedit"
+                :issubtask="issubtask"
+                :parent_id="id"
+                :foredit="foredit"
+            ></add-task>
+
         </div>
     </main>
 </template>
@@ -104,19 +129,47 @@
 export default {
     data() {
         return {
+            isedit: false,
+            issubtask: false,
+            foredit:[],
             loaded: false,
+            showform: false,
             id: Number(this.$route.params.id),
             task: [],
         }
     },
     created(){
-        axios.get(`/api/tasks/${this.id}`).then(response => {
-            console.log(response.data);
-            this.task = response.data;
-            this.loaded = true;
-        });
+        this.init();
+
+
+    },
+    watch:{
+        $route (to, from){
+            this.id = Number(this.$route.params.id)
+            this.init();
+        }
+
     },
     methods: {
+        init() {
+            axios.get(`/api/tasks/${this.id}`).then(response => {
+                console.log(response.data);
+                this.task = response.data;
+                this.loaded = true;
+            });
+        },
+        edit(){
+            this.isedit = true;
+            this.issubtask = false;
+            this.foredit = this.task;
+            this.showform = true;
+        },
+        subtask(){
+            this.isedit = false;
+            this.issubtask = true;
+            this.foredit = [];
+            this.showform = true;
+        }
 
     },
 }
