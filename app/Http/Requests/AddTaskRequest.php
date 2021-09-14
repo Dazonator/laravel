@@ -36,11 +36,11 @@ class AddTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|min:5|max:255',
-            'text' => 'required',
-            'performers_id' => 'required',
-            'initiator_id' => 'required',
-            'priority_id' => 'required',
-            'startdate' => 'required',
+            'text' => '',
+            'performers_id' => '',
+            'initiator_id' => '',
+            'priority_id' => '',
+            'startdate' => '',
         ];
     }
 }

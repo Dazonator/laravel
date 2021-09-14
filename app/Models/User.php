@@ -16,9 +16,15 @@ class User extends Authenticatable
 //    protected $table = 'users';
 
     protected $fillable = [
+        'login',
         'name',
+        'lastname',
         'email',
         'password',
+        'phone',
+        'department_id',
+        'position',
+        'img',
     ];
 
     protected $hidden = [
@@ -45,4 +51,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Tasks::class);
     }
 
+    public function setImgAttribute($img) {
+        $img = '/storage/'.$img;
+        $this->attributes['img'] = $img;
+    }
 }

@@ -1,5 +1,4 @@
 <template>
-
     <main class="col py-4">
         <div class="row">
             <div class="col">

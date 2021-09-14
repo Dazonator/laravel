@@ -43,6 +43,17 @@ class TasksController extends Controller
         $task->responsibles()->sync($performers);
     }
 
+    public function completedTask(Request $request){
+//        dd($request->id);
+        $id = $request->id;
+        $task = Tasks::find($id);
+        $task->update([
+            'status_id' => '3',
+        ]);
+        $task2 = Tasks::find($id);
+        dd($task2);
+    }
+
     public function userTasks()
     {
 

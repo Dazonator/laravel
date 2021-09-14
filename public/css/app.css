@@ -10126,8 +10126,6 @@ h3 {
 }
 
 .add-task.col {
-  display: flex;
-  flex-direction: column;
   max-width: 400px;
 }
 .add-task.col label {
@@ -10205,4 +10203,14 @@ h3 {
   margin-right: 5px;
   border: 1px solid green;
   border-radius: 50%;
+}
+
+.team-nav,
+.col.team-nav {
+  max-width: 400px;
+  height: 100%;
+}
+.team-nav__title,
+.col.team-nav__title {
+  color: #ced4da;
 }

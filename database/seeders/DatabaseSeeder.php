@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'administrator',
             'lastname' => 'superadmin',
             'phone' => '+37529123456789',
-            'position_id' => 2,
+            'position' => 'administrator',
             'department_id' => 2,
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('11111111'),
@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             DepartmentsSeeder::class,
-            PositionsSeeder::class,
             PrioritiesSeedeer::class,
             StatusSeeder::class,
         ]);

@@ -1,5 +1,4 @@
 <template>
-
     <main class="col py-4">
         <div class="row">
             <div class="col task-page"  v-if="loaded">
@@ -7,6 +6,11 @@
                 <!--            <pre v-html="tasks"></pre>-->
                 <div class="task-page__deadline">
                     Дедлайн  25 января 2021
+                </div>
+
+
+                <div class="task-page__status">
+                    <span>{{task.status.status}}</span>
                 </div>
 
                 <div class="task-page__priority">
@@ -44,18 +48,89 @@
 
                     <v-btn
                         color="success"
+                        @click.stop="taskCompleted()"
+                        :disabled="!statusActive"
+                    >
+                        {{(!statusActive) ? 'Задача завершена' : 'Завершить задачу'}}
+                    </v-btn>
+
+                    <v-btn
+                        v-if="!statusActive"
+                        color="primary"
+                        @click="restoreTask()"
+                    >
+                        Восстановить задачу
+                    </v-btn>
+
+                    <v-btn
+                        v-if="statusActive"
+                        color="yellow darken-3"
                         dark
                         @click="edit()"
                     >
                         Редактировать
                     </v-btn>
+
                     <v-btn
+                        v-if="statusActive"
                         color="primary"
-                        dark
                         @click="subtask()"
                     >
                         Создать подзадачу
                     </v-btn>
+
+
+
+                    <v-dialog
+                        v-model="dialogCannotBeCompleted"
+                        max-width="400px"
+                    >
+                        <v-card>
+                            <h3 class="pa-4">
+                                Задача не может быть завершена. Есть незакрытые подзадачи
+                            </h3>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="green darken-1"
+                                    text
+                                    @click="dialogCannotBeCompleted = false"
+                                >
+                                    Понятно
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </div>
+
+                <div class="subtasks mb-12" v-if="task.children.length!==0">
+                    <h5 class="subtasks__title">Подзадачи</h5>
+                    <div class="subtasks-table">
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <tbody>
+                                <tr
+                                    v-for="item in task.children"
+                                >
+                                    <td>
+                                        <router-link
+                                            :to="'/tasks/' + item.id"
+                                        >
+                                            {{item.title}}
+                                        </router-link>
+                                    </td>
+                                    <td>
+                                        {{ item.text }}
+                                    </td>
+
+                                    <td>
+                                        {{ item.status_id }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </div>
                 </div>
 
                 <div class="parent-tasks mb-12" v-if="task.parent">
@@ -75,31 +150,8 @@
                                         <td>
                                             {{ task.parent.text }}
                                         </td>
-                                    </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table>
-                    </div>
-                </div>
-
-                <div class="subtasks" v-if="task.children.length!==0">
-                    <h5 class="subtasks__title">Подзадачи</h5>
-                    <div class="subtasks-table">
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <tbody>
-                                    <tr
-                                        v-for="item in task.children"
-                                    >
                                         <td>
-                                            <router-link
-                                                :to="'/tasks/' + item.id"
-                                            >
-                                                {{item.title}}
-                                            </router-link>
-                                        </td>
-                                        <td>
-                                            {{ item.text }}
+                                            {{ task.parent.status_id }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -129,6 +181,9 @@
 export default {
     data() {
         return {
+            statusActive: true,
+            errors: {},
+            dialogCannotBeCompleted: false,
             isedit: false,
             issubtask: false,
             foredit:[],
@@ -140,8 +195,6 @@ export default {
     },
     created(){
         this.init();
-
-
     },
     watch:{
         $route (to, from){
@@ -156,6 +209,9 @@ export default {
                 console.log(response.data);
                 this.task = response.data;
                 this.loaded = true;
+                if(this.task.status_id === 3){
+                    this.statusActive = false;
+                }
             });
         },
         edit(){
@@ -169,7 +225,28 @@ export default {
             this.issubtask = true;
             this.foredit = [];
             this.showform = true;
+        },
+        taskCompleted(){
+            if(this.task.children.length > 0){
+                for(let child of this.task.children){
+                    if(child.status_id !== 3){
+                        this.dialogCannotBeCompleted = true;
+                        return;
+                    }
+                }
+            }
+
+            this.errors = {};
+            axios.post(`/api/tasks/completed/${this.id}`, this.task.id).then(response => {
+                alert('Задача добавлена!!!');
+                window.location.href = `/tasks/${this.task.id}`;
+            }).catch(error => {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data.errors || {};
+                }
+            });
         }
+
 
     },
 }
