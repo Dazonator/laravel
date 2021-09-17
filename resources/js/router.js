@@ -53,6 +53,19 @@ const routes = [
         path: "/team",
         name: 'team',
         component: team
+    },
+
+    {
+        path: "/team/:department",
+        name: 'team-department',
+        component: team,
+        props: true
+    },
+    {
+        path: "/team/users/:userId",
+        name: 'team-user',
+        component: team,
+        props: true
     }
 ];
 

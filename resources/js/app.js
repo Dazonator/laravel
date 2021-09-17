@@ -37,13 +37,16 @@ Vue.component('calendar-component', require('./components/CalendarComponent').de
 Vue.component('add-task', require('./components/templates/add-task').default);
 Vue.component('add-user', require('./components/templates/add-user').default);
 
+Vue.component('department-users', require('./views/team/department-users').default);
+Vue.component('user-tasks', require('./views/team/user-tasks').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
+window.qapp = new Vue({
     vuetify: new Vuetify(),
     el: '#app',
     router

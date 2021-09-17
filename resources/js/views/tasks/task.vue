@@ -201,7 +201,6 @@ export default {
             this.id = Number(this.$route.params.id)
             this.init();
         }
-
     },
     methods: {
         init() {

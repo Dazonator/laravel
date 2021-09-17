@@ -21,6 +21,8 @@ class UserController extends Controller
 //        $request->img->move(public_path('img/users/'), $imageName);
 //        $finImgPath = 'img/users'.$imageName;
 //        print_r($request);
+//        Storage::move('old/file.jpg', 'new/file.jpg');
+
         $user = new User();
         $user::create([
             'login' => $request->login,
@@ -45,10 +47,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $user = User::where('id', Auth::user()->id)->with(['department'])->first();
-//        return $user;
-//        return Auth::user();
-        return $user;
+        return User::where('id', Auth::user()->id)->with(['department'])->first();
     }
 
 

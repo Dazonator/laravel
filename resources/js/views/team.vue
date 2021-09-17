@@ -12,12 +12,16 @@
                                 <v-list-item
                                     v-for="(department, i) in departments"
                                     :key="i"
-                                    @click="activeDepartment = i"
                                 >
-                                    <v-list-item-title
-                                        v-text="department.department"
+
+                                    <router-link
+                                        :to="'/team/' + (i+1)"
                                     >
-                                    </v-list-item-title>
+                                        {{ department.department }}
+                                    </router-link>
+<!--                                    <v-list-item-title-->
+<!--                                        v-text="department.department"-->
+<!--                                    </v-list-item-title>-->
                                 </v-list-item>
                             </v-list>
                         </v-list-item-group>
@@ -25,101 +29,61 @@
 
                     <add-user></add-user>
                 </div>
-
             </div>
-
-            <div class="col">
-                <div class="bg pa-4">
-                    <template>
-                        <v-data-table
-                            :headers="headers"
-                            :items="departments[activeDepartment].users"
-                            :search="search"
-                            :loading="tableloading"
-                            loading-text="Загрузка задач..."
-                            :hide-default-footer="true"
-                        >
-                            <template v-slot:top>
-                                <v-toolbar flat>
-                                    <v-spacer></v-spacer>
-                                    <v-text-field
-                                        v-model="search"
-                                        append-icon="mdi-magnify"
-                                        label="Поиск..."
-                                        single-line
-                                        hide-details
-                                    ></v-text-field>
-                                </v-toolbar>
-                            </template>
-                            <template #item.img="{ item }">
-                                <v-avatar
-                                    left
-                                    size="28"
-                                >
-                                    <v-img
-                                        :src=item.img
-                                        alt=item.name
-                                    ></v-img>
-                                </v-avatar>
-                            </template>
-                            <template #item.full_name="{ item }">
-                                {{ item.lastname }} {{ item.name }}
-                            </template>
-                        </v-data-table>
-                    </template>
-                </div>
-            </div>
+            <component
+                v-bind:is="getComponent"
+                v-bind:data="postData"
+            ></component>
         </div>
     </main>
 </template>
 
 <script>
 export default {
+    props: [],
+    watch:{
+        '$route.path' (to, from){
+            this.userId = Number(this.$route.params.userId);
+            this.department = Number(this.$route.params.department);
+            this.init();
+        },
+    },
     data() {
         return {
+            getComponent: '',
+            postData: [],
             loaded: false,
-            tableloading: true,
             departments: [],
+            // users: [],
             activeDepartment: 0,
-            search: '',
-            headers: [
-                {
-                    text: '',
-                    align: 'start',
-                    sortable: true,
-                    value: 'img',
-                },
-                {
-                    text: 'Имя',
-                    align: 'start',
-                    sortable: true,
-                    value: 'full_name',
-                },
-                {
-                    text: 'Должность',
-                    align: 'start',
-                    sortable: true,
-                    value: 'position',
-                },
-                {
-                    text: 'Отдел',
-                    align: 'start',
-                    sortable: true,
-                    value: 'department.department',
-                },
-            ],
+            userId: Number(this.$route.params.userId),
+            department: Number(this.$route.params.department),
         }
     },
     created(){
-        axios.get('/api/team').then(response => {
-            console.log(response.data);
+        axios.get('/api/team/departments').then(response => {
             this.departments = response.data;
             this.loaded = true;
-            this.tableloading = false;
         });
-
+        this.init();
     },
     methods: {
+        departmentUsers (i){
+            this.postData = i;
+            this.getComponent = 'department-users';
+        },
+        init(){
+            if(this.department){
+                this.departmentUsers(this.department);
+            }
+            if(this.userId){
+                this.openUserTasks(this.userId);
+            }
+        },
+        openUserTasks(i){
+            this.postData = i;
+            this.getComponent = 'user-tasks';
+        },
     },
 }
 </script>

@@ -55,4 +55,23 @@ class User extends Authenticatable
         $img = '/storage/'.$img;
         $this->attributes['img'] = $img;
     }
+    public function setImagesAttribute($images) {
+        if (is_array($images)) {
+            $result = [];
+            foreach($images as $image) {
+                $name = substr( $image, strrpos( $image, "/" ) + 1 );
+                $result [] = $pt = 'reviews/'.date("m_Y").'/'.$name;
+                $path = storage_path('app/public/').$pt;
+                if (!File::exists(dirname($path))) {
+                    File::makeDirectory(dirname($path), 0755, true);
+                }
+                File::move(storage_path('app/public/temp/').$image, $path);
+            }
+            $this->attributes['images'] = count($result)?json_encode($result):NULL;
+        }
+    }
+
+    public function getPersonalTasks (){
+        return $this->hasManyThrough(Status::class, Tasks::class);
+    }
 }

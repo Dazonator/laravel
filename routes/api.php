@@ -37,7 +37,9 @@ Route::get('/tasks', [TasksController::class, 'userTasks']);
 Route::get('/tasks/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 
-Route::get('/team', [TeamController::class, 'getDepartments']);
+Route::get('/team/departments', [TeamController::class, 'getDepartments']);
+Route::get('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers']);
+Route::get('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
 Route::post('/team/adduser', [UserController::class, 'addUser']);
