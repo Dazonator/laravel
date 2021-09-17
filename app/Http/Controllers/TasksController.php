@@ -44,14 +44,18 @@ class TasksController extends Controller
     }
 
     public function completedTask(Request $request){
-//        dd($request->id);
         $id = $request->id;
-        $task = Tasks::find($id);
+        $task = Tasks::where('id', $id)->first();
         $task->update([
             'status_id' => '3',
         ]);
-        $task2 = Tasks::find($id);
-        dd($task2);
+    }
+    public function restoreTask(Request $request){
+        $id = $request->id;
+        $task = Tasks::where('id', $id)->first();
+        $task->update([
+            'status_id' => '1',
+        ]);
     }
 
     public function userTasks()

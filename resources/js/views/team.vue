@@ -32,7 +32,7 @@
             </div>
             <component
                 v-bind:is="getComponent"
-                v-bind:data="postData"
+                v-bind:id="postData"
             ></component>
         </div>
     </main>

@@ -48,6 +48,7 @@ Route::post('/team/adduser/uploadPhoto', [UserController::class, 'uploadPhoto'])
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
 Route::post('/tasks/update/{id}', [TasksController::class, 'updateTask']);
 Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
+Route::post('/tasks/restore/{id}', [TasksController::class, 'restoreTask']);
 
 
 //Route::post('/add-task', [TasksController::class, 'submitTask']);

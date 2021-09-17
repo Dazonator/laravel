@@ -33,7 +33,7 @@
                         ></v-img>
                     </v-avatar>
                 </template>
-                <template #item.full_name="{ item }">
+                <template #item.name="{ item }">
                     <router-link
                         :to="'/team/users/' + item.id"
                     >
@@ -54,9 +54,9 @@
 <script>
 export default {
     name: "department-users",
-    props: ['data'],
+    props: ['id'],
     watch: {
-        data: function (val){
+        id: function (val){
             this.init();
         }
     },
@@ -77,7 +77,7 @@ export default {
                     text: 'Имя',
                     align: 'start',
                     sortable: true,
-                    value: 'full_name',
+                    value: 'name',
                 },
                 {
                     text: 'Должность',
@@ -100,7 +100,7 @@ export default {
     },
     methods: {
         init: function (){
-            axios.get(`/api/team/departments/${this.data}`).then(response => {
+            axios.get(`/api/team/departments/${this.id}`).then(response => {
                 this.users = response.data;
                 this.loaded = true;
                 this.tableLoading = false;

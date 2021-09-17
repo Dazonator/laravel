@@ -55,9 +55,9 @@
                     </v-btn>
 
                     <v-btn
-                        v-if="!statusActive"
                         color="primary"
                         @click="restoreTask()"
+                        v-if="!statusActive"
                     >
                         Восстановить задачу
                     </v-btn>
@@ -95,6 +95,27 @@
                                     color="green darken-1"
                                     text
                                     @click="dialogCannotBeCompleted = false"
+                                >
+                                    Понятно
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <v-dialog
+                        v-model="dialogCannotBeRestore"
+                        max-width="400px"
+                    >
+                        <v-card>
+                            <h3 class="pa-4">
+                                Задача не может быть восстановлена. Родительская задача завершена
+                            </h3>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="green darken-1"
+                                    text
+                                    @click="dialogCannotBeRestore = false"
                                 >
                                     Понятно
                                 </v-btn>
@@ -184,6 +205,7 @@ export default {
             statusActive: true,
             errors: {},
             dialogCannotBeCompleted: false,
+            dialogCannotBeRestore: false,
             isedit: false,
             issubtask: false,
             foredit:[],
@@ -210,6 +232,8 @@ export default {
                 this.loaded = true;
                 if(this.task.status_id === 3){
                     this.statusActive = false;
+                } else {
+                    this.statusActive = true;
                 }
             });
         },
@@ -237,8 +261,25 @@ export default {
 
             this.errors = {};
             axios.post(`/api/tasks/completed/${this.id}`, this.task.id).then(response => {
-                alert('Задача добавлена!!!');
-                window.location.href = `/tasks/${this.task.id}`;
+                // alert('Задача завершена!!!');
+                // window.location.href = `/tasks/${this.task.id}`;
+                this.init();
+            }).catch(error => {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data.errors || {};
+                }
+            });
+        },
+        restoreTask(){
+            if(this.task.parent){
+                if(this.task.parent.status_id === 3){
+                    this.dialogCannotBeRestore = true;
+                    return;
+                }
+            }
+            axios.post(`/api/tasks/restore/${this.id}`, this.task.id).then(response => {
+                // alert('Задача восстановлена!!!');
+                this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors || {};
