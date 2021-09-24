@@ -4,8 +4,8 @@
             <div class="col task-page"  v-if="loaded">
                 <h1>{{task.title}}</h1>
                 <!--            <pre v-html="tasks"></pre>-->
-                <div class="task-page__deadline">
-                    Дедлайн  25 января 2021
+                <div class="task-page__deadline" v-if="task.deadline">
+                    Дедлайн  {{ task.deadline | deadLine }}
                 </div>
 
 
@@ -13,23 +13,28 @@
                     <span>{{task.status.status}}</span>
                 </div>
 
-                <div class="task-page__priority">
+                <div class="task-page__priority" v-if="task.priority">
                     <span>{{task.priority.priority}}</span>
                 </div>
 
-                <p class="task-page__text">
+                <p class="task-page__text" v-if="task.text">
                     {{task.text}}
                 </p>
 
                 <div class="task-page__created">
-                    Создано 12/02/2021 Менеджеры №123
+                    Создано {{ task.areated_at | startDate }}
                 </div>
 
                 <div class="responsibles">
                     <h6 class="responsibles__title">Исполнителей в этой задаче: {{task.responsibles.length}}</h6>
                     <ul class="responsibles__items">
-                        <li v-for="item in task.responsibles">
-                            <a href="">
+                        <li
+                            v-for="item in task.responsibles"
+                            :key="item.id"
+                        >
+                            <router-link
+                                :to="'/profile/' + item.id"
+                            >
                                 <v-avatar
                                     left
                                     size="28"
@@ -39,7 +44,7 @@
                                         alt=item.name
                                     ></v-img>
                                 </v-avatar>
-                            </a>
+                            </router-link>
                         </li>
                     </ul>
                 </div>
@@ -199,7 +204,9 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
+    name: 'task',
     data() {
         return {
             statusActive: true,
@@ -226,7 +233,7 @@ export default {
     },
     methods: {
         init() {
-            axios.get(`/api/tasks/${this.id}`).then(response => {
+            axios.get(`/api/tasks/task/${this.id}`).then(response => {
                 console.log(response.data);
                 this.task = response.data;
                 this.loaded = true;
@@ -289,5 +296,15 @@ export default {
 
 
     },
+    filters: {
+        deadLine: function (date) {
+            moment.locale('ru');
+            return moment(date).format('LL');
+        },
+        startDate: function (date) {
+            moment.locale('ru');
+            return moment(date).format('l');
+        }
+    }
 }
 </script>

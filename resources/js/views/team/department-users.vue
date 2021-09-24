@@ -23,15 +23,19 @@
                     </v-toolbar>
                 </template>
                 <template #item.img="{ item }">
-                    <v-avatar
-                        left
-                        size="28"
+                    <router-link
+                        :to="'/profile/' + item.id"
                     >
-                        <v-img
-                            :src=item.img
-                            alt=item.name
-                        ></v-img>
-                    </v-avatar>
+                        <v-avatar
+                            left
+                            size="28"
+                        >
+                            <v-img
+                                :src=item.img
+                                alt=item.name
+                            ></v-img>
+                        </v-avatar>
+                    </router-link>
                 </template>
                 <template #item.name="{ item }">
                     <router-link

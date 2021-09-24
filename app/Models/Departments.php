@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Departments extends Model
 {
     protected $fillable = [
-        'id',
         'department'
     ];
 
@@ -16,4 +15,8 @@ class Departments extends Model
     {
         return $this->hasMany(User::class, 'department_id');
     }
+
+//    public function tasksByDepartments(){
+//        return $this->hasManyThrough(Tasks::class, User::class, 'department_id', 'performers_id');
+//    }
 }

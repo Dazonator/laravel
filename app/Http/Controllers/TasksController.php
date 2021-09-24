@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTaskRequest;
+use App\Models\Departments;
+use App\Models\Status;
 use App\Models\Tasks;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -58,20 +60,46 @@ class TasksController extends Controller
         ]);
     }
 
-    public function userTasks()
-    {
+//    public function userTasks()
+//    {
+//        $user = Auth::user()->id;
+//        $status = Status::with(['statusTasks' => function($query) use ($user){
+//            $query->whereHas('responsibles', function($q) use ($user){
+//                $q->where('id', $user);
+//            });
+//        }])->get();
+//
+//        return $status;
+//    }
 
-        return Auth::user()->tasks()->with([
-            'priority',
-            'status',
-            'initiator' => function($q) {
-                $q->select('id', 'img', 'name', 'lastname');
-            },
-            'responsibles' => function($q) {
-                $q->select('id', 'img', 'name', 'lastname');
-            },
-        ])->get();
+    public function getStatusesAndDepartments(){
+//        return Status::all();
+        return [
+            'statuses' => Status::all(),
+            'departments' => Departments::all()
+        ];
+    }
 
+
+//    public function getDepartments(){
+//        return Departments::all();
+//    }
+
+    public function tasksByDepartment($id){
+//        return Departments::with(['tasksByDepartments'])->get();
+//        return Tasks::with(['responsibles' => function($q) use ($id){
+//            $q->where('department_id', $id);
+//        }])->get();
+        return Tasks::with(['responsibles'])->whereHas('responsibles', function($q) use ($id){
+            $q->where('department_id', $id);
+        })->get();
+    }
+
+
+    public function statusTasks($id){
+        return Tasks::where('status_id', $id)->with('responsibles')->whereHas('responsibles', function ($q){
+            $q->where('id', Auth::user()->id);
+        })->get();
     }
 
     public function editTask($id){

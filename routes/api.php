@@ -25,25 +25,38 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::group(['middleware' => 'auth'], function () {
-//
-Route::get('/profile', [UserController::class, 'index']);
+
+Route::get('/profile/{id?}', [UserController::class, 'profile']);
+
+
 Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
 
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);
-Route::get('/tasks/{id}', [TasksController::class, 'getTask']);
+Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
+//Route::get('/tasks/statuses', [TasksController::class, 'getStatuses']);
+//Route::get('/tasks/departments', [TasksController::class, 'getDepartments']);
+//Route::get('/tasks/test', [TasksController::class, 'getTasksByDepartment']);
+
+Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
+Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
+Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
+
 
 Route::get('/team/departments', [TeamController::class, 'getDepartments']);
 Route::get('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers']);
 Route::get('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
+Route::post('/profile/change-password', [UserController::class, 'changePassword']);
+Route::post('/profile/change-photo', [UserController::class, 'changePhoto']);
+
 Route::post('/team/adduser', [UserController::class, 'addUser']);
 Route::post('/team/adduser/uploadPhoto', [UserController::class, 'uploadPhoto']);
+
 
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
 Route::post('/tasks/update/{id}', [TasksController::class, 'updateTask']);
@@ -51,20 +64,3 @@ Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
 Route::post('/tasks/restore/{id}', [TasksController::class, 'restoreTask']);
 
 
-//Route::post('/add-task', [TasksController::class, 'submitTask']);
-//Route::post('/add-subtask', [TasksController::class, 'submitSubtask']);
-
-
-
-//Route::post('/add-task', [AddTaskController::class, 'submit']);
-
-
-
-
-//});
-
-//Route::apiResources([
-//    'tasks' => AddTaskController::class,
-//]);
-
-//Route::get('/profile', 'UserController@index');

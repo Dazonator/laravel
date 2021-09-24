@@ -16,12 +16,12 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('text');
+            $table->text('text')->nullable();
             $table->json('performers_id');
-            $table->integer('initiator_id');
-            $table->integer('priority_id');
+            $table->integer('initiator_id')->nullable();
+            $table->integer('priority_id')->nullable();
             $table->date('deadline')->nullable();
-            $table->date('startdate');
+            $table->date('startdate')->nullable();
             $table->tinyInteger('status_id')->default(1);
             $table->integer('parent_id')->nullable();
             $table->timestamps();

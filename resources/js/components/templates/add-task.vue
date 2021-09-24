@@ -7,16 +7,13 @@
         <div class="bg pa-4 mb-4">
             {{errors.title}}
             <v-text-field
-                solo
                 label="Название"
                 name="title"
                 v-model="fields.title"
-
             ></v-text-field>
 
             {{errors.text}}
             <v-textarea
-                solo
                 name="text"
                 label="Описание задачи"
                 value=""
@@ -27,7 +24,6 @@
             {{errors.performers_id}}
             <v-autocomplete
                 :items="employees"
-                solo
                 chips
                 label="Исполнители"
                 item-text="name"
@@ -73,7 +69,6 @@
             {{errors.initiator}}
             <v-autocomplete
                 :items="employees"
-                solo
                 chips
                 label="Инициатор"
                 item-text="name"
@@ -121,7 +116,6 @@
                 item-text="priority"
                 item-selection="priority"
                 item-value="id"
-                solo
                 label="Приоритет"
                 dense
                 name="priority_id"

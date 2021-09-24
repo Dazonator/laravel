@@ -68,10 +68,6 @@ export default {
         this.init();
     },
     methods: {
-        departmentUsers (i){
-            this.postData = i;
-            this.getComponent = 'department-users';
-        },
         init(){
             if(this.department){
                 this.departmentUsers(this.department);
@@ -80,9 +76,13 @@ export default {
                 this.openUserTasks(this.userId);
             }
         },
+        departmentUsers (i){
+            this.postData = i;
+            this.getComponent = 'department-users';
+        },
         openUserTasks(i){
             this.postData = i;
-            this.getComponent = 'user-tasks';
+            this.getComponent = 'team-user-tasks';
         },
     },
 }

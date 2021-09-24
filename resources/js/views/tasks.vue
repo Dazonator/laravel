@@ -1,83 +1,65 @@
 <template>
-    <main class="col py-4">
+    <main class="col py-4" v-if="loaded">
         <div class="row">
-            <div class="col">
-                <h1>Мои задачи</h1>
-                <!--            <pre v-html="tasks"></pre>-->
-                <div class="bg pa-4">
-                    <template>
-                        <v-data-table
-                            :headers="headers"
-                            :items="tasks"
-                            :single-expand="singleExpand"
-                            :expanded.sync="expanded"
-                            show-expand
-                            :search="search"
-                            :loading="tableloading"
-                            loading-text="Загрузка задач..."
+            <div class="col tasks-nav" >
+                <div class="">
+                    <div class="bg py-6 px-10 mb-2">
+                        <v-list-item-group
+                            color="primary"
                         >
-                            <template v-slot:top>
-                                <v-toolbar flat>
-                                    <v-btn
-                                        color="primary"
-                                        class="mb-2"
-                                        @click="addTask = !addTask"
+                            <v-list>
+
+                                <h5 class="team-nav__title">Мои задачи</h5>
+                                <v-list-item
+                                    v-for="(status, i) in statuses"
+                                    :key="i"
+                                >
+                                    <router-link
+                                        :to="'/tasks/status/' + status.id"
                                     >
-                                        Добавить задачу
-                                    </v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-text-field
-                                        v-model="search"
-                                        append-icon="mdi-magnify"
-                                        label="Поиск..."
-                                        single-line
-                                        hide-details
-                                    ></v-text-field>
-                                </v-toolbar>
-                            </template>
-                            <template #item.title="{ item }">
-                                <router-link
+                                        {{status.status}}
+                                    </router-link>
+                                </v-list-item>
 
-                                    :to="'/tasks/' + item.id"
+                                <h5 class="team-nav__title">Задачи отделов</h5>
+                                <v-list-item
+                                    v-for="(department, i) in departments"
+                                    :key="'A' + i"
                                 >
-                                    {{ item.title }}
-                                </router-link>
-                            </template>
+                                    <router-link
+                                        :to="'/tasks/department/' + department.id"
+                                    >
+                                       {{department.department}}
+                                    </router-link>
+                                </v-list-item>
+                            </v-list>
+                        </v-list-item-group>
+                    </div>
 
-                            <template #item.responsibles="{ item }">
-                                <a href="" v-for="i in item.responsibles">
-                                    <v-chip>
-                                        <v-avatar left>
-                                            <v-img :src="i.img"></v-img>
-                                        </v-avatar>
-                                    </v-chip>
-                                </a>
-                            </template>
-
-                            <template #item.initiator="{ item }">
-                                <v-chip
-                                >
-                                    <v-avatar left>
-                                        <v-img :src="item.initiator.img"></v-img>
-                                    </v-avatar>
-                                    {{item.initiator.name}}
-                                    {{item.initiator.lastname}}
-
-                                </v-chip>
-                            </template>
-
-                            <template v-slot:expanded-item="{ headers, item }">
-                                <td :colspan="headers.length">
-                                    {{ item.text }}
-                                </td>
-                            </template>
-                        </v-data-table>
-                    </template>
+                    <v-btn
+                        color="primary"
+                        class="mb-2"
+                        @click="addTask = !addTask"
+                        block
+                    >
+                        Добавить задачу
+                    </v-btn>
                 </div>
             </div>
-            <add-task
-                v-show="addTask"
-            ></add-task>
+
+<!--            <user-tasks-->
+<!--                v-if="postId"-->
+<!--                :id="postId"-->
+<!--                :title="childrenTitle"-->
+<!--            >-->
+<!--            </user-tasks>-->
+            <component
+                :is="getComponent"
+                :id="postId"
+                :title="childrenTitle"
+            ></component>
+
+            <add-task v-if="addTask"></add-task>
         </div>
     </main>
 </template>
@@ -86,59 +68,69 @@
 export default {
     data() {
         return {
+            loaded: false,
             addTask: false,
-            tableloading: true,
-            expanded: [],
-            singleExpand: true,
-            tasks: [],
-            search: '',
-            headers: [
-                {
-                    text: 'Название',
-                    align: 'start',
-                    sortable: true,
-                    value: 'title',
-                },
-                {
-                    text: 'Ответственные',
-                    value: 'responsibles',
-                    sortable: true,
-                },
-                {
-                    text: 'Постановщик',
-                    value: 'initiator',
-                    sortable: true,
-                },
-                {
-                    text: 'Дедлайн',
-                    value: 'deadline',
-                    sortable: true,
-                },
-                {
-                    text: 'Приоритет',
-                    value: 'priority.priority',
-                    sortable: true,
-                },
-                {
-                    text: 'Статус',
-                    value: 'status.status',
-                    sortable: true,
-                },
-                {
-                    text: '',
-                    value: 'data-table-expand'
-                },
-            ],
+            statuses: {},
+            departments: {},
+            postId: null,
+            getComponent: '',
+            statusId: Number(this.$route.params.statusId),
+            departmentId: Number(this.$route.params.departmentId),
+            childrenTitle: '',
+            test: [],
+        }
+    },
+    watch:{
+        '$route.path' (to, from){
+            this.statusId = Number(this.$route.params.statusId);
+            this.departmentId = Number(this.$route.params.departmentId);
+            this.init();
         }
     },
     created(){
-        axios.get('/api/tasks').then(response => {
-            console.log(response.data);
-            this.tasks = response.data;
-            this.tableloading = false;
+        // axios.get('/api/tasks/statuses').then(response => {
+        //     this.statuses = response.data;
+        //     // console.log(response.data);
+        //     console.log(this.statuses);
+        //
+        // });
+        // axios.get('/api/tasks/departments').then(response => {
+        //     this.departments = response.data;
+        //     // console.log(this.departments);
+        // });
+        axios.get('/api/tasks/statuses-departments').then(response => {
+            this.statuses = response.data.statuses;
+            this.departments = response.data.departments;
+            // console.log(this.departments);
+            this.init();
+            this.loaded = true;
         });
+
+
+        // this.init();
     },
     methods: {
+        init(){
+            if(this.statusId){
+                this.statusTasks(this.statusId);
+            }
+            if(this.departmentId){
+                this.departmentTasks(this.departmentId);
+            }
+        },
+        statusTasks(i){
+            this.postId = i;
+            // this.childrenTitle = 'Мои текущие задачи';
+            this.childrenTitle = this.statuses[i-1].status;
+            this.getComponent = 'user-tasks';
+        },
+        departmentTasks(i){
+            this.postId = i;
+            this.childrenTitle = this.departments[i-1].department;
+            // this.childrenTitle = 'Задачи отделов';
+            this.getComponent = 'department-tasks';
+        }
+
     },
 }
 </script>

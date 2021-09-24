@@ -70,7 +70,7 @@ export default {
     created(){
         axios.get('/api/profile').then(response => {
             // console.log(response.data);
-            this.user = response.data;
+            this.user = response.data.user;
         });
     }
 }

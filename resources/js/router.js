@@ -31,7 +31,13 @@ const routes = [
     {
         path: "/profile",
         name: 'profile',
-        component: profile
+        component: profile,
+    },
+    {
+        path: "/profile/:id",
+        name: 'profile_id',
+        component: profile,
+        props: true
     },
     {
         path: "/structure",
@@ -44,7 +50,19 @@ const routes = [
         component: tasks
     },
     {
-        path: "/tasks/:id",
+        path: "/tasks/status/:statusId",
+        name: 'tasks_id',
+        component: tasks,
+        props: true
+    },
+    {
+        path: "/tasks/department/:departmentId",
+        name: 'department_id',
+        component: tasks,
+        props: true
+    },
+    {
+        path: "/tasks/task/:id",
         name: 'task',
         component: task,
         props: true

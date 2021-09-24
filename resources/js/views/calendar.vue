@@ -1,6 +1,6 @@
 <template>
     <main class="col py-4">
-        <h1>Lorem ipsum dolor sit amet.</h1>
+        <h1>Календарь</h1>
         <calendar-component></calendar-component>
     </main>
 </template>

@@ -138,26 +138,26 @@
         }
     }
 }
-
+//
 .add-task.col{
     //display: flex;
     //flex-direction: column;
     max-width: 400px;
 
-    label{
-        margin-bottom: 2px;
-        font-weight: bold;
-        margin-left: 20px;
-    }
-    input,
-    textarea,
-    select{
-        //border-color: #F8FAFB;
-        //background-color: #F8FAFB;
-    }
-    button{
-        flex: none;
-    }
+    //label{
+    //    margin-bottom: 2px;
+    //    font-weight: bold;
+    //    margin-left: 20px;
+    //}
+    //input,
+    //textarea,
+    //select{
+    //    //border-color: #F8FAFB;
+    //    //background-color: #F8FAFB;
+    //}
+    //button{
+    //    flex: none;
+    //}
 }
 
 .profile{
@@ -171,6 +171,10 @@
         }
         a{
             display: block;
+        }
+        span{
+            display: block;
+            margin-top: 10px;
         }
     }
     &__information{
@@ -255,7 +259,9 @@
 
 
 .team-nav,
-.col.team-nav{
+.col.team-nav,
+.tasks-nav,
+.col.tasks-nav{
     max-width: 400px;
     height: 100%;
 

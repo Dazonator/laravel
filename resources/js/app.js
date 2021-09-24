@@ -12,7 +12,12 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 // import VueRouter from "vue-router";
 import 'vuetify/dist/vuetify.min.css';
+import ru from 'vuetify/lib/locale/ru';
 import router from "./router";
+import moment from 'moment';
+
+
+Vue.use(moment);
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
@@ -38,7 +43,11 @@ Vue.component('add-task', require('./components/templates/add-task').default);
 Vue.component('add-user', require('./components/templates/add-user').default);
 
 Vue.component('department-users', require('./views/team/department-users').default);
-Vue.component('user-tasks', require('./views/team/user-tasks').default);
+Vue.component('team-user-tasks', require('./views/team/team-user-tasks').default);
+
+Vue.component('user-tasks', require('./views/tasks/user-tasks').default);
+Vue.component('department-tasks', require('./views/tasks/department-tasks').default);
+Vue.component('task', require('./views/tasks/task').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -47,16 +56,12 @@ Vue.component('user-tasks', require('./views/team/user-tasks').default);
  */
 
 window.qapp = new Vue({
-    vuetify: new Vuetify(),
+    vuetify: new Vuetify({
+        lang: {
+            locales: { ru },
+            current: 'ru',
+        },
+    }),
     el: '#app',
     router
 });
-
-//
-// document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-// console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-// if (token) {
-//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-// } else {
-//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-// }

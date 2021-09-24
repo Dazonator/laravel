@@ -10128,14 +10128,6 @@ h3 {
 .add-task.col {
   max-width: 400px;
 }
-.add-task.col label {
-  margin-bottom: 2px;
-  font-weight: bold;
-  margin-left: 20px;
-}
-.add-task.col button {
-  flex: none;
-}
 
 .profile__img .v-image__image {
   width: 100%;
@@ -10147,6 +10139,10 @@ h3 {
 }
 .profile__img a {
   display: block;
+}
+.profile__img span {
+  display: block;
+  margin-top: 10px;
 }
 .profile__information .value {
   background: #F8FAFB;
@@ -10206,11 +10202,15 @@ h3 {
 }
 
 .team-nav,
-.col.team-nav {
+.col.team-nav,
+.tasks-nav,
+.col.tasks-nav {
   max-width: 400px;
   height: 100%;
 }
 .team-nav__title,
-.col.team-nav__title {
+.col.team-nav__title,
+.tasks-nav__title,
+.col.tasks-nav__title {
   color: #ced4da;
 }
