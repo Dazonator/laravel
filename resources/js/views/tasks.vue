@@ -20,7 +20,7 @@
                                         {{status.status}}
                                     </router-link>
                                 </v-list-item>
-
+                                <v-divider></v-divider>
                                 <h5 class="team-nav__title">Задачи отделов</h5>
                                 <v-list-item
                                     v-for="(department, i) in departments"

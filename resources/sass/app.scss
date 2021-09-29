@@ -269,3 +269,11 @@
         color: $gray-400;
     }
 }
+
+.v-color-picker{
+    max-width: 100% !important;
+}
+
+.v-color-picker__controls{
+    display: none !important;
+}

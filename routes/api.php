@@ -8,6 +8,7 @@ use \App\Http\Controllers\AddTaskController;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\TasksController;
 use \App\Http\Controllers\TeamController;
+use \App\Http\Controllers\CalendarController;
 
 
 /*
@@ -32,6 +33,9 @@ Route::get('/profile/{id?}', [UserController::class, 'profile']);
 Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
+
+
+Route::post('/calendar/events', [CalendarController::class, 'getEvents']);
 
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);

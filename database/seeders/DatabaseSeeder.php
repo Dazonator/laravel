@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             DepartmentsSeeder::class,
             PrioritiesSeedeer::class,
             StatusSeeder::class,
+            EventsSeeder::class,
         ]);
     }
 }

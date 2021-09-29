@@ -10214,3 +10214,11 @@ h3 {
 .col.tasks-nav__title {
   color: #ced4da;
 }
+
+.v-color-picker {
+  max-width: 100% !important;
+}
+
+.v-color-picker__controls {
+  display: none !important;
+}

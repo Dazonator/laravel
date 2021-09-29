@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Positions extends Model
 {
     protected $fillable = [
-        'id',
         'position'
     ];
 }
