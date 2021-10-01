@@ -21,6 +21,7 @@ class EventsSeeder extends Seeder
             'text' => 'Text event'.Str::random(30),
             'start' => '2021-09-22 13:52',
             'end' => '2021-09-22 16:52',
+            'user_id' => 1
         ]);
     }
 }

@@ -37,6 +37,12 @@ Route::get('/departments', [AddUserController::class, 'getDepartments']);
 
 Route::post('/calendar/events', [CalendarController::class, 'getEvents']);
 
+Route::post('/calendar/event/{id}', [CalendarController::class, 'getById']);
+Route::post('/calendar/create', [CalendarController::class, 'submitEvent']);
+
+Route::post('/calendar/update/{id}', [CalendarController::class, 'updateEvent']);
+Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent']);
+
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);
 Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);

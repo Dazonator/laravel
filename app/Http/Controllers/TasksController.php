@@ -99,7 +99,7 @@ class TasksController extends Controller
     public function statusTasks($id){
         return Tasks::where('status_id', $id)->with('responsibles')->whereHas('responsibles', function ($q){
             $q->where('id', Auth::user()->id);
-        })->get();
+        })->orWhere('initiator_id', Auth::user()->id)->get();
     }
 
     public function editTask($id){

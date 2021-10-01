@@ -150,10 +150,6 @@
 
 
             {{errors.startdate}}
-            {{isedit}}
-            {{issubtask}}
-<!--            {{foredit}}-->
-            {{fields}}
             <v-menu
                 v-model="menu"
                 :close-on-content-click="false"

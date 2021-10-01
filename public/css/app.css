@@ -10010,6 +10010,10 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.v-card__title {
+  word-break: break-word !important;
+}
+
 .priority-1 {
   color: #CCCCCC;
 }
@@ -10213,12 +10217,4 @@ h3 {
 .tasks-nav__title,
 .col.tasks-nav__title {
   color: #ced4da;
-}
-
-.v-color-picker {
-  max-width: 100% !important;
-}
-
-.v-color-picker__controls {
-  display: none !important;
 }

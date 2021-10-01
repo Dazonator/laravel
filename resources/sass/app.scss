@@ -9,12 +9,14 @@
 
 @import '~vuetify/dist/vuetify.min.css';
 
+.v-card__title{
+    word-break: break-word !important;
+}
 .priority-1{
     color: #CCCCCC;
 }
 .priority-2{
     color: #535353;
-
 }
 .priority-3{
     color: #9D3A25;
@@ -270,10 +272,10 @@
     }
 }
 
-.v-color-picker{
-    max-width: 100% !important;
-}
-
-.v-color-picker__controls{
-    display: none !important;
-}
+//.v-color-picker{
+//    max-width: 100% !important;
+//}
+//
+//.v-color-picker__controls{
+//    display: none !important;
+//}

@@ -103,10 +103,16 @@
                         >
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon>
+                            <v-btn
+                                icon
+                                @click="updateEvent(selectedEvent.id)"
+                            >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
-                            <v-btn icon>
+                            <v-btn
+                                icon
+                                @click="deleteId = selectedEvent.id"
+                            >
                                 <v-icon>mdi-delete-outline</v-icon>
                             </v-btn>
                             <v-btn icon
@@ -121,12 +127,60 @@
                     </v-card>
                 </v-menu>
             </v-sheet>
+
+            <add-event
+                :updateId="updateId"
+            ></add-event>
+            <v-dialog
+                v-model="dialogDelete"
+                max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="text-h5">
+                        Вы действительно хотите удалить событие?
+                    </v-card-title>
+
+                    <v-card-actions>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="dialogDelete = false"
+                        >
+                            Нет
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="deleteEvent"
+                        >
+                            Да
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-col>
     </v-row>
 </template>
 <script>
 export default {
+    watch:{
+        deleteId: function (q){
+            if (this.deleteId){
+                this.dialogDelete = true;
+            }
+        },
+        dialogDelete: function (q){
+            if (!this.dialogDelete){
+                this.deleteId = null;
+            }
+        }
+    },
     data: () => ({
+        dialogDelete: false,
+        deleteId: null,
+        updateId: null,
         tasks: [],
         focus: '',
         type: '4day',
@@ -185,13 +239,11 @@ export default {
 
                 this.tasks = response.data;
                 console.log(this.tasks);
-                // console.log(this.tasks);
                 for (let task in this.tasks) {
 
                     console.log();
-                    // console.log(typeof task.start);
-                    // console.log(this.tasks);
                     events.push({
+                        id: this.tasks[task].id,
                         name: this.tasks[task].title,
                         text: this.tasks[task].text,
                         start: this.tasks[task].start,
@@ -207,6 +259,15 @@ export default {
         rnd (a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
         },
+        updateEvent(id){
+            this.updateId = id;
+        },
+        deleteEvent(){
+            axios.post(`/api/calendar/delete/${this.deleteId}`).then(response => {
+                console.log(response.data);
+                window.location.reload();
+            });
+        }
     },
 }
 </script>

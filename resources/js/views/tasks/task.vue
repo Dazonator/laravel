@@ -140,7 +140,7 @@
                                 >
                                     <td>
                                         <router-link
-                                            :to="'/tasks/' + item.id"
+                                            :to="'/tasks/task/' + item.id"
                                         >
                                             {{item.title}}
                                         </router-link>
@@ -168,7 +168,7 @@
                                     <tr>
                                         <td>
                                             <router-link
-                                                :to="'/tasks/' + task.parent.id"
+                                                :to="'/tasks/task/' + task.parent.id"
                                             >
                                                 {{task.parent.title}}
                                             </router-link>
