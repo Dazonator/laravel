@@ -130,6 +130,7 @@
 
             <add-event
                 :updateId="updateId"
+                @updateId="clearId($event)"
             ></add-event>
             <v-dialog
                 v-model="dialogDelete"
@@ -267,7 +268,13 @@ export default {
                 console.log(response.data);
                 window.location.reload();
             });
+        },
+        clearId(updateEvent){
+            if (updateEvent){
+                this.updateId = null;
+            }
         }
+
     },
 }
 </script>

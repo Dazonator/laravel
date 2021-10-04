@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tasks extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -25,6 +27,8 @@ class Tasks extends Model
     protected $casts   = [
         'performers_id' => 'json'
     ];
+
+    protected $dates = ['deleted_at'];
 
 
     /* Связь для получения приоритетов */

@@ -3,7 +3,6 @@
     <div>
         <v-dialog
             v-model="dialog"
-            persistent
             max-width="800px"
         >
             <template v-slot:activator="{ on, attrs }">
@@ -180,6 +179,11 @@ export default {
         });
     },
     watch:{
+        dialog: function (q){
+            if(!this.dialog){
+                this.fields = {}
+            }
+        }
     },
     methods: {
         imgUpload(file){

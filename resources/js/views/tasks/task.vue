@@ -52,6 +52,13 @@
                 <div class="mb-6">
 
                     <v-btn
+                        color="error"
+                        @click="taskDelete()"
+                    >
+                        Удалить задачу
+                    </v-btn>
+
+                    <v-btn
                         color="success"
                         @click.stop="taskCompleted()"
                         :disabled="!statusActive"
@@ -286,6 +293,17 @@ export default {
             }
             axios.post(`/api/tasks/restore/${this.id}`, this.task.id).then(response => {
                 // alert('Задача восстановлена!!!');
+                this.init();
+            }).catch(error => {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data.errors || {};
+                }
+            });
+        },
+        taskDelete(){
+            axios.post(`/api/tasks/delete/${this.task.id}`).then(response => {
+                alert('Задача завершена!!!');
+                // window.location.href = `/tasks/${this.task.id}`;
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {

@@ -214,6 +214,7 @@ export default {
                     startDate: '',
                     endDate: ''
                 };
+                this.clearId();
             }
         },
         updateId: function (q){
@@ -309,6 +310,9 @@ export default {
                 this.dialog = true;
                 alert('update');
             });
+        },
+        clearId(){
+            this.$emit('updateId', true);
         }
     }
 

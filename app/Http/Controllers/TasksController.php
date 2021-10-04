@@ -60,6 +60,10 @@ class TasksController extends Controller
         ]);
     }
 
+    public function deleteTask($id){
+        Tasks::where('id', $id)->first()->delete();
+    }
+
 //    public function userTasks()
 //    {
 //        $user = Auth::user()->id;
@@ -86,10 +90,6 @@ class TasksController extends Controller
 //    }
 
     public function tasksByDepartment($id){
-//        return Departments::with(['tasksByDepartments'])->get();
-//        return Tasks::with(['responsibles' => function($q) use ($id){
-//            $q->where('department_id', $id);
-//        }])->get();
         return Tasks::with(['responsibles'])->whereHas('responsibles', function($q) use ($id){
             $q->where('department_id', $id);
         })->get();
@@ -97,7 +97,7 @@ class TasksController extends Controller
 
 
     public function statusTasks($id){
-        return Tasks::where('status_id', $id)->with('responsibles')->whereHas('responsibles', function ($q){
+        return Tasks::where('status_id', $id)->whereHas('responsibles', function ($q){
             $q->where('id', Auth::user()->id);
         })->orWhere('initiator_id', Auth::user()->id)->get();
     }
