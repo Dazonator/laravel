@@ -26,7 +26,14 @@ const routes = [
     {
         path: "/messages",
         name: 'messages',
-        component: messages
+        component: messages,
+        props: true
+    },
+    {
+        path: "/messages/:taskId",
+        name: 'messages',
+        component: messages,
+        props: true
     },
     {
         path: "/profile",

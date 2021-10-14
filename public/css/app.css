@@ -10208,13 +10208,17 @@ h3 {
 .team-nav,
 .col.team-nav,
 .tasks-nav,
-.col.tasks-nav {
+.col.tasks-nav,
+.messages-nav,
+.col.messages-nav {
   max-width: 400px;
   height: 100%;
 }
 .team-nav__title,
 .col.team-nav__title,
 .tasks-nav__title,
-.col.tasks-nav__title {
+.col.tasks-nav__title,
+.messages-nav__title,
+.col.messages-nav__title {
   color: #ced4da;
 }

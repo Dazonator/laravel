@@ -3,8 +3,13 @@
     <form class="col add-task"
         @submit.prevent="submit"
     >
-
         <div class="bg pa-4 mb-4">
+
+
+            <h5 class="text-center mb-6">
+                {{isTask ? 'Создать задачу' : ''}}
+                {{isDistribution ? 'Создать задачу для отдела' : ''}}
+            </h5>
             {{errors.title}}
             <v-text-field
                 label="Название"
@@ -21,8 +26,22 @@
 
             ></v-textarea>
 
+            {{errors.priority}}
+            <v-select
+                v-if="isDistribution"
+                :items=departments
+                item-text="department"
+                item-selection="department"
+                item-value="id"
+                label="Отдел"
+                dense
+                name="department_id"
+                v-model="fields.department_id"
+            ></v-select>
+
             {{errors.performers_id}}
             <v-autocomplete
+                v-if="!isDistribution"
                 :items="employees"
                 chips
                 label="Исполнители"
@@ -68,6 +87,7 @@
 
             {{errors.initiator}}
             <v-autocomplete
+                v-if="!isDistribution"
                 :items="employees"
                 chips
                 label="Инициатор"
@@ -112,6 +132,7 @@
 
             {{errors.priority}}
             <v-select
+                v-if="!isDistribution"
                 :items=priorities
                 item-text="priority"
                 item-selection="priority"
@@ -124,6 +145,7 @@
 
             {{errors.deadline}}
             <v-menu
+                v-if="!isDistribution"
                 v-model="menu2"
                 :close-on-content-click="false"
                 :nudge-right="40"
@@ -151,13 +173,13 @@
 
             {{errors.startdate}}
             <v-menu
+                v-if="!isDistribution"
                 v-model="menu"
                 :close-on-content-click="false"
                 :nudge-right="40"
                 transition="scale-transition"
                 offset-y
                 min-width="auto"
-
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -175,21 +197,23 @@
                 ></v-date-picker>
             </v-menu>
         </div>
+        {{fields}}
         <v-btn
             type="submit"
             color="primary"
             large
             block
         >
-            {{(isedit == true) ? 'Сохранить изменения' : ''}}
-            {{(issubtask == true) ? 'Создать подзадачу'  : ''}}
-            {{(isedit !== true && issubtask !==true) ? 'Создать задачу'  : ''}}
+            {{isEdit ? 'Сохранить изменения' : ''}}
+            {{isSubtask ? 'Создать подзадачу' : ''}}
+            {{isTask ? 'Создать задачу' : ''}}
+            {{isDistribution ? 'Создать задачу для отдела' : ''}}
         </v-btn>
     </form>
 </template>
 <script>
 export default {
-    props: ['parent_id', 'isedit', 'issubtask', 'foredit'],
+    props: ['parent_id', 'isEdit', 'isSubtask', 'foredit', 'whatCreate'],
     data () {
         const srcs = {
             1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -200,6 +224,8 @@ export default {
         }
 
         return {
+            isTask: false,
+            isDistribution: false,
             fields: {},
             errors: {},
             autoUpdate: true,
@@ -207,6 +233,7 @@ export default {
             isUpdating: false,
             employees: [],
             priorities: [],
+            departments: [],
 
             priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
             title: 'Название',
@@ -218,20 +245,29 @@ export default {
     },
 
     watch: {
-        isedit: function ($val){
-            if (this.isedit){
+        whatCreate: function (q){
+            if (this.whatCreate === 'task'){
+                this.isTask = true;
+                this.isDistribution = false;
+            } else if (this.whatCreate === 'distribution'){
+                this.isTask = false;
+                this.isDistribution = true;
+            } else {
+                this.isTask = false;
+                this.isDistribution = false;
+            }
+        },
+        isEdit: function ($val){
+            if (this.isEdit){
                 axios.get('/api/tasks/edit/'+this.parent_id).then(response => {
                     this.fields = response.data;
-                    // console.log(this.priorities);
                 });
             }
         },
-        issubtask: function ($val) {
-            if (this.issubtask){
+        isSubtask: function ($val) {
+            if (this.isSubtask){
                 this.fields = {};
-                console.log(this.fields);
                 this.fields.parent_id = this.parent_id;
-                console.log(this.fields);
             }
         }
     },
@@ -251,9 +287,8 @@ export default {
         submit() {
             this.errors = {};
 
-            if(this.isedit == true){
+            if(this.isEdit){
                 axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
-                    // alert('Задача изменена!');
                     window.location.href = `/tasks/${this.fields.id}`;
                 }).catch(error => {
                     if (error.response.status === 422) {
@@ -262,7 +297,6 @@ export default {
                 });
             } else {
                 axios.post('/api/tasks/create', this.fields).then(response => {
-                    // alert('Задача добавлена!!!');
                     window.location.href = "/tasks";
                 }).catch(error => {
                     if (error.response.status === 422) {
@@ -295,9 +329,19 @@ export default {
             this.priorities = response.data;
             // console.log(this.priorities);
         });
+        axios.get('/api/departments').then(response => {
+            this.departments = response.data;
+            console.log(this.departments);
+        });
         if (this.parent_id){
             this.fields.parent_id = this.parent_id;
-        };
+        }
+        if (this.whatCreate === 'task'){
+            this.isTask = true;
+        }
+        if (this.whatCreate === 'distribution'){
+            this.isDistribution = true;
+        }
     },
 }
 </script>

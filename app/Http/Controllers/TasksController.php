@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTaskRequest;
 use App\Models\Departments;
+use App\Models\Messages;
 use App\Models\Status;
 use App\Models\Tasks;
 use App\Models\User;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class TasksController extends Controller
 {
     public function submitTask(AddTaskRequest $request){
-
+        $user = Auth::user()->id;
         $task = new Tasks();
         $performers = $request->performers_id;
         $task::create([
@@ -26,8 +27,11 @@ class TasksController extends Controller
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
+            'distribution_department' => $request->department_id,
+            'creator_id' => $user,
         ])->responsibles()->sync($performers);
     }
+
     public function updateTask(AddTaskRequest $request){
         $id = $request->id;
         $performers = $request->performers_id;
@@ -41,6 +45,7 @@ class TasksController extends Controller
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
+            'distribution_department' => null,
         ]);
         $task->responsibles()->sync($performers);
     }
@@ -85,21 +90,20 @@ class TasksController extends Controller
     }
 
 
-//    public function getDepartments(){
-//        return Departments::all();
-//    }
-
     public function tasksByDepartment($id){
-        return Tasks::with(['responsibles'])->whereHas('responsibles', function($q) use ($id){
-            $q->where('department_id', $id);
-        })->get();
+//        return Tasks::with(['responsibles'])->whereHas('responsibles', function($q) use ($id){
+//            $q->where('department_id', $id);
+//        })->get();
+        return Tasks::where('distribution_department', $id)->get();
     }
 
 
     public function statusTasks($id){
-        return Tasks::where('status_id', $id)->whereHas('responsibles', function ($q){
-            $q->where('id', Auth::user()->id);
-        })->orWhere('initiator_id', Auth::user()->id)->get();
+        return Tasks::where('status_id', $id) -> where(function ($query){
+            $query->where('initiator_id', Auth::user()->id)->orWhereHas('responsibles', function ($q){
+                $q->where('id', Auth::user()->id);
+            });
+        })->get();
     }
 
     public function editTask($id){
@@ -107,6 +111,15 @@ class TasksController extends Controller
     }
 
     public function getTask($id){
+//        $messages = Messages::where('task_is', $id)
+//            ->whereJsonContains('message_for', Auth::user()->id)
+//            ->update(['message_for'=> function($q){
+//        }]);
+////
+//        foreach ($messages as $message) {
+//            $message->message_for = array_diff($message->message_for, [Auth::user()->id]);
+//        }
+
         return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator', 'parent', 'children'])->first();
     }
 

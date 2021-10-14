@@ -22,6 +22,8 @@ class Tasks extends Model
         'created_at',
         'update_at',
         'parent_id',
+        'distribution_department',
+        'creator_id',
     ];
 
     protected $casts   = [
@@ -70,4 +72,8 @@ class Tasks extends Model
         return $this->hasMany(Tasks::class, 'parent_id');
     }
 
+    /* Получение задач с уведомлениями */
+    public function taskMessages(){
+        return $this->hasMany(Messages::class, 'task_id', 'id');
+    }
 }

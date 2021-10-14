@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddUserController;
+use App\Http\Controllers\MessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -46,12 +47,11 @@ Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent'])
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);
 Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
-//Route::get('/tasks/statuses', [TasksController::class, 'getStatuses']);
-//Route::get('/tasks/departments', [TasksController::class, 'getDepartments']);
-//Route::get('/tasks/test', [TasksController::class, 'getTasksByDepartment']);
 
 Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
+Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
+Route::get('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
 Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 
@@ -73,6 +73,10 @@ Route::post('/tasks/update/{id}', [TasksController::class, 'updateTask']);
 Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
 Route::post('/tasks/restore/{id}', [TasksController::class, 'restoreTask']);
 Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
+
+
+Route::get('/messages', [MessagesController::class, 'messagesNotifications']);
+Route::get('/notifications', [MessagesController::class, 'getNotifications']);
 
 
 

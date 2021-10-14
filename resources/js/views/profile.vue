@@ -154,14 +154,14 @@ export default {
         init(){
             if(!this.id){
                 axios.get(`/api/profile`).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = response.data.is_user;
                     this.loaded = true;
                 });
             } else {
                 axios.get(`/api/profile/${this.id}`).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = response.data.is_user;
                     this.loaded = true;
@@ -186,10 +186,10 @@ export default {
             this.file = e.target.files[0];
             let formData = new FormData();
             formData.append('file', this.file);
-            console.log(formData);
+            // console.log(formData);
             axios.post('/api/profile/change-photo', formData).then(response => {
-                console.log(response.data);
                 this.init();
+                this.$store.dispatch('user/getUser');
             }).catch(error => {
                 if (error.response.status == 422) {
                     if(error.response.data.errors) {

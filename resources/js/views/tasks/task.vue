@@ -22,7 +22,7 @@
                 </p>
 
                 <div class="task-page__created">
-                    Создано {{ task.areated_at | startDate }}
+                    Создано {{ task.created_at | createDate }}
                 </div>
 
                 <div class="responsibles">
@@ -59,6 +59,7 @@
                     </v-btn>
 
                     <v-btn
+                        v-if="!task.distribution_department"
                         color="success"
                         @click.stop="taskCompleted()"
                         :disabled="!statusActive"
@@ -80,11 +81,11 @@
                         dark
                         @click="edit()"
                     >
-                        Редактировать
+                        {{task.distribution_department ? 'Распределить' : 'Редактировать'}}
                     </v-btn>
 
                     <v-btn
-                        v-if="statusActive"
+                        v-if="statusActive && !task.distribution_department"
                         color="primary"
                         @click="subtask()"
                     >
@@ -193,15 +194,78 @@
                     </div>
                 </div>
 
-<!--                <div class="bg pa-4">-->
+                <div class="task-messages bg">
+                    <div class="fill-height  pa-6">
+                        <v-row
+                            style="height:500px;scroll-behavior: smooth; overflow: auto;"
+                            class="fill-height container-chat"
+                            align="end"
+                        >
+                            <v-col>
+                                <div
+                                    v-for="(item, index) in chat"
+                                    :key="index"
+                                    :class="['d-flex flex-row align-center my-2', item.user.id == $store.state.user.user.id ? 'justify-end': null]"
+                                >
+                                    <div
+                                        class="container-chat__message d-flex flex-row align-center"
+                                        :class="[[item.user.id == $store.state.user.user.id ? 'user-message' : '']]"
+                                    >
+                                        <v-avatar
+                                            left
+                                            size="32"
+                                            class="container-chat__avatar"
+                                        >
+                                            <v-img
+                                                :src=item.user.img
+                                                alt=item.name
+                                            ></v-img>
+                                        </v-avatar>
+                                        <div :class="[[item.user.id == $store.state.user.user.id ? 'mr-3 text-end' : 'ml-3']]">
+                                            <div
+                                                class="container-chat__name font-weight-bold mb-1"
+                                                :class="[[item.user.id == $store.state.user.user.id ? 'ml-1' : 'mr-1']]"
+                                            >
+                                                {{item.user.name}}
+                                            </div>
+                                            <div class="mb-1">
+                                                {{ item.message }}
+                                            </div>
+                                            <div
+                                                class="container-chat__time text--gray"
+                                            >
+                                                {{ item.created_at | messageTime }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </div>
 
-<!--                </div>-->
+                    <v-divider class=""></v-divider>
+                    <div class="d-flex flex-row align-center px-6">
+                        <v-text-field
+                            v-model="message"
+                            dense
+                            placeholder="Текст сообщения..."
+                            @keypress.enter="sendMessage"
+                            class="ma-0"
+                            height="55"
+                        >
+
+                        </v-text-field>
+                        <v-btn icon class="ml-4" @click="sendMessage">
+                            <v-icon>mdi-send</v-icon>
+                        </v-btn>
+                    </div>
+                </div>
             </div>
 
             <add-task
                 v-show="showform"
-                :isedit="isedit"
-                :issubtask="issubtask"
+                :isEdit="isEdit"
+                :isSubtask="isSubtask"
                 :parent_id="id"
                 :foredit="foredit"
             ></add-task>
@@ -212,24 +276,31 @@
 
 <script>
 import moment from 'moment';
+// import { mapGetters, mapActions } from "vuex";
 export default {
     name: 'task',
+    props: {
+        taskId: Number,
+    },
     data() {
         return {
+            chat: {},
+            message: '',
             statusActive: true,
             errors: {},
             dialogCannotBeCompleted: false,
             dialogCannotBeRestore: false,
-            isedit: false,
-            issubtask: false,
+            isEdit: false,
+            isSubtask: false,
             foredit:[],
             loaded: false,
             showform: false,
-            id: Number(this.$route.params.id),
+            id: null,
             task: [],
         }
     },
     created(){
+        moment.locale('ru');
         this.init();
     },
     watch:{
@@ -240,6 +311,12 @@ export default {
     },
     methods: {
         init() {
+            if(Number(this.$route.params.id)){
+                this.id = Number(this.$route.params.id);
+            }
+            if(this.taskId){
+                this.id = this.taskId;
+            }
             axios.get(`/api/tasks/task/${this.id}`).then(response => {
                 console.log(response.data);
                 this.task = response.data;
@@ -249,17 +326,20 @@ export default {
                 } else {
                     this.statusActive = true;
                 }
+
+
+                this.initMessages();
             });
         },
         edit(){
-            this.isedit = true;
-            this.issubtask = false;
+            this.isEdit = true;
+            this.isSubtask = false;
             this.foredit = this.task;
             this.showform = true;
         },
         subtask(){
-            this.isedit = false;
-            this.issubtask = true;
+            this.isEdit = false;
+            this.isSubtask = true;
             this.foredit = [];
             this.showform = true;
         },
@@ -303,26 +383,135 @@ export default {
         taskDelete(){
             axios.post(`/api/tasks/delete/${this.task.id}`).then(response => {
                 alert('Задача завершена!!!');
-                // window.location.href = `/tasks/${this.task.id}`;
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors || {};
                 }
             });
-        }
-
-
+        },
+        initMessages() {
+            axios.get(`/api/tasks/task/messages/${this.id}`).then(response => {
+                // console.log(response.data);
+                this.chat = response.data;
+                this.scrollToEnd();
+            });
+        },
+        sendMessage() {
+            let newMessage = {
+                message: this.message,
+                task_id: this.id
+            }
+            axios.post(`/api/tasks/task/messages/send`, newMessage).then(response => {
+                this.initMessages();
+                setTimeout( () => {
+                    this.scrollToEnd()
+                }, 100);
+                this.message = "";
+            });
+        },
+        scrollToEnd() {
+            setTimeout( () => {
+                var objDiv = this.$el.querySelector(".container-chat");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }, 100);
+        },
     },
     filters: {
         deadLine: function (date) {
-            moment.locale('ru');
             return moment(date).format('LL');
         },
-        startDate: function (date) {
-            moment.locale('ru');
+        createDate: function (date) {
             return moment(date).format('l');
+        },
+        messageTime: function (date) {
+            return moment(date).fromNow();
         }
     }
 }
 </script>
+
+<style>
+    .task-messages{
+        display: flex;
+        flex-direction: column;
+    }
+    .task-messages .v-footer{
+        flex-grow: 1;
+    }
+    .container-chat{
+        line-height: 1.2;
+    }
+    .container-chat .container-chat__message{
+        padding: 5px 10px;
+        border-radius: 10px 10px 10px 0;
+        background-color: #f5f5f5;
+        position: relative;
+    }
+    .container-chat .container-chat__message.user-message{
+        background-color: #F2F2FF;
+    }
+    .container-chat .container-chat__message.user-message{
+        border-radius: 10px 10px 0 10px;
+    }
+
+    .container-chat .container-chat__message::before,
+    .container-chat .container-chat__message::after{
+        content: '';
+        display: block;
+        width: 10px;
+        height: 20px;
+        position: absolute;
+    }
+
+    .container-chat .container-chat__message.user-message::before{
+        left: 100%;
+    }.container-chat .container-chat__message::before{
+        background-color: #eee;
+        left: auto;
+        right: 100%;
+        bottom: 0;
+     }
+    .container-chat .container-chat__message.user-message::after{
+        left: 100%;
+        border-radius: 0 0 0 7px;
+    }
+    .container-chat .container-chat__message::after{
+        background-color: #fff;
+        left: auto;
+        right: 100%;
+        bottom: 0;
+        border-radius: 0 0 7px 0;
+    }
+
+
+
+    .container-chat .container-chat__name{
+        font-size: 12px;
+    }
+    .container-chat .container-chat__time{
+        font-size: 10px;
+    }
+    .container-chat__message.user-message .container-chat__avatar{
+        order: 1;
+    }
+
+
+
+
+    .container-chat::-webkit-scrollbar {
+        width: 3px;
+        background-color: #f9f9fd;
+    }
+
+    .container-chat::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: rgb(25, 118, 210)
+    }
+
+    .container-chat::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background-color: #f9f9fd;
+    }
+</style>

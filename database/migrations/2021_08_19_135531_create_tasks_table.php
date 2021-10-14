@@ -17,13 +17,15 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('text')->nullable();
-            $table->json('performers_id');
+            $table->json('performers_id')->nullable();
             $table->integer('initiator_id')->nullable();
             $table->integer('priority_id')->nullable();
             $table->date('deadline')->nullable();
             $table->date('startdate')->nullable();
             $table->tinyInteger('status_id')->default(1);
             $table->integer('parent_id')->nullable();
+            $table->tinyInteger('distribution_department')->nullable();
+            $table->tinyInteger('creator_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

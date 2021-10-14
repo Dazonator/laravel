@@ -39,10 +39,19 @@
                     <v-btn
                         color="primary"
                         class="mb-2"
-                        @click="addTask = !addTask"
+                        @click="newTask"
                         block
                     >
-                        Добавить задачу
+                        Создать задачу
+                    </v-btn>
+
+                    <v-btn
+                        color="primary"
+                        class="mb-2"
+                        @click="newDistributionDepartment"
+                        block
+                    >
+                        Создать задачу для отдела
                     </v-btn>
                 </div>
             </div>
@@ -59,7 +68,10 @@
                 :title="childrenTitle"
             ></component>
 
-            <add-task v-if="addTask"></add-task>
+            <add-task
+                v-if="addTask"
+                :whatCreate="whatCreate"
+            ></add-task>
         </div>
     </main>
 </template>
@@ -68,6 +80,7 @@
 export default {
     data() {
         return {
+            whatCreate: '',
             loaded: false,
             addTask: false,
             statuses: {},
@@ -129,6 +142,29 @@ export default {
             this.childrenTitle = this.departments[i-1].department;
             // this.childrenTitle = 'Задачи отделов';
             this.getComponent = 'department-tasks';
+        },
+        newTask(){
+            if (!this.addTask){
+                this.addTask = true;
+                this.whatCreate = 'task';
+            } else if(this.addTask && this.whatCreate !== 'task') {
+                this.whatCreate = 'task';
+            } else {
+                this.whatCreate = '';
+                this.addTask = false;
+            }
+
+        },
+        newDistributionDepartment(){
+            if (!this.addTask){
+                this.addTask = true;
+                this.whatCreate = 'distribution';
+            } else if(this.addTask && this.whatCreate !== 'distribution') {
+                this.whatCreate = 'distribution';
+            } else {
+                this.whatCreate = '';
+                this.addTask = false;
+            }
         }
 
     },

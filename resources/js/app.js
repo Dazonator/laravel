@@ -6,7 +6,7 @@
 
 require('./bootstrap');
 
-import Vue from 'vue'
+import Vue from 'vue';
 import Vuetify from "vuetify";
 import axios from 'axios';
 import VueAxios from 'vue-axios';
@@ -15,7 +15,8 @@ import 'vuetify/dist/vuetify.min.css';
 import ru from 'vuetify/lib/locale/ru';
 import router from "./router";
 import moment from 'moment';
-
+import store from './store/index';
+import { mapGetters, mapActions } from "vuex";
 
 Vue.use(moment);
 Vue.use(Vuetify);
@@ -32,7 +33,7 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
  * components and automatically register them with their "basename".
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+*/
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
@@ -64,5 +65,17 @@ window.qapp = new Vue({
         },
     }),
     el: '#app',
-    router
+    router,
+    store,
+    methods: {
+        ...mapActions(['user/getUser', 'notifications/getNotifications']),
+    },
+    created() {
+        this.$store.dispatch('user/getUser');
+        this.$store.dispatch('notifications/getNotifications');
+    }
 });
+
+// $("#d1").on("shown.bs.modal", function() {
+//     tinyMCE.get("editor").focus();
+// });

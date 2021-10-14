@@ -41,6 +41,7 @@ class AddTaskRequest extends FormRequest
             'initiator_id' => '',
             'priority_id' => '',
             'startdate' => '',
+            'department_id' => ''
         ];
     }
 }
