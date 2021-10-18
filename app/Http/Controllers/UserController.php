@@ -17,13 +17,6 @@ class UserController extends Controller
 {
 
     public function addUser(AddUserRequest $request){
-
-//        $imageName = $request->name.'.'.$request->lastname.'.'.$request->image->extension();
-//        $request->img->move(public_path('img/users/'), $imageName);
-//        $finImgPath = 'img/users'.$imageName;
-//        print_r($request);
-//        Storage::move('old/file.jpg', 'new/file.jpg');
-
         $user = new User();
         $user::create([
             'login' => $request->login,
@@ -41,7 +34,6 @@ class UserController extends Controller
     public function changePassword(Request $request){
         $user = Auth::user();
 
-//        print_r($user);
         $userPassword = $user->password;
         $oldPassword = $request->old_password;
         $newPassword = $request->new_password;
@@ -101,23 +93,15 @@ class UserController extends Controller
     }
 
 
-    public function employees()
-    {
-        return User::select('id', 'img', 'name', 'lastname', 'position')->get();
-    }
-
-
-    public function priorities()
-    {
-        return Priority::all();
-
-    }
-
-
-//    public function chengePassword(Request $request){
-//
+//    public function employees()
+//    {
+//        return User::select('id', 'img', 'name', 'lastname', 'position')->get();
 //    }
 
 
-
+//    public function priorities()
+//    {
+//        return Priority::all();
+//
+//    }
 }

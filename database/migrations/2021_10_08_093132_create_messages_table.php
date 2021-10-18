@@ -17,7 +17,6 @@ class CreateMessagesTable extends Migration
             $table->id();
             $table->tinyInteger('user_id');
             $table->text('message');
-            $table->json('message_for');
             $table->tinyInteger('task_id');
             $table->timestamps();
         });

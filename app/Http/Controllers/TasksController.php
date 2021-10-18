@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddTaskRequest;
 use App\Models\Departments;
 use App\Models\Messages;
+use App\Models\MessagesUser;
 use App\Models\Status;
 use App\Models\Tasks;
 use App\Models\User;
@@ -111,17 +112,6 @@ class TasksController extends Controller
     }
 
     public function getTask($id){
-//        $messages = Messages::where('task_is', $id)
-//            ->whereJsonContains('message_for', Auth::user()->id)
-//            ->update(['message_for'=> function($q){
-//        }]);
-////
-//        foreach ($messages as $message) {
-//            $message->message_for = array_diff($message->message_for, [Auth::user()->id]);
-//        }
-
         return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator', 'parent', 'children'])->first();
     }
-
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddUserController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\MessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,12 @@ Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
 
+Route::post('/add-task-params', [AddTaskController::class, 'getParamsAddTask']);
+Route::post('/main-app-parameters', [Controller::class, 'mainAppParameters']);
+
+
+
+
 
 Route::post('/calendar/events', [CalendarController::class, 'getEvents']);
 
@@ -51,7 +58,7 @@ Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesA
 Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
-Route::get('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
+Route::post('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
 Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 

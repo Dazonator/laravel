@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Tasks::class);
     }
 
+    public function messages()
+    {
+        return $this->belongsToMany(Messages::class);
+    }
+
     public function setImgAttribute($img) {
         $img = '/storage/'.$img;
         $this->attributes['img'] = $img;

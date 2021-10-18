@@ -1,7 +1,9 @@
 <template>
 
-    <form class="col add-task"
+    <form
+        class="col add-task"
         @submit.prevent="submit"
+        v-if="loaded"
     >
         <div class="bg pa-4 mb-4">
 
@@ -224,26 +226,36 @@ export default {
         }
 
         return {
+            loaded: false,
             isTask: false,
             isDistribution: false,
             fields: {},
             errors: {},
             autoUpdate: true,
-            friends: [],
             isUpdating: false,
             employees: [],
             priorities: [],
             departments: [],
 
-            priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
-            title: 'Название',
+            // priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
+            // title: 'Название',
             date: null,
             date2: null,
             menu: false,
             menu2: false,
         }
     },
-
+    computed: {
+        // employees: function (){
+        //     return this.$store.getters['user/users'];
+        // },
+        // priorities: function (){
+        //     return this.$store.getters['user/priorities'];
+        // },
+        // departments: function (){
+        //     return this.$store.getters['user/departments'];
+        // }
+    },
     watch: {
         whatCreate: function (q){
             if (this.whatCreate === 'task'){
@@ -273,10 +285,24 @@ export default {
     },
 
     methods: {
+        init(){
+            // this.employees = this.$store.getters['user/users'];
+            // this.priorities = this.$store.getters['user/priorities'];
+            // this.departments = this.$store.getters['user/departments'];
+
+            if (this.parent_id){
+                this.fields.parent_id = this.parent_id;
+            }
+            if (this.whatCreate === 'task'){
+                this.isTask = true;
+            }
+            if (this.whatCreate === 'distribution'){
+                this.isDistribution = true;
+            }
+            this.loaded = true;
+        },
         removePerformers (item) {
-            // console.log(item);
             const index = this.fields.performers_id.indexOf(item.id);
-            // console.log(index);
             if (index >= 0) {
                 this.fields.performers_id.splice(index, 1)
             }
@@ -308,7 +334,7 @@ export default {
         deleteTask() {
             this.errors = {};
 
-            if(this.isedit == true){
+            if(this.isEdit == true){
                 axios.post(`/api/tasks/delete/${this.id}`, this.id).then(response => {
                     alert('Message sent!');
                     window.location.href = "/tasks";
@@ -321,27 +347,12 @@ export default {
         },
     },
     created(){
-        axios.get('/api/employees').then(response => {
-            this.employees = response.data;
-            // console.log(this.employees);
+        axios.post('/api/add-task-params').then(response => {
+            this.employees = response.data.employees;
+            this.priorities = response.data.priorities;
+            this.departments = response.data.departments;
         });
-        axios.get('/api/priorities').then(response => {
-            this.priorities = response.data;
-            // console.log(this.priorities);
-        });
-        axios.get('/api/departments').then(response => {
-            this.departments = response.data;
-            console.log(this.departments);
-        });
-        if (this.parent_id){
-            this.fields.parent_id = this.parent_id;
-        }
-        if (this.whatCreate === 'task'){
-            this.isTask = true;
-        }
-        if (this.whatCreate === 'distribution'){
-            this.isDistribution = true;
-        }
+        this.init();
     },
 }
 </script>

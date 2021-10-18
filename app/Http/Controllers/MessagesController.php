@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Messages;
+use App\Models\MessagesUser;
 use App\Models\Tasks;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
@@ -19,9 +20,9 @@ class MessagesController extends Controller
 
         if($task->performers_id){
             for($i = 0; $i < count($task->performers_id); ++$i) {
-                if($task->performers_id[$i] == $userId){
-                    continue;
-                }
+//                if($task->performers_id[$i] == $userId){
+//                    continue;
+//                }
                 array_push($messageFor, $task->performers_id[$i]);
             }
         }
@@ -34,27 +35,30 @@ class MessagesController extends Controller
             'user_id' => $userId,
             'message' => $request->message,
             'task_id' => $request->task_id,
-            'message_for' => $messageFor,
-        ]);
+        ])->messagesFor()->sync($messageFor);
     }
+
     public function getChatMessages($id){
+        $messages = Messages::where('task_id', $id)->get();
+        foreach ($messages as $message) {
+            MessagesUser::where('user_id', Auth::user()->id)->where('messages_id', $message->id)->delete();
+        }
+
         return Messages::where('task_id', $id)->with(['user' => function($query){
             $query->select('id','img', 'name');
         }])->get();
     }
+
     public function messagesNotifications(){
-        return Tasks::with(['taskMessages' => function ($q){
-            $q->whereJsonContains('message_for', Auth::user()->id);
-        }])->whereHas('taskMessages', function ($q){
-            $q->whereJsonContains('message_for', Auth::user()->id);
-        })->get();
-
-//        return Tasks::with(['tasksNotifications' => function ($query) {
-//            $query->whereHas('message_for', Auth::user()->id);
-//        }])->get();
+        return Tasks::withCount(['taskNotifications' => function($q){
+            $q->where('messages_user.user_id', Auth::user()->id);
+        }])->whereHas('taskNotifications', function ($query) {
+            $query->where('messages_user.user_id', Auth::user()->id);
+        }, '>', 0)->get();
     }
 
-    public function getNotifications() {
-        return Messages::whereJsonContains('message_for', Auth::user()->id)->count();
-    }
+//    public function getNotifications() {
+//        return MessagesUser::where('user_id', Auth::user()->id)->count();
+//    }
+
 }

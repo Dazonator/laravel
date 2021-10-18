@@ -72,8 +72,15 @@ class Tasks extends Model
         return $this->hasMany(Tasks::class, 'parent_id');
     }
 
-    /* Получение задач с уведомлениями */
-    public function taskMessages(){
-        return $this->hasMany(Messages::class, 'task_id', 'id');
+//    /* Связь для получения сообщений задач */
+//    public function taskMessages(){
+//        return $this->hasMany(Messages::class, 'task_id', 'id');
+//    }
+
+    /* Связь для доступа к связующей таблице через сообщения */
+    public function taskNotifications(){
+        return $this->hasManyThrough(MessagesUser::class, Messages::class, 'task_id', 'messages_id');
     }
+
+
 }

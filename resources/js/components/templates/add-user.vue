@@ -172,6 +172,11 @@ export default {
         dialog: false,
         errors: {},
     }),
+    computed: {
+        // departments: function (){
+        //     return this.$store.getters['user/departments'];
+        // }
+    },
     created() {
         axios.get('/api/departments').then(response => {
             this.departments = response.data;

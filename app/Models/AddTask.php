@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AddTask extends Model
 {
-//    use HasFactory;
-//    protected $flights = ['title', 'text'];
     protected $table = 'add_tasks';
-
 }
 

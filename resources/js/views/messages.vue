@@ -16,7 +16,7 @@
 
                                 <v-badge
                                     color="red"
-                                    :content="message.task_messages.length"
+                                    :content="message.task_notifications_count"
                                     class="flex-grow-1 align-self-center"
                                     inline
                                 >
@@ -37,6 +37,7 @@
             <task
                 v-if="taskId"
                 :taskId="taskId"
+                @updateNotifications="init()"
             ></task>
 
         </div>

@@ -29,6 +29,7 @@
                         <v-badge
                             color="red"
                             :content="notifications"
+                            :value="notifications"
                             overlap
                             class="d-flex flex-column justify-content-center align-items-center"
                         >
@@ -75,11 +76,15 @@ export default {
     }),
     computed: {
         user: function (){
-            return this.$store.getters['user/user'];
+            return this.$store.getters['user/authUser'];
         },
         notifications: function (){
-            return this.$store.getters['notifications/notifications'];
+            return this.$store.getters['user/notifications'];
         }
     },
+    created() {
+
+    }
+
 }
 </script>

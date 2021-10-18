@@ -11,7 +11,7 @@
                             <v-list>
                                 <v-list-item
                                     v-for="(department, i) in departments"
-                                    :key="i"
+                                    :key="i"main steps
                                 >
 
                                     <router-link
@@ -41,13 +41,6 @@
 <script>
 export default {
     props: [],
-    watch:{
-        '$route.path' (to, from){
-            this.userId = Number(this.$route.params.userId);
-            this.department = Number(this.$route.params.department);
-            this.init();
-        },
-    },
     data() {
         return {
             getComponent: '',
@@ -60,15 +53,28 @@ export default {
             department: Number(this.$route.params.department),
         }
     },
+    watch:{
+        '$route.path' (to, from){
+            this.userId = Number(this.$route.params.userId);
+            this.department = Number(this.$route.params.department);
+            this.init();
+        },
+    },
+    // computed: {
+    //     departments: function (){
+    //         return this.$store.getters['user/departments'];
+    //     }
+    // },
     created(){
         axios.get('/api/team/departments').then(response => {
             this.departments = response.data;
-            this.loaded = true;
         });
         this.init();
     },
     methods: {
         init(){
+
+            this.loaded = true;
             if(this.department){
                 this.departmentUsers(this.department);
             }

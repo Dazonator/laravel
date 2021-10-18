@@ -197,7 +197,6 @@
                 <div class="task-messages bg">
                     <div class="fill-height  pa-6">
                         <v-row
-                            style="height:500px;scroll-behavior: smooth; overflow: auto;"
                             class="fill-height container-chat"
                             align="end"
                         >
@@ -205,11 +204,11 @@
                                 <div
                                     v-for="(item, index) in chat"
                                     :key="index"
-                                    :class="['d-flex flex-row align-center my-2', item.user.id == $store.state.user.user.id ? 'justify-end': null]"
+                                    :class="['d-flex flex-row align-center my-2', item.user.id == $store.state.user.authUser.id ? 'justify-end': null]"
                                 >
                                     <div
                                         class="container-chat__message d-flex flex-row align-center"
-                                        :class="[[item.user.id == $store.state.user.user.id ? 'user-message' : '']]"
+                                        :class="[[item.user.id == $store.state.user.authUser.id ? 'user-message' : '']]"
                                     >
                                         <v-avatar
                                             left
@@ -221,10 +220,10 @@
                                                 alt=item.name
                                             ></v-img>
                                         </v-avatar>
-                                        <div :class="[[item.user.id == $store.state.user.user.id ? 'mr-3 text-end' : 'ml-3']]">
+                                        <div :class="[[item.user.id == $store.state.user.authUser.id ? 'mr-3 text-end' : 'ml-3']]">
                                             <div
                                                 class="container-chat__name font-weight-bold mb-1"
-                                                :class="[[item.user.id == $store.state.user.user.id ? 'ml-1' : 'mr-1']]"
+                                                :class="[[item.user.id == $store.state.user.authUser.id ? 'ml-1' : 'mr-1']]"
                                             >
                                                 {{item.user.name}}
                                             </div>
@@ -326,10 +325,9 @@ export default {
                 } else {
                     this.statusActive = true;
                 }
-
-
-                this.initMessages();
             });
+
+            this.initMessages();
         },
         edit(){
             this.isEdit = true;
@@ -391,10 +389,14 @@ export default {
             });
         },
         initMessages() {
-            axios.get(`/api/tasks/task/messages/${this.id}`).then(response => {
+            axios.post(`/api/tasks/task/messages/${this.id}`).then(response => {
                 // console.log(response.data);
                 this.chat = response.data;
                 this.scrollToEnd();
+
+                this.$store.dispatch('user/getAppParameters');
+
+                this.$emit('updateNotifications', true);
             });
         },
         sendMessage() {
@@ -439,6 +441,14 @@ export default {
     .task-messages .v-footer{
         flex-grow: 1;
     }
+
+    .task-messages .row{
+        height:500px;
+        /*scroll-behavior: smooth;*/
+        overflow: auto;
+        transition: none;
+    }
+
     .container-chat{
         line-height: 1.2;
     }

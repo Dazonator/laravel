@@ -1,9 +1,9 @@
 <template>
-    <main class="col py-4">
+    <main class="col py-4" v-if="loaded">
         <div class="row">
             <div class="col">
                 <h2 class="mb-4">{{user.name}} {{user.lastname}}</h2>
-                <div class="bg pa-4" v-if="loaded">
+                <div class="bg pa-4">
                     <div class="row profile">
                         <form class="col-3 text-center profile__img">
                             <label>
@@ -118,8 +118,6 @@
                                 </v-form>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -159,13 +157,21 @@ export default {
                     this.isUser = response.data.is_user;
                     this.loaded = true;
                 });
+                // console.log(
+                // this.$store.getters['user/authUser']);
+                // this.user = this.$store.getters['user/authUser'];
+                // console.log(this.user);
+                // this.isUser = true;
+                // this.loaded = true;
             } else {
                 axios.get(`/api/profile/${this.id}`).then(response => {
                     // console.log(response.data);
                     this.user = response.data.user;
-                    this.isUser = response.data.is_user;
+                    this.isUser = false;
                     this.loaded = true;
                 });
+
+
             }
         },
         changePassword(){
@@ -189,7 +195,7 @@ export default {
             // console.log(formData);
             axios.post('/api/profile/change-photo', formData).then(response => {
                 this.init();
-                this.$store.dispatch('user/getUser');
+                this.$store.dispatch('user/getAppParameters');
             }).catch(error => {
                 if (error.response.status == 422) {
                     if(error.response.data.errors) {

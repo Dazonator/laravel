@@ -68,11 +68,10 @@ window.qapp = new Vue({
     router,
     store,
     methods: {
-        ...mapActions(['user/getUser', 'notifications/getNotifications']),
+        ...mapActions(['user/getAppParameters']),
     },
-    created() {
-        this.$store.dispatch('user/getUser');
-        this.$store.dispatch('notifications/getNotifications');
+    created () {
+        this.$store.dispatch('user/getAppParameters');
     }
 });
 
