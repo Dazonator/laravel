@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Tasks extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
+        'id',
         'title',
         'text',
         'performers_id',
@@ -22,6 +24,7 @@ class Tasks extends Model
         'created_at',
         'update_at',
         'parent_id',
+        'in_step',
         'distribution_department',
         'creator_id',
     ];
@@ -32,6 +35,31 @@ class Tasks extends Model
 
     protected $dates = ['deleted_at'];
 
+    public static function boot() {
+        parent::boot();
+        self::created(function ($model) {
+            TasksHistory::create([
+                'task_id' => $model->id,
+                'user_id' => Auth::user()->id,
+                'action' => 'created',
+            ]);
+        });
+        self::deleted(function ($model) {
+            TasksHistory::create([
+                'task_id' => $model->id,
+                'user_id' => Auth::user()->id,
+                'action' => 'deleted',
+            ]);
+
+        });
+        self::updated(function ($model) {
+            TasksHistory::create([
+                'task_id' => $model->id,
+                'user_id' => Auth::user()->id,
+                'action' => 'updated',
+            ]);
+        });
+    }
 
     /* Связь для получения приоритетов */
     public function priority()
@@ -70,6 +98,11 @@ class Tasks extends Model
     public function children()
     {
         return $this->hasMany(Tasks::class, 'parent_id');
+    }
+
+    public function steps()
+    {
+        return $this->hasMany(Steps::class, 'task_id');
     }
 
 //    /* Связь для получения сообщений задач */

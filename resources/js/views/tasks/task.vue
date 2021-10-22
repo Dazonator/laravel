@@ -137,9 +137,10 @@
                     </v-dialog>
                 </div>
 
-                <div class="subtasks mb-12" v-if="task.children.length!==0">
-                    <h5 class="subtasks__title">Подзадачи</h5>
-                    <div class="subtasks-table">
+                <div class="subtasks mb-12" v-if="">
+                    <h5 class="subtasks__title mr-4">Подзадачи</h5>
+
+                    <div class="subtasks-table px-4 mb-6">
                         <v-simple-table>
                             <template v-slot:default>
                                 <tbody>
@@ -165,6 +166,60 @@
                             </template>
                         </v-simple-table>
                     </div>
+
+                    <div
+                        v-for="step in task.steps"
+                    >
+                        <h6 class="text-subtitle-2 px-4">Этап: {{step.title}}</h6>
+                        <div class="subtasks-table px-4 mb-6">
+                            <v-simple-table>
+                                <template v-slot:default>
+                                    <tbody>
+                                        <tr
+                                            v-for="item in step.tasks"
+                                        >
+                                            <td>
+                                                <router-link
+                                                    :to="'/tasks/task/' + item.id"
+                                                >
+                                                    {{item.title}}
+                                                </router-link>
+                                            </td>
+                                            <td>
+                                                {{ item.text }}
+                                            </td>
+
+                                            <td>
+                                                {{ item.status_id }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </div>
+                    </div>
+
+                    <v-row>
+                        <v-col
+                            cols="4"
+                        >
+                            <form class="d-flex" @submit.prevent="addStep">
+                                <v-text-field
+                                    class="mr-2"
+                                    v-model="dataStep.title"
+                                    label="Название этапа"
+                                    solo
+                                    hide-details
+                                ></v-text-field>
+                                <v-btn
+                                    type="submit"
+                                    color="primary"
+                                    elevation="2"
+                                    large
+                                >Добавить этап</v-btn>
+                            </form>
+                        </v-col>
+                    </v-row>
                 </div>
 
                 <div class="parent-tasks mb-12" v-if="task.parent">
@@ -285,6 +340,7 @@ export default {
         return {
             chat: {},
             message: '',
+            dataStep: {},
             statusActive: true,
             errors: {},
             dialogCannotBeCompleted: false,
@@ -350,11 +406,21 @@ export default {
                     }
                 }
             }
+            if(this.task.steps.length > 0){
+                for (let step in this.task.steps) {
+                    console.log(step);
+                    for (let task in this.task.steps[step].tasks) {
+                        console.log(task);
+                        if (this.task.steps[step].tasks[task].status_id !== 3){
+                            this.dialogCannotBeCompleted = true;
+                            return;
+                        }
+                    }
+                }
+            }
 
             this.errors = {};
             axios.post(`/api/tasks/completed/${this.id}`, this.task.id).then(response => {
-                // alert('Задача завершена!!!');
-                // window.location.href = `/tasks/${this.task.id}`;
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
@@ -370,7 +436,6 @@ export default {
                 }
             }
             axios.post(`/api/tasks/restore/${this.id}`, this.task.id).then(response => {
-                // alert('Задача восстановлена!!!');
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
@@ -418,6 +483,13 @@ export default {
                 objDiv.scrollTop = objDiv.scrollHeight;
             }, 100);
         },
+        addStep(){
+            this.dataStep.task_id = this.id;
+            axios.post(`/api/tasks/task/create-new-step`, this.dataStep).then(response => {
+                this.init();
+                this.dataStep = {};
+            });
+        }
     },
     filters: {
         deadLine: function (date) {

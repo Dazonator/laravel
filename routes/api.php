@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddUserController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\StepsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -57,8 +58,12 @@ Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesA
 
 Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
+Route::get('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
 Route::post('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
+Route::post('/tasks/task/create-new-step', [StepsController::class, 'createNewStep']);
+Route::post('/tasks/task/delete-step/{id}', [StepsController::class, 'deleteStep']);
+Route::post('/tasks/task/update-step/{id}', [StepsController::class, 'updateStep']);
 Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 

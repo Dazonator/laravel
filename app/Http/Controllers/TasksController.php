@@ -7,7 +7,9 @@ use App\Models\Departments;
 use App\Models\Messages;
 use App\Models\MessagesUser;
 use App\Models\Status;
+use App\Models\Steps;
 use App\Models\Tasks;
+use App\Models\TasksHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,7 @@ class TasksController extends Controller
         $user = Auth::user()->id;
         $task = new Tasks();
         $performers = $request->performers_id;
-        $task::create([
+        Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
             'performers_id' => $request->performers_id,
@@ -28,6 +30,7 @@ class TasksController extends Controller
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
+            'in_step' => $request->in_step,
             'distribution_department' => $request->department_id,
             'creator_id' => $user,
         ])->responsibles()->sync($performers);
@@ -46,6 +49,7 @@ class TasksController extends Controller
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
+            'in_step' => $request->in_step,
             'distribution_department' => null,
         ]);
         $task->responsibles()->sync($performers);
@@ -108,10 +112,28 @@ class TasksController extends Controller
     }
 
     public function editTask($id){
-        return Tasks::where('id', $id)->first();
+        return Tasks::where('id', $id)->with([
+            'steps',
+            'parent' => function ($q){
+                $q->with('steps');
+            }
+        ])->first();
     }
 
     public function getTask($id){
-        return Tasks::where('id', $id)->with(['responsibles', 'priority', 'status', 'initiator', 'parent', 'children'])->first();
+        return Tasks::where('id', $id)->with([
+            'responsibles',
+            'priority',
+            'status',
+            'initiator',
+            'parent',
+            'children' => function ($q){
+                $q->where('in_step', null);
+            },
+            'steps' => function ($q){
+                $q->with('tasks');
+            }
+        ])->first();
     }
+
 }

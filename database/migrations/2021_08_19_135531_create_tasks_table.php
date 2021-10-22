@@ -22,10 +22,11 @@ class CreateTasksTable extends Migration
             $table->integer('priority_id')->nullable();
             $table->date('deadline')->nullable();
             $table->date('startdate')->nullable();
-            $table->tinyInteger('status_id')->default(1);
+            $table->integer('status_id')->default(1);
             $table->integer('parent_id')->nullable();
-            $table->tinyInteger('distribution_department')->nullable();
-            $table->tinyInteger('creator_id')->nullable();
+            $table->integer('in_step')->nullable();
+            $table->integer('distribution_department')->nullable();
+            $table->integer('creator_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

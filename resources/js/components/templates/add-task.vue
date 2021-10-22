@@ -145,6 +145,19 @@
                 v-model="fields.priority_id"
             ></v-select>
 
+
+            <v-select
+                v-if="fields.parent_id"
+                :items=steps
+                item-text="title"
+                item-selection="title"
+                item-value="id"
+                label="Приоритет"
+                dense
+                name="in_step"
+                v-model="fields.in_step"
+            ></v-select>
+
             {{errors.deadline}}
             <v-menu
                 v-if="!isDistribution"
@@ -236,6 +249,7 @@ export default {
             employees: [],
             priorities: [],
             departments: [],
+            steps: [],
 
             // priority: ['Очень высокий', 'Высокий', 'Средний', 'Низкий'],
             // title: 'Название',
@@ -272,12 +286,17 @@ export default {
         isEdit: function ($val){
             if (this.isEdit){
                 axios.get('/api/tasks/edit/'+this.parent_id).then(response => {
+                    console.log(response.data);
                     this.fields = response.data;
+                    this.steps = this.fields.parent.steps;
                 });
             }
         },
         isSubtask: function ($val) {
             if (this.isSubtask){
+                axios.get('/api/tasks/parent-steps/'+this.parent_id).then(response => {
+                    this.steps = response.data;
+                });
                 this.fields = {};
                 this.fields.parent_id = this.parent_id;
             }
@@ -286,10 +305,6 @@ export default {
 
     methods: {
         init(){
-            // this.employees = this.$store.getters['user/users'];
-            // this.priorities = this.$store.getters['user/priorities'];
-            // this.departments = this.$store.getters['user/departments'];
-
             if (this.parent_id){
                 this.fields.parent_id = this.parent_id;
             }

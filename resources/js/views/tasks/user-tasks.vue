@@ -68,6 +68,21 @@
                             {{ item.text }}
                         </td>
                     </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                            small
+                            class="mr-2"
+                            @click="editItem(item)"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon
+                            small
+                            @click="deleteItem(item)"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
                 </v-data-table>
             </template>
         </div>
@@ -126,6 +141,7 @@ export default {
                     value: 'status.status',
                     sortable: true,
                 },
+                { text: 'Actions', value: 'actions', sortable: false },
                 {
                     text: '',
                     value: 'data-table-expand'
