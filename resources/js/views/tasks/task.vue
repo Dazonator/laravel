@@ -144,39 +144,67 @@
                         <v-simple-table>
                             <template v-slot:default>
                                 <tbody>
-                                <tr
-                                    v-for="item in task.children"
-                                >
-                                    <td>
-                                        <router-link
-                                            :to="'/tasks/task/' + item.id"
-                                        >
-                                            {{item.title}}
-                                        </router-link>
-                                    </td>
-                                    <td>
-                                        {{ item.text }}
-                                    </td>
+                                    <tr
+                                        v-for="item in task.children"
+                                    >
+                                        <td>
+                                            <router-link
+                                                :to="'/tasks/task/' + item.id"
+                                            >
+                                                {{item.title}}
+                                            </router-link>
+                                        </td>
+                                        <td>
+                                            {{ item.text }}
+                                        </td>
 
-                                    <td>
-                                        {{ item.status_id }}
-                                    </td>
-                                </tr>
+                                        <td class="text-right">
+
+                                            <v-select
+                                                class="subtasks-input d-inline-block"
+                                                :items=task.steps
+
+                                                single-line
+                                                label="Этап"
+                                                item-text="title"
+                                                item-selection="title"
+                                                item-value="id"
+                                                v-model="item.in_step"
+                                                @change="updateTaskStep(item)"
+                                            ></v-select>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </template>
                         </v-simple-table>
                     </div>
 
                     <div
-                        v-for="step in task.steps"
+                        v-for="(step, id) in task.steps"
                     >
-                        <h6 class="text-subtitle-2 px-4">Этап: {{step.title}}</h6>
-                        <div class="subtasks-table px-4 mb-6">
+                        <h6 class="step-title text-subtitle-2 px-4 d-flex">
+                            <input
+                                type="text"
+                                v-model=step.title
+                                v-on:blur="updateStep(id)"
+                                @keypress.enter="blurInput($event)"
+                                style="width: 100%;"
+                                class="py-2"
+                            >
+
+                            <v-icon
+                                small
+                                @click="deleteStep(id)"
+                            >
+                                mdi-delete
+                            </v-icon>
+                        </h6>
+                        <div class="subtasks-table px-4 mb-2">
                             <v-simple-table>
                                 <template v-slot:default>
                                     <tbody>
                                         <tr
-                                            v-for="item in step.tasks"
+                                            v-for="(item, taskId) in step.tasks"
                                         >
                                             <td>
                                                 <router-link
@@ -189,8 +217,24 @@
                                                 {{ item.text }}
                                             </td>
 
-                                            <td>
-                                                {{ item.status_id }}
+                                            <td
+                                                class="text-right"
+                                            >
+<!--                                                {{ item.status_id }}-->
+                                                <v-select
+                                                    class="subtasks-input d-inline-block"
+                                                    :items=task.steps
+
+                                                    single-line
+                                                    label="Этап"
+                                                    item-text="title"
+                                                    item-selection="title"
+                                                    item-value="id"
+                                                    append-icon="mdi-close"
+                                                    v-model="item.in_step"
+                                                    @change="updateTaskStep(item)"
+                                                    @click:append="deleteTaskStep(item)"
+                                                ></v-select>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -489,6 +533,33 @@ export default {
                 this.init();
                 this.dataStep = {};
             });
+        },
+        updateStep(id){
+            axios.post(`/api/tasks/task/update-step-title`, this.task.steps[id]).then(response => {
+                this.init();
+            });
+        },
+        deleteStep(id){
+            if(this.task.steps[id].tasks.length > 0){
+                alert('Этап не может быть удалён пока в нем есть подзадачи')
+            } else {
+                axios.post(`/api/tasks/task/delete-step`, this.task.steps[id]).then(response => {
+                    this.init();
+                });
+            }
+        },
+        blurInput(event){
+            event.target.blur();
+        },
+        updateTaskStep(task){
+            axios.post(`/api/tasks/task/update-task-step`, task).then(response => {
+                this.init();
+            });
+        },
+        deleteTaskStep(task){
+            console.log(task);
+            task.in_step = null;
+            this.updateTaskStep(task);
         }
     },
     filters: {
@@ -506,6 +577,19 @@ export default {
 </script>
 
 <style>
+    .step-title input[type="text"]{
+        outline: none;
+        box-shadow: none;
+        border-bottom: 1px solid #eee;
+
+    }
+    .step-title input[type="text"]:focus{
+        background-color: #fff;
+    }
+    .subtasks-input{
+        max-width: 200px;
+    }
+
     .task-messages{
         display: flex;
         flex-direction: column;

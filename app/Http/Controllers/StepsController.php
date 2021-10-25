@@ -23,12 +23,23 @@ class StepsController extends Controller
         ]);
     }
 
-    public function deleteStep($id){
-        Tasks::where('id', $id)->first()->delete();
+    public function deleteStep(Request $request){
+        $id = $request->id;
+        Steps::find($id)->delete();
     }
 
-    public function updateStep($id){
-        Tasks::where('id', $id)->first()->delete();
+    public function updateStepTitle(Request $request){
+        $id = $request->id;
+        $step = Steps::find($id);
 
+        $step->update([
+            'title' => $request->title,
+        ]);
     }
+     public function updateTaskStep(Request $request){
+        $task = Tasks::find($request->id);
+        $task->update([
+             'in_step' => $request->in_step,
+         ]);
+     }
 }

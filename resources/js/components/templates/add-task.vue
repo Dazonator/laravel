@@ -28,7 +28,7 @@
 
             ></v-textarea>
 
-            {{errors.priority}}
+            {{errors.departments}}
             <v-select
                 v-if="isDistribution"
                 :items=departments
@@ -152,7 +152,7 @@
                 item-text="title"
                 item-selection="title"
                 item-value="id"
-                label="Приоритет"
+                label="Этап"
                 dense
                 name="in_step"
                 v-model="fields.in_step"

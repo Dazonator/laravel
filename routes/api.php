@@ -62,6 +62,9 @@ Route::get('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps'
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
 Route::post('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
 Route::post('/tasks/task/create-new-step', [StepsController::class, 'createNewStep']);
+Route::post('/tasks/task/update-step-title', [StepsController::class, 'updateStepTitle']);
+Route::post('/tasks/task/update-task-step', [StepsController::class, 'updateTaskStep']);
+Route::post('/tasks/task/delete-step', [StepsController::class, 'deleteStep']);
 Route::post('/tasks/task/delete-step/{id}', [StepsController::class, 'deleteStep']);
 Route::post('/tasks/task/update-step/{id}', [StepsController::class, 'updateStep']);
 Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
