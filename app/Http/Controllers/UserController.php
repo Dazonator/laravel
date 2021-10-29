@@ -93,10 +93,10 @@ class UserController extends Controller
     }
 
 
-//    public function employees()
-//    {
-//        return User::select('id', 'img', 'name', 'lastname', 'position')->get();
-//    }
+    public function getUsers()
+    {
+        return User::select('id', 'img', 'name', 'lastname', 'position')->get();
+    }
 
 
 //    public function priorities()

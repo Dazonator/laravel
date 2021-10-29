@@ -20,7 +20,6 @@
                 </v-btn>
             </template>
             <v-card>
-
                 <form @submit.prevent="submit">
                     <v-card-title>
                         <span class="text-h5">Добавить событие</span>
@@ -59,7 +58,7 @@
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field
                                                 v-model="fields.startDate"
-                                                label="Дата начала"
+                                                label="Дата"
                                                 prepend-icon="mdi-calendar"
                                                 name="startDate"
                                                 readonly
@@ -93,7 +92,7 @@
                                             <v-text-field
                                                 v-model="fields.startTime"
                                                 label="Время начала"
-                                                prepend-icon="mdi-clock-time-four-outline"
+                                                prepend-icon="mdi-clock-outline"
                                                 readonly
                                                 v-bind="attrs"
                                                 v-on="on"
@@ -159,7 +158,7 @@
                                             <v-text-field
                                                 v-model="fields.endTime"
                                                 label="Время окончания"
-                                                prepend-icon="mdi-clock-time-four-outline"
+                                                prepend-icon="mdi-clock-outline"
                                                 readonly
                                                 v-bind="attrs"
                                                 v-on="on"

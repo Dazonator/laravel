@@ -38,6 +38,7 @@ Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
 
 Route::post('/add-task-params', [AddTaskController::class, 'getParamsAddTask']);
+Route::post('/meetings-users', [UserController::class, 'getUsers']);
 Route::post('/main-app-parameters', [Controller::class, 'mainAppParameters']);
 
 
