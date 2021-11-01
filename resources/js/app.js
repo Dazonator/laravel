@@ -17,10 +17,14 @@ import router from "./router";
 import moment from 'moment';
 import store from './store/index';
 import { mapGetters, mapActions } from "vuex";
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
+
+Vue.use( CKEditor );
 Vue.use(moment);
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
+
 
 
 window.axios = require('axios');
@@ -50,6 +54,9 @@ Vue.component('team-user-tasks', require('./views/team/team-user-tasks').default
 Vue.component('user-tasks', require('./views/tasks/user-tasks').default);
 Vue.component('department-tasks', require('./views/tasks/department-tasks').default);
 Vue.component('task', require('./views/tasks/task').default);
+
+
+Vue.component('ck-editor', require('./components/templates/ckeditor').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

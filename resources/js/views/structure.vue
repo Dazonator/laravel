@@ -3,10 +3,6 @@
         <div class="row">
             <div class="col" >
                 <h1>{{text}}</h1>
-<!--                <tinymce></tinymce>-->
-<!--                <tiny-editor-->
-<!--                    @content="text = $event"-->
-<!--                ></tiny-editor>-->
                 <v-dialog
                     v-model="dialog"
                     persistent
@@ -30,11 +26,7 @@
                             <span class="text-h5">User Profile</span>
                         </v-card-title>
                         <v-card-text>
-                            <tiny-editor
-                                @content="text = $event"
-                            ></tiny-editor>
-<!--                            <textarea name="" id="mytextarea" cols="30" rows="10"></textarea>-->
-<!--                            <editor api-key="API_KEY" :init="{plugins: 'wordcount'}" />-->
+                            <ck-editor @input="getEditorText"></ck-editor>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -69,14 +61,11 @@
                 dialog: false
             }
         },
-        created() {
+        methods: {
+            getEditorText (data) {
+                this.text = data;
+            }
         }
-        // ready: function() {
-        //     tinyMCE.execCommand('mceAddEditor');
-        // },
-        // beforeDestroy: function() {
-        //     tinyMCE.execCommand('mceRemoveEditor');
-        // }
 
     }
 </script>
