@@ -101,7 +101,9 @@
                             :color="selectedEvent.color"
                             dark
                         >
-                            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                            <v-toolbar-title
+                                v-html="selectedEvent.isMeeting ? 'Собрание отдела: ' + selectedEvent.department : selectedEvent.name"
+                            ></v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn
                                 icon
@@ -121,7 +123,18 @@
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-card-text>
+                        <v-card-text
+                            v-if="selectedEvent.isMeeting"
+                        >
+                            <router-link
+                                :to="'/meetings/' + selectedEvent.id"
+                            >
+                                Ссылка на собрание
+                            </router-link>
+                        </v-card-text>
+                        <v-card-text
+                            v-if="!selectedEvent.isMeeting"
+                        >
                             <p v-html="selectedEvent.text"></p>
                         </v-card-text>
                     </v-card>
@@ -196,7 +209,6 @@ export default {
         selectedOpen: false,
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted () {
         this.$refs.calendar.checkChange()
@@ -237,18 +249,31 @@ export default {
         updateRange ({ start, end }) {
             const events = [];
             axios.post(`/api/calendar/events`, {start: start.date, end: end.date}).then(response => {
-
                 this.tasks = response.data;
-                console.log(this.tasks);
                 for (let task in this.tasks) {
-
-                    console.log();
                     events.push({
+                        isMeeting: false,
                         id: this.tasks[task].id,
                         name: this.tasks[task].title,
                         text: this.tasks[task].text,
                         start: this.tasks[task].start,
                         end: this.tasks[task].end,
+                        color: this.colors[this.rnd(0, this.colors.length - 1)],
+                    })
+                }
+            });
+            axios.post(`/api/calendar/meetings`, {start: start.date, end: end.date}).then(response => {
+                // this.tasks = response.data;
+                let meetings = response.data;
+                console.log(meetings);
+                for (let meeting in meetings) {
+                    events.push({
+                        isMeeting: true,
+                        name: 'Собрание отдела: ' + meetings[meeting].department.department,
+                        id: meetings[meeting].id,
+                        department: meetings[meeting].department.department,
+                        start: meetings[meeting].start,
+                        end: meetings[meeting].end,
                         color: this.colors[this.rnd(0, this.colors.length - 1)],
                     })
                 }

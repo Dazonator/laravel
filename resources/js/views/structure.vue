@@ -26,7 +26,7 @@
                             <span class="text-h5">User Profile</span>
                         </v-card-title>
                         <v-card-text>
-                            <ck-editor @input="getEditorText"></ck-editor>
+                            <ck-editor @input="getEditorData"></ck-editor>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -62,7 +62,7 @@
             }
         },
         methods: {
-            getEditorText (data) {
+            getEditorData (data) {
                 this.text = data;
             }
         }

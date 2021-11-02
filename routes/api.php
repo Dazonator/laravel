@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddUserController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\StepsController;
 use Illuminate\Http\Request;
@@ -43,15 +44,20 @@ Route::post('/main-app-parameters', [Controller::class, 'mainAppParameters']);
 
 
 
-
-
 Route::post('/calendar/events', [CalendarController::class, 'getEvents']);
-
 Route::post('/calendar/event/{id}', [CalendarController::class, 'getById']);
 Route::post('/calendar/create', [CalendarController::class, 'submitEvent']);
-
 Route::post('/calendar/update/{id}', [CalendarController::class, 'updateEvent']);
 Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent']);
+
+
+Route::post('/calendar/meetings', [MeetingsController::class, 'getMeetings']);
+Route::post('/calendar/meetings/max-number', [MeetingsController::class, 'getMaxNumber']);
+Route::post('/calendar/meetings/create', [MeetingsController::class, 'submitMeeting']);
+Route::post('/calendar/meetings/update/{id}', [MeetingsController::class, 'updateMeeting']);
+Route::post('/calendar/meetings/delete/{id}', [MeetingsController::class, 'deleteMeeting']);
+Route::post('/calendar/meetings/{id}', [MeetingsController::class, 'getById']);
+
 
 
 Route::get('/tasks', [TasksController::class, 'userTasks']);

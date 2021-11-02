@@ -17,10 +17,10 @@ import router from "./router";
 import moment from 'moment';
 import store from './store/index';
 import { mapGetters, mapActions } from "vuex";
-import CKEditor from '@ckeditor/ckeditor5-vue2';
+// import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 
-Vue.use( CKEditor );
+// Vue.use( CKEditor );
 Vue.use(moment);
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
@@ -45,6 +45,7 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 Vue.component('example-component', require('./components/ExampleComponent').default);
 Vue.component('calendar-component', require('./components/CalendarComponent').default);
 Vue.component('add-event', require('./views/calendar/add-event').default);
+Vue.component('add-meeting', require('./views/calendar/add-meeting').default);
 Vue.component('add-task', require('./components/templates/add-task').default);
 Vue.component('add-user', require('./components/templates/add-user').default);
 
