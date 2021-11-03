@@ -87,50 +87,50 @@
                 </template>
             </v-autocomplete>
 
-            {{errors.initiator}}
-            <v-autocomplete
-                v-if="!isDistribution"
-                :items="employees"
-                chips
-                label="Инициатор"
-                item-text="name"
-                item-value="id"
-                name="initiator"
-                v-model="fields.initiator_id"
-            >
-                <template v-slot:selection="data">
-                    <v-chip
-                        v-bind="data.attrs"
-                        :input-value="data.selected"
-                        close
-                        @click="data.select"
-                        @click:close="removeInitiator()"
-                    >
-                        <v-avatar left>
-                            <v-img :src="data.item.img"></v-img>
-                        </v-avatar>
-                        {{ data.item.lastname }}
-                    </v-chip>
-                </template>
-                <template v-slot:item="data">
-                    <template v-if="typeof data.item !== 'object'">
-                        <v-list-item-content v-text="data.item"></v-list-item-content>
-                    </template>
-                    <template v-else>
-                        <v-list-item-avatar>
-                            <v-img
-                                :src="data.item.img"
-                                :aspect-ratio="1/1"
-                            >
-                            </v-img>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                            <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
-                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
-                        </v-list-item-content>
-                    </template>
-                </template>
-            </v-autocomplete>
+<!--            {{errors.initiator}}-->
+<!--            <v-autocomplete-->
+<!--                v-if="!isDistribution"-->
+<!--                :items="employees"-->
+<!--                chips-->
+<!--                label="Инициатор"-->
+<!--                item-text="name"-->
+<!--                item-value="id"-->
+<!--                name="initiator"-->
+<!--                v-model="fields.initiator_id"-->
+<!--            >-->
+<!--                <template v-slot:selection="data">-->
+<!--                    <v-chip-->
+<!--                        v-bind="data.attrs"-->
+<!--                        :input-value="data.selected"-->
+<!--                        close-->
+<!--                        @click="data.select"-->
+<!--                        @click:close="removeInitiator()"-->
+<!--                    >-->
+<!--                        <v-avatar left>-->
+<!--                            <v-img :src="data.item.img"></v-img>-->
+<!--                        </v-avatar>-->
+<!--                        {{ data.item.lastname }}-->
+<!--                    </v-chip>-->
+<!--                </template>-->
+<!--                <template v-slot:item="data">-->
+<!--                    <template v-if="typeof data.item !== 'object'">-->
+<!--                        <v-list-item-content v-text="data.item"></v-list-item-content>-->
+<!--                    </template>-->
+<!--                    <template v-else>-->
+<!--                        <v-list-item-avatar>-->
+<!--                            <v-img-->
+<!--                                :src="data.item.img"-->
+<!--                                :aspect-ratio="1/1"-->
+<!--                            >-->
+<!--                            </v-img>-->
+<!--                        </v-list-item-avatar>-->
+<!--                        <v-list-item-content>-->
+<!--                            <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>-->
+<!--                            <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>-->
+<!--                        </v-list-item-content>-->
+<!--                    </template>-->
+<!--                </template>-->
+<!--            </v-autocomplete>-->
 
             {{errors.priority}}
             <v-select

@@ -4,6 +4,8 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 import calendar from './views/calendar';
+import meetings from './views/meetings';
+import meeting from './views/meetings/meeting';
 import profile from './views/profile';
 import messages from "./views/messages";
 import structure from "./views/structure";
@@ -22,6 +24,17 @@ const routes = [
         path: "/calendar",
         name: 'calendar',
         component: calendar
+    },
+    {
+        path: "/meetings",
+        name: 'meetings',
+        component: meetings
+    },
+    {
+        path: "/meetings/:meetingNumber",
+        name: 'meeting',
+        component: meeting,
+        props: true
     },
     {
         path: "/messages",

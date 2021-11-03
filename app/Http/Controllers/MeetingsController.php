@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meetings;
+use App\Models\Tasks;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,11 @@ class MeetingsController extends Controller
         Meetings::where('id', $id)->delete();
     }
 
-    public function getMeetings(Request $request){
+    public function getMeetings(){
+        return Meetings::with('department', 'initiator')->get();
+    }
+
+    public function getMeetingsCalendar(Request $request){
         $request->start = Carbon::parse($request->start)->startOfDay();
         $request->end = Carbon::parse($request->end)->endOfDay();
         $meetings = Meetings::
@@ -67,16 +72,22 @@ class MeetingsController extends Controller
         return $meetings;
     }
 
-    public function getById($id){
-        return Meetings::where('id', $id)->first();
+    public function getByNumber($number){
+        $meeting = Meetings::where('number', $number)->with('department')->get();
+        $tasks = Tasks::where('distribution_department', $meeting->department_id)->with('initiator')->get();
+        return [
+            'meeting' => $meeting,
+            'tasks' => $tasks,
+        ];
     }
 
     public function getMaxNumber()
     {
         $maxNumber = Meetings::max('number');
         if(!$maxNumber){
-            return 0;
+            return 1;
         }
+        $maxNumber++;
         return $maxNumber;
     }
 }

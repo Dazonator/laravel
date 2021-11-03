@@ -25,7 +25,7 @@ class TasksController extends Controller
             'title' => $request->title,
             'text' => $request->text,
             'performers_id' => $request->performers_id,
-            'initiator_id' => $request->initiator_id,
+            'initiator_id' => $user,
             'priority_id' => $request->priority_id,
             'deadline' => $request->deadline,
             'startdate' => $request->startdate,

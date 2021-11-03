@@ -24,4 +24,9 @@ class Meetings extends Model
     {
         return $this->hasOne(Departments::class, 'id', 'department_id');
     }
+
+    public function initiator()
+    {
+        return $this->hasOne(User::class, 'id', 'initiator_id');
+    }
 }

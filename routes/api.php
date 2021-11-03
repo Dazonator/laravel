@@ -51,12 +51,18 @@ Route::post('/calendar/update/{id}', [CalendarController::class, 'updateEvent'])
 Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent']);
 
 
-Route::post('/calendar/meetings', [MeetingsController::class, 'getMeetings']);
+
+
+Route::post('/calendar/meetings', [MeetingsController::class, 'getMeetingsCalendar']);
 Route::post('/calendar/meetings/max-number', [MeetingsController::class, 'getMaxNumber']);
 Route::post('/calendar/meetings/create', [MeetingsController::class, 'submitMeeting']);
 Route::post('/calendar/meetings/update/{id}', [MeetingsController::class, 'updateMeeting']);
 Route::post('/calendar/meetings/delete/{id}', [MeetingsController::class, 'deleteMeeting']);
 Route::post('/calendar/meetings/{id}', [MeetingsController::class, 'getById']);
+
+
+Route::post('/meetings', [MeetingsController::class, 'getMeetings']);
+Route::post('/meetings/{number}', [MeetingsController::class, 'getByNumber']);
 
 
 
