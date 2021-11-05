@@ -18,8 +18,8 @@ class StatusSeeder extends Seeder
         DB::table('Statuses')->delete();
 
         $statuses = [
-            ['id' => 1, 'status' => 'В работе'],
-            ['id' => 2, 'status' => 'Планы'],
+            ['id' => 1, 'status' => 'Планы'],
+            ['id' => 2, 'status' => 'В работе'],
             ['id' => 3, 'status' => 'Выполнено'],
         ];
 

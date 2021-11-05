@@ -25,7 +25,10 @@ class Tasks extends Model
         'update_at',
         'parent_id',
         'in_step',
+        'initial_department',
         'distribution_department',
+        'is_distributed',
+        'meeting_id',
         'creator_id',
     ];
 

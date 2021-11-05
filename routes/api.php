@@ -54,7 +54,7 @@ Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent'])
 
 
 Route::post('/calendar/meetings', [MeetingsController::class, 'getMeetingsCalendar']);
-Route::post('/calendar/meetings/max-number', [MeetingsController::class, 'getMaxNumber']);
+Route::post('/calendar/meetings/max-number/{id}', [MeetingsController::class, 'getMaxNumber']);
 Route::post('/calendar/meetings/create', [MeetingsController::class, 'submitMeeting']);
 Route::post('/calendar/meetings/update/{id}', [MeetingsController::class, 'updateMeeting']);
 Route::post('/calendar/meetings/delete/{id}', [MeetingsController::class, 'deleteMeeting']);
@@ -62,7 +62,7 @@ Route::post('/calendar/meetings/{id}', [MeetingsController::class, 'getById']);
 
 
 Route::post('/meetings', [MeetingsController::class, 'getMeetings']);
-Route::post('/meetings/{number}', [MeetingsController::class, 'getByNumber']);
+Route::post('/meetings/{id}', [MeetingsController::class, 'getById']);
 
 
 
@@ -97,6 +97,7 @@ Route::post('/team/adduser/uploadPhoto', [UserController::class, 'uploadPhoto'])
 
 
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
+Route::post('/tasks/create-department-task', [TasksController::class, 'submitTaskDepartment']);
 Route::post('/tasks/update/{id}', [TasksController::class, 'updateTask']);
 Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
 Route::post('/tasks/restore/{id}', [TasksController::class, 'restoreTask']);

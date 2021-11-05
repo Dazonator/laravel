@@ -9,13 +9,17 @@
 
     import CKEditor from '@ckeditor/ckeditor5-vue2';
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    // import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
-    // import UploadAdapter from './UploadAdapter.js';
-    // let uploader = './images';
 
     export default {
         name: '',
-
+        props: ['defaultText'],
+        watch: {
+            defaultText: function (q) {
+                if(this.defaultText){
+                    this.editorData = this.defaultText;
+                }
+            }
+        },
         data() {
             return {
                 editor: ClassicEditor,
@@ -33,11 +37,6 @@
             postData(data){
                 this.$emit('input', this.editorData);
             },
-            // uploader(editor){
-            //     editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
-            //         return new UploadAdapter( loader );
-            //     };
-            // },
         }
     }
 </script>

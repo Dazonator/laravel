@@ -173,7 +173,7 @@
                     <v-text-field
                         v-model="fields.deadline"
                         label="Дедлайн"
-                        prepend-icon="mdi-calendar"
+                        append-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
@@ -200,7 +200,7 @@
                     <v-text-field
                         v-model="fields.startdate"
                         label="Дата старта"
-                        prepend-icon="mdi-calendar"
+                        append-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
@@ -283,7 +283,7 @@ export default {
                 this.isDistribution = false;
             }
         },
-        isEdit: function ($val){
+        isEdit: function (q){
             if (this.isEdit){
                 axios.get('/api/tasks/edit/'+this.parent_id).then(response => {
                     console.log(response.data);
@@ -292,7 +292,7 @@ export default {
                 });
             }
         },
-        isSubtask: function ($val) {
+        isSubtask: function (q) {
             if (this.isSubtask){
                 axios.get('/api/tasks/parent-steps/'+this.parent_id).then(response => {
                     this.steps = response.data;
@@ -336,6 +336,16 @@ export default {
                         this.errors = error.response.data.errors || {};
                     }
                 });
+            } else if (this.isDistribution){
+
+                axios.post('/api/tasks/create-department-task', this.fields).then(response => {
+                    window.location.href = "/tasks";
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+
             } else {
                 axios.post('/api/tasks/create', this.fields).then(response => {
                     window.location.href = "/tasks";

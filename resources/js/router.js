@@ -31,7 +31,7 @@ const routes = [
         component: meetings
     },
     {
-        path: "/meetings/:meetingNumber",
+        path: "/meetings/:meetingId",
         name: 'meeting',
         component: meeting,
         props: true

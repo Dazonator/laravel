@@ -72,22 +72,22 @@ class MeetingsController extends Controller
         return $meetings;
     }
 
-    public function getByNumber($number){
-        $meeting = Meetings::where('number', $number)->with('department')->get();
-        $tasks = Tasks::where('distribution_department', $meeting->department_id)->with('initiator')->get();
+    public function getById($id){
+        $meeting = Meetings::where('id', $id)->with('department')->first();
+        $tasksInitial = Tasks::where('initial_department', $meeting->department_id)->where('distribution_department', null)->where('is_distributed', false)->with('initiator')->get();
+        $tasksDistribution = Tasks::where('distribution_department', $meeting->department_id)->where('is_distributed', false)->with('initiator')->get();
+        $distributionTasksTrue = Tasks::where('meeting_id', $id)->where('is_distributed', true)-> get();
         return [
             'meeting' => $meeting,
-            'tasks' => $tasks,
+            'tasksInitial' => $tasksInitial,
+            'tasksDistribution' => $tasksDistribution,
+            'distributionTasksTrue' => $distributionTasksTrue,
         ];
     }
 
-    public function getMaxNumber()
+    public function getMaxNumber($id)
     {
-        $maxNumber = Meetings::max('number');
-        if(!$maxNumber){
-            return 1;
-        }
-        $maxNumber++;
+        $maxNumber = Meetings::where('department_id', $id)->max('number');
         return $maxNumber;
     }
 }

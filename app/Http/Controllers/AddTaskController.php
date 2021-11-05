@@ -16,7 +16,6 @@ use App\Models\AddTask;
 class AddTaskController extends Controller
 {
     public function getParamsAddTask($id = null){
-//        $task = Tasks::where('id', $id)->first();
         return [
             'employees' => User::select('id', 'img', 'name', 'lastname', 'position')->get(),
             'priorities' => Priority::all(),

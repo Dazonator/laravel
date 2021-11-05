@@ -29,7 +29,7 @@
             >
                 <template #item.number="{ item }">
                     <router-link
-                        :to="'/meetings/' + item.number"
+                        :to="'/meetings/' + item.id"
                     >
                         {{ item.number }}
                     </router-link>

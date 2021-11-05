@@ -31,6 +31,7 @@
                                     label="Номер собрания"
                                     type="number"
                                     v-model="fields.number"
+                                    disabled
                                 ></v-text-field>
                             </v-col>
                             <v-col
@@ -44,6 +45,7 @@
                                     item-value="id"
                                     label="Отдел"
                                     v-model="fields.department_id"
+                                    @input="getMeetingNumber"
                                 ></v-select>
                             </v-col>
                             <v-col
@@ -220,16 +222,19 @@
             dialog: false,
             fields: {
                 startDate: '',
-                endDate: ''
+                endDate: '',
+                department_id: 0,
             },
             departments: {},
             users: {},
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             menu: false,
+
             timeMenu: false,
             timeMenu2: false,
             time: null,
             time2: null,
+
             errors: null,
         }),
         created() {
@@ -237,10 +242,6 @@
         },
         methods: {
             init(){
-                axios.post(`/api/calendar/meetings/max-number`).then(response => {
-                    console.log(response.data);
-                    this.fields.number = response.data;
-                });
                 axios.get(`/api/departments`).then(response => {
                     console.log(response.data);
                     this.departments = response.data;
@@ -256,6 +257,13 @@
                 if (index >= 0) {
                     this.fields.additional_staff.splice(index, 1)
                 }
+            },
+            getMeetingNumber(event) {
+                // console.log(event);
+                axios.post(`/api/calendar/meetings/max-number/${this.fields.department_id}`).then(response => {
+                    console.log(response.data);
+                    this.fields.number = response.data;
+                });
             },
             submit(){
                 if (!this.updateId){

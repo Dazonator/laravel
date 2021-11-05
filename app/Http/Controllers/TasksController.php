@@ -19,7 +19,6 @@ class TasksController extends Controller
 {
     public function submitTask(AddTaskRequest $request){
         $user = Auth::user()->id;
-        $task = new Tasks();
         $performers = $request->performers_id;
         Tasks::create([
             'title' => $request->title,
@@ -31,14 +30,30 @@ class TasksController extends Controller
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
             'in_step' => $request->in_step,
-            'distribution_department' => $request->department_id,
             'creator_id' => $user,
         ])->responsibles()->sync($performers);
+    }
+
+    public function submitTaskDepartment(Request $request){
+        $user = Auth::user()->id;
+        Tasks::create([
+            'title' => $request->title,
+            'text' => $request->text,
+            'initiator_id' => $user,
+            'initial_department' => $request->department_id,
+            'is_distributed' => false,
+            'creator_id' => $user,
+        ]);
     }
 
     public function updateTask(AddTaskRequest $request){
         $id = $request->id;
         $performers = $request->performers_id;
+
+        $isDistributed = null;
+        if ($request->meeting_id) {
+            $isDistributed = true;
+        }
         $task = Tasks::find($id);
         $task->update([
             'title' => $request->title,
@@ -50,7 +65,8 @@ class TasksController extends Controller
             'startdate' => $request->startdate,
             'parent_id' => $request->parent_id,
             'in_step' => $request->in_step,
-            'distribution_department' => null,
+            'meeting_id' => $request->meeting_id,
+            'is_distributed' => $isDistributed,
         ]);
         $task->responsibles()->sync($performers);
     }
