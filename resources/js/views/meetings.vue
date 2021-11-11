@@ -1,13 +1,9 @@
 <template>
     <main class="col py-4" v-if="loaded">
-<!--        <div class="row">-->
-<!--            <div class="col-3" v-for="(meeting, index) in meetings">-->
-<!--                <router-link :to="'/meetings/' + meeting.id" class="meeting">-->
-<!--                    <h5>Собрание №{{meeting.id}}</h5>-->
-<!--                    <p>{{meeting.department.department}}</p>-->
-<!--                </router-link>-->
-<!--            </div>-->
-<!--        </div>-->
+        <h1 class="mb-8">Календарь</h1>
+        <div class="mb-4">
+            <add-meeting></add-meeting>
+        </div>
         <v-card>
             <v-card-title>
                 <v-text-field

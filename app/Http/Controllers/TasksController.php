@@ -50,10 +50,11 @@ class TasksController extends Controller
         $id = $request->id;
         $performers = $request->performers_id;
 
-        $isDistributed = null;
+        $isDistributed = false;
         if ($request->meeting_id) {
             $isDistributed = true;
         }
+
         $task = Tasks::find($id);
         $task->update([
             'title' => $request->title,
@@ -66,6 +67,7 @@ class TasksController extends Controller
             'parent_id' => $request->parent_id,
             'in_step' => $request->in_step,
             'meeting_id' => $request->meeting_id,
+            'distribution_department' => $request->distribution_department,
             'is_distributed' => $isDistributed,
         ]);
         $task->responsibles()->sync($performers);

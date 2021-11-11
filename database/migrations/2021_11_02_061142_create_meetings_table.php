@@ -21,6 +21,7 @@ class CreateMeetingsTable extends Migration
             $table->json('additional_staff')->nullable();
             $table->dateTime('start');
             $table->dateTime('end');
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
         });
     }

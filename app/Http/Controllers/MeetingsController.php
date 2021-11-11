@@ -21,7 +21,7 @@ class MeetingsController extends Controller
             'additional_staff' => $request->additional_staff,
             'start' => $request->start,
             'end' => $request->end,
-        ]);
+        ])->users()->sync($request->additional_staff);
     }
 
     public function updateMeeting(Request $request){
@@ -34,10 +34,18 @@ class MeetingsController extends Controller
             'start' => $request->start,
             'end' => $request->end,
         ]);
+        $meeting->users()->sync($request->additional_staff);
     }
 
     public function deleteMeeting($id){
         Meetings::where('id', $id)->delete();
+    }
+
+    public function completedMeeting($id){
+        $meeting = Meetings::find($id);
+        $meeting->update([
+            'completed_at' => Carbon::now(),
+        ]);
     }
 
     public function getMeetings(){
@@ -45,26 +53,51 @@ class MeetingsController extends Controller
     }
 
     public function getMeetingsCalendar(Request $request){
+//        $meetings = Meetings::
+//            where([
+//                ['start', '>=', $request->start],
+//                ['start', '<=', $request->end],
+//            ])
+//            ->orWhere([
+//                ['end', '>=', $request->start],
+//                ['end', '<=', $request->end],
+//            ])
+//            ->orWhere([
+//                ['start', '<=', $request->start],
+//                ['end', '>=', $request->end],
+//            ])
+//            ->orWhere([
+//                ['start', '<=', $request->start],
+//                ['end', '>=', $request->end],
+//            ])
+//            ->with('department')->get();
+//        foreach ($meetings as $meeting){
+//            $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');
+//            $meeting->end = Carbon::parse($meeting->end)->format('Y-m-d H:i');
+//        }
+//        return $meetings;
+
         $request->start = Carbon::parse($request->start)->startOfDay();
         $request->end = Carbon::parse($request->end)->endOfDay();
-        $meetings = Meetings::
-            where([
+        $meetings = Meetings::with(['department', 'users'])->where(function ($query) use ($request) {
+            $query->where([
                 ['start', '>=', $request->start],
                 ['start', '<=', $request->end],
-            ])
-            ->orWhere([
+            ])->orWhere([
                 ['end', '>=', $request->start],
                 ['end', '<=', $request->end],
-            ])
-            ->orWhere([
+            ])->orWhere([
                 ['start', '<=', $request->start],
                 ['end', '>=', $request->end],
-            ])
-            ->orWhere([
+            ])->orWhere([
                 ['start', '<=', $request->start],
                 ['end', '>=', $request->end],
-            ])
-            ->with('department')->get();
+            ]);
+        })->where(function ($query){
+            $query->where('department_id', Auth::user()->department_id)->orWhereHas('users', function ($q){
+                $q->where('user_id', Auth::user()->id);
+            });
+        })->get();
         foreach ($meetings as $meeting){
             $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');
             $meeting->end = Carbon::parse($meeting->end)->format('Y-m-d H:i');
@@ -85,9 +118,16 @@ class MeetingsController extends Controller
         ];
     }
 
+    public function getByIdForUpdate($id){
+        $meeting = Meetings::find($id);
+        $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');
+        $meeting->end = Carbon::parse($meeting->end)->format('Y-m-d H:i');
+        return $meeting;
+    }
+
     public function getMaxNumber($id)
     {
-        $maxNumber = Meetings::where('department_id', $id)->max('number');
-        return $maxNumber;
+        $number = Meetings::where('department_id', $id)->max('number');
+        return $number;
     }
 }

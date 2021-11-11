@@ -45,7 +45,7 @@
                                     item-value="id"
                                     label="Отдел"
                                     v-model="fields.department_id"
-                                    @input="getMeetingNumber"
+                                    @input="getMeetingNumber($event)"
                                 ></v-select>
                             </v-col>
                             <v-col
@@ -218,12 +218,31 @@
     export default {
         name: "add-meeting",
         props: ['updateId'],
+        watch: {
+            dialog: function (q){
+                if(!this.dialog) {
+                    this.fields = {
+                        startDate: '',
+                        endDate: '',
+                        department_id: 0,
+                        number: '',
+                    };
+                    this.clearId();
+                }
+            },
+            updateId: function (q){
+                if(this.updateId){
+                    this.getById(this.updateId);
+                }
+            },
+        },
         data: () => ({
             dialog: false,
             fields: {
                 startDate: '',
                 endDate: '',
                 department_id: 0,
+                number: '',
             },
             departments: {},
             users: {},
@@ -243,14 +262,15 @@
         methods: {
             init(){
                 axios.get(`/api/departments`).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.departments = response.data;
                 });
                 axios.post(`/api/meetings-users`).then(response => {
-                    console.log(response.data);
-                    console.log(response.data);
+                    // console.log(response.data);
+                    // console.log(response.data);
                     this.users = response.data;
                 });
+                // this.getMeetingNumber();
             },
             removePerformers (item) {
                 const index = this.fields.additional_staff.indexOf(item.id);
@@ -259,10 +279,14 @@
                 }
             },
             getMeetingNumber(event) {
-                // console.log(event);
-                axios.post(`/api/calendar/meetings/max-number/${this.fields.department_id}`).then(response => {
-                    console.log(response.data);
-                    this.fields.number = response.data;
+                console.log(event);
+                axios.post(`/api/calendar/meetings/max-number/${event}`).then(response => {
+                    // console.log(response);
+                    if (response.data) {
+                        this.fields.number = response.data + 1;
+                    } else {
+                        this.fields.number = 1;
+                    }
                 });
             },
             submit(){
@@ -270,28 +294,43 @@
                     this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
                     this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
                     axios.post('/api/calendar/meetings/create', this.fields).then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         window.location.reload();
                     }).catch(error => {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors || {};
-                            console.log(this.errors);
+                            // console.log(this.errors);
                         }
                     });
                 } else {
                     this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
                     this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
                     axios.post(`/api/calendar/meetings/update/${this.updateId}`, this.fields).then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         window.location.reload();
                     }).catch(error => {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors || {};
-                            console.log(this.errors);
+                            // console.log(this.errors);
                         }
                     });
                 }
             },
+            getById(id){
+                axios.post(`/api/meetings/get-by-id-for-update/${id}`).then(response => {
+                    // console.log(response.data);
+                    this.fields = response.data;
+                    let date1 = this.fields.start.split(" ");
+                    let date2 = this.fields.end.split(" ");
+                    this.fields.startDate = date1[0];
+                    this.fields.startTime = date1[1];
+                    this.fields.endTime = date2[1];
+                    this.dialog = true;
+                });
+            },
+            clearId(){
+                this.$emit('updateId', true);
+            }
         }
     }
 </script>

@@ -3,135 +3,173 @@
     <main class="col py-4" v-if="loaded">
         <h1 class="mb-6">Собрание №{{meeting.number}}</h1>
 
-
-        <h3>Распределить</h3>
-        <v-data-table
-            class="mb-6"
-            :headers="headers"
-            :items="initialTasks"
-            :single-expand="singleExpand"
-            :expanded.sync="expanded"
-            show-expand
-            :search="search"
-            loading-text="Загрузка задач..."
+        <div
+            v-if="!is_completed"
         >
-            <template v-slot:top>
-                <v-toolbar flat>
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                        v-model="search"
-                        append-icon="mdi-magnify"
-                        label="Поиск..."
-                        single-line
+            <h3>Распределить</h3>
+            <v-data-table
+                class="mb-6"
+                :headers="headers"
+                :items="initialTasks"
+                :single-expand="singleExpand"
+                :expanded.sync="expanded"
+                show-expand
+                :search="search"
+                loading-text="Загрузка задач..."
+            >
+                <template v-slot:top>
+                    <v-toolbar flat>
+                        <v-spacer></v-spacer>
+                        <v-text-field
+                            v-model="search"
+                            append-icon="mdi-magnify"
+                            label="Поиск..."
+                            single-line
+                            hide-details
+                        ></v-text-field>
+                    </v-toolbar>
+                </template>
+                <template #item.title="{ item }">
+                    <router-link
+
+                        :to="'/tasks/task/' + item.id"
+                    >
+                        {{ item.title }}
+                    </router-link>
+                </template>
+                <template #item.initiator="{ item }">
+                    <v-chip
+                        v-if="item.initiator"
+                    >
+                        <v-avatar left>
+                            <v-img :src="item.initiator.img"></v-img>
+                        </v-avatar>
+                        {{item.initiator.name}}
+                        {{item.initiator.lastname}}
+
+                    </v-chip>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                    <v-icon
+                        small
+                        class="mr-2"
+                        @click="distributionTask(item.id)"
+                    >
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon
+                        small
+                        @click="deleteId = item.id"
+                    >
+                        mdi-delete
+                    </v-icon>
+                </template>
+                <template
+                    v-slot:item.department_id="{ item }"
+                >
+                    <v-select
+                        v-model="item.distribution_department"
+                        :items="departments"
+                        item-text="department"
+                        item-value="id"
+                        label="Для отдела"
+                        dense
+                        solo
                         hide-details
-                    ></v-text-field>
-                </v-toolbar>
-            </template>
-            <template #item.title="{ item }">
-                <router-link
+                        @change="changeDepartment(item)"
+                    ></v-select>
+                    <!--                    {{initialTasks}}-->
+                </template>
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length" v-html="item.text">
+                    </td>
+                </template>
+            </v-data-table>
+        </div>
 
-                    :to="'/tasks/task/' + item.id"
-                >
-                    {{ item.title }}
-                </router-link>
-            </template>
-            <template #item.initiator="{ item }">
-                <v-chip
-                    v-if="item.initiator"
-                >
-                    <v-avatar left>
-                        <v-img :src="item.initiator.img"></v-img>
-                    </v-avatar>
-                    {{item.initiator.name}}
-                    {{item.initiator.lastname}}
-
-                </v-chip>
-            </template>
-            <template v-slot:item.actions="{ item }">
-                <v-icon
-                    small
-                    class="mr-2"
-                    @click="distributionTask(item.id)"
-                >
-                    mdi-pencil
-                </v-icon>
-                <v-icon
-                    small
-                    @click="deleteItem(item)"
-                >
-                    mdi-delete
-                </v-icon>
-            </template>
-            <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length" v-html="item.text">
-                </td>
-            </template>
-        </v-data-table>
-
-
-        <h3>Внедрить</h3>
-        <v-data-table
-            class="mb-6"
-            :headers="headers"
-            :items="distributionTasks"
-            :single-expand="singleExpand2"
-            :expanded.sync="expanded2"
-            show-expand
-            :search="search2"
-            loading-text="Загрузка задач..."
+        <div
+            v-if="!is_completed"
         >
-            <template v-slot:top>
-                <v-toolbar flat>
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                        v-model="search2"
-                        append-icon="mdi-magnify"
-                        label="Поиск..."
-                        single-line
+            <h3>Внедрить</h3>
+            <v-data-table
+                class="mb-6"
+                :headers="headers"
+                :items="distributionTasks"
+                :single-expand="singleExpand2"
+                :expanded.sync="expanded2"
+                show-expand
+                :search="search2"
+                loading-text="Загрузка задач..."
+            >
+                <template v-slot:top>
+                    <v-toolbar flat>
+                        <v-spacer></v-spacer>
+                        <v-text-field
+                            v-model="search2"
+                            append-icon="mdi-magnify"
+                            label="Поиск..."
+                            single-line
+                            hide-details
+                        ></v-text-field>
+                    </v-toolbar>
+                </template>
+                <template #item.title="{ item }">
+                    <router-link
+
+                        :to="'/tasks/task/' + item.id"
+                    >
+                        {{ item.title }}
+                    </router-link>
+                </template>
+                <template #item.initiator="{ item }">
+                    <v-chip
+                        v-if="item.initiator"
+                    >
+                        <v-avatar left>
+                            <v-img :src="item.initiator.img"></v-img>
+                        </v-avatar>
+                        {{item.initiator.name}}
+                        {{item.initiator.lastname}}
+
+                    </v-chip>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                    <v-icon
+                        small
+                        class="mr-2"
+                        @click="distributionTask(item.id)"
+                    >
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon
+                        small
+                        @click="deleteId = item.id"
+                    >
+                        mdi-delete
+                    </v-icon>
+                </template>
+                <template
+                    v-slot:item.department_id="{ item }"
+                >
+                    <v-select
+                        v-model="item.distribution_department"
+                        :items="departments"
+                        item-text="department"
+                        item-value="id"
+                        label="Для отдела"
+                        dense
+                        solo
                         hide-details
-                    ></v-text-field>
-                </v-toolbar>
-            </template>
-            <template #item.title="{ item }">
-                <router-link
-
-                    :to="'/tasks/task/' + item.id"
-                >
-                    {{ item.title }}
-                </router-link>
-            </template>
-            <template #item.initiator="{ item }">
-                <v-chip
-                    v-if="item.initiator"
-                >
-                    <v-avatar left>
-                        <v-img :src="item.initiator.img"></v-img>
-                    </v-avatar>
-                    {{item.initiator.name}}
-                    {{item.initiator.lastname}}
-
-                </v-chip>
-            </template>
-            <template v-slot:item.actions="{ item }">
-                <v-icon
-                    small
-                    class="mr-2"
-                    @click="dialog = true"
-                >
-                    mdi-pencil
-                </v-icon>
-                <v-icon
-                    small
-                    @click="deleteItem(item)"
-                >
-                    mdi-delete
-                </v-icon>
-            </template>
-            <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length" v-html="item.text">
-                </td>
-            </template>
-        </v-data-table>
+                        @change="changeDepartment(item)"
+                    ></v-select>
+                    <!--                    {{initialTasks}}-->
+                </template>
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length" v-html="item.text">
+                    </td>
+                </template>
+            </v-data-table>
+        </div>
 
 
         <h3>Распределённое на этом собрании</h3>
@@ -167,6 +205,49 @@
             :meetingId = meetingId
         ></update-task>
 
+
+        <v-btn
+            v-if="!is_completed"
+            class="mt-6"
+            color="error"
+            block
+            @click="completedMeeting()"
+        >
+            Завершить собрание
+        </v-btn>
+
+
+        <v-dialog
+            v-model="dialogDelete"
+            max-width="290"
+        >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Вы действительно хотите удалить событие?
+                </v-card-title>
+
+                <v-card-actions>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="dialogDelete = false"
+                    >
+                        Нет
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="deleteTask()"
+                    >
+                        Да
+                    </v-btn>
+
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </main>
 </template>
 
@@ -178,10 +259,14 @@
                 updateId: null,
                 isDistribution: false,
 
+                deleteId: null,
+                departments: {},
+                dialogDelete: false,
                 dialog: false,
                 loaded: false,
                 getComponent: 'update-task',
                 meeting: {},
+                is_completed: false,
                 // tasks: {},
                 initialTasks: {},
                 distributionTasks: {},
@@ -205,7 +290,16 @@
                         value: 'initiator',
                         sortable: true,
                     },
-                    { text: 'Actions', value: 'actions', sortable: false },
+                    {
+                        text: 'Действия',
+                        value: 'actions',
+                        sortable: false
+                    },
+                    {
+                        text: '',
+                        value: 'department_id',
+                        sortable: false
+                    },
                     {
                         text: '',
                         value: 'data-table-expand'
@@ -217,20 +311,43 @@
             '$route.path' (to, from){
                 this.meetingId = Number(this.$route.params.meetingId);
                 this.init();
-            }
+            },
+            deleteId: function (q){
+                if (this.deleteId){
+                    this.dialogDelete = true;
+                }
+            },
         },
         created() {
             this.init();
         },
         methods: {
             init(){
+                axios.get(`/api/departments`).then(response => {
+                    this.departments = response.data;
+                });
+
                 axios.post(`/api/meetings/${this.meetingId}`).then(response => {
-                    console.log(response.data);
                     this.meeting = response.data.meeting;
                     this.initialTasks = response.data.tasksInitial;
                     this.distributionTasks = response.data.tasksDistribution;
                     this.distributionTasksTrue = response.data.distributionTasksTrue;
+                    console.log(this.meeting);
+
+                    if (this.meeting.completed_at){
+                        this.is_completed = true;
+                    }
+                    console.log(this.is_completed);
+
+
                     this.loaded = true;
+                });
+            },
+            deleteTask(){
+                axios.post(`/api/tasks/delete/${this.deleteId}`).then(response => {
+                    this.init();
+                    this.deleteId = null;
+                    this.dialogDelete = false;
                 });
             },
             closeDialog(data){
@@ -244,6 +361,19 @@
                 this.updateId = id;
                 this.isDistribution = true;
                 this.dialog = true;
+            },
+            completedMeeting(){
+                axios.post(`/api/meetings/completed/${this.meetingId}`).then(response => {
+                    this.init();
+                });
+            },
+            changeDepartment(item){
+                if((item.initial_department === item.distribution_department) && (item.initial_department > 0) && (item.distribution_department > 0)){
+                    item.distribution_department = null;
+                }
+                axios.post(`/api/tasks/update/${item.id}`, item).then(response => {
+                    this.init();
+                });
             }
 
         }

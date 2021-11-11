@@ -1,6 +1,15 @@
 <template>
     <v-row class="fill-height">
         <v-col>
+            <div
+                class="mb-6"
+            >
+                <add-meeting
+                    :updateId = "updateMeetingId"
+                    @updateId = "clearId()"
+                >
+                </add-meeting>
+            </div>
             <v-sheet height="64">
                 <v-toolbar
                     flat
@@ -106,14 +115,30 @@
                             ></v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn
+                                v-if="!selectedEvent.isMeeting"
                                 icon
-                                @click="updateEvent(selectedEvent.id)"
+                                @click="updateId = selectedEvent.id"
                             >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn
+                                v-if="selectedEvent.isMeeting && !selectedEvent.isCompleted"
+                                icon
+                                @click="updateMeetingId = selectedEvent.id"
+                            >
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn
+                                v-if="!selectedEvent.isMeeting"
                                 icon
                                 @click="deleteId = selectedEvent.id"
+                            >
+                                <v-icon>mdi-delete-outline</v-icon>
+                            </v-btn>
+                            <v-btn
+                                v-if="selectedEvent.isMeeting  && !selectedEvent.isCompleted"
+                                icon
+                                @click="deleteMeetingId = selectedEvent.id"
                             >
                                 <v-icon>mdi-delete-outline</v-icon>
                             </v-btn>
@@ -142,9 +167,10 @@
             </v-sheet>
 
             <add-event
-                :updateId="updateId"
-                @updateId="clearId($event)"
+                :updateId = "updateId"
+                @updateId = "clearId()"
             ></add-event>
+
             <v-dialog
                 v-model="dialogDelete"
                 max-width="290"
@@ -165,12 +191,22 @@
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn
+                            v-if="deleteId"
                             color="green darken-1"
                             text
                             @click="deleteEvent"
                         >
                             Да
                         </v-btn>
+                        <v-btn
+                            v-if="deleteMeetingId"
+                            color="green darken-1"
+                            text
+                            @click="deleteMeeting()"
+                        >
+                            Да
+                        </v-btn>
+
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -189,12 +225,19 @@ export default {
             if (!this.dialogDelete){
                 this.deleteId = null;
             }
+        },
+        deleteMeetingId: function (q) {
+            if (this.deleteMeetingId){
+                this.dialogDelete = true;
+            }
         }
     },
     data: () => ({
         dialogDelete: false,
         deleteId: null,
         updateId: null,
+        deleteMeetingId: null,
+        updateMeetingId: null,
         tasks: [],
         focus: '',
         type: '4day',
@@ -265,10 +308,12 @@ export default {
             axios.post(`/api/calendar/meetings`, {start: start.date, end: end.date}).then(response => {
                 // this.tasks = response.data;
                 let meetings = response.data;
+                console.log(response.data);
                 console.log(meetings);
                 for (let meeting in meetings) {
                     events.push({
                         isMeeting: true,
+                        isCompleted: meetings[meeting].completed_at != null ? true : false,
                         name: 'Собрание отдела: ' + meetings[meeting].department.department,
                         id: meetings[meeting].id,
                         department: meetings[meeting].department.department,
@@ -279,25 +324,31 @@ export default {
                 }
             });
 
-            this.events = events
+            this.events = events;
             // console.log(this.events);
         },
         rnd (a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
         },
-        updateEvent(id){
-            this.updateId = id;
-        },
         deleteEvent(){
             axios.post(`/api/calendar/delete/${this.deleteId}`).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 window.location.reload();
             });
         },
-        clearId(updateEvent){
-            if (updateEvent){
-                this.updateId = null;
-            }
+
+        // updateMeeting(id){
+        //     this.updateId = id;
+        // },
+        deleteMeeting(){
+            axios.post(`/api/calendar/meetings/delete/${this.deleteMeetingId}`).then(response => {
+                // console.log(response.data);
+                window.location.reload();
+            });
+        },
+        clearId(){
+            this.updateId = null;
+            this.updateMeetingId = null;
         }
 
     },

@@ -15,6 +15,7 @@ class Meetings extends Model
         'start',
         'end',
         'user_id',
+        'completed_at',
     ];
     protected $casts   = [
         'additional_staff' => 'json'
@@ -28,5 +29,10 @@ class Meetings extends Model
     public function initiator()
     {
         return $this->hasOne(User::class, 'id', 'initiator_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

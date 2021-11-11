@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Messages::class);
     }
 
+    public function meetings()
+    {
+        return $this->belongsToMany(Meetings::class);
+    }
+
     public function setImgAttribute($img) {
         $img = '/storage/'.$img;
         $this->attributes['img'] = $img;

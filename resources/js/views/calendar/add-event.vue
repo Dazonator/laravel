@@ -297,9 +297,9 @@ export default {
         },
         getById(id){
             axios.post(`/api/calendar/event/${id}`).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.fields = response.data;
-                console.log(this.fields);
+                // console.log(this.fields);
                 let date1 = this.fields.start.split(" ");
                 let date2 = this.fields.end.split(" ");
                 this.fields.startDate = date1[0];
@@ -307,7 +307,7 @@ export default {
                 this.fields.endDate = date2[0];
                 this.fields.endTime = date2[1];
                 this.dialog = true;
-                alert('update');
+                // alert('update');
             });
         },
         clearId(){

@@ -62,7 +62,10 @@ Route::post('/calendar/meetings/{id}', [MeetingsController::class, 'getById']);
 
 
 Route::post('/meetings', [MeetingsController::class, 'getMeetings']);
+Route::post('/meetings/completed/{id}', [MeetingsController::class, 'completedMeeting']);
+Route::post('/meetings/get-by-id-for-update/{id}', [MeetingsController::class, 'getByIdForUpdate']);
 Route::post('/meetings/{id}', [MeetingsController::class, 'getById']);
+
 
 
 
