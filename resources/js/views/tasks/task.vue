@@ -17,9 +17,8 @@
                     <span>{{task.priority.priority}}</span>
                 </div>
 
-                <p class="task-page__text" v-if="task.text">
-                    {{task.text}}
-                </p>
+                <div class="task-page__text" v-if="task.text" v-html="task.text">
+                </div>
 
                 <div class="task-page__created">
                     Создано {{ task.created_at | createDate }}

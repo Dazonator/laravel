@@ -117,7 +117,7 @@ class TasksController extends Controller
 //        return Tasks::with(['responsibles'])->whereHas('responsibles', function($q) use ($id){
 //            $q->where('department_id', $id);
 //        })->get();
-        return Tasks::where('distribution_department', $id)->get();
+        return Tasks::where('initial_department', $id)->with('initiator')->get();
     }
 
 

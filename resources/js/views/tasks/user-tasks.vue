@@ -63,8 +63,11 @@
                 </template>
 
                 <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length">
-                        {{ item.text }}
+                    <td
+                        :colspan="headers.length"
+                        v-html="item.text"
+                    >
+
                     </td>
                 </template>
                 <template v-slot:item.actions="{ item }">
