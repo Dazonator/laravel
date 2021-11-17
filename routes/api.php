@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/ckeditor/upload', [UserController::class, 'editorUpload']);
 
 Route::get('/profile/{id?}', [UserController::class, 'profile']);
 

@@ -1,10 +1,13 @@
 <template>
     <v-dialog
-        v-model="open"
+        v-model="isOpen"
         fullscreen
         hide-overlay
         transition="dialog-bottom-transition"
         scrollable
+
+        persistent
+        :retain-focus="false"
     >
         <v-card
             tile
@@ -213,6 +216,7 @@
         props: ['open', 'updateId', 'isDistribution', 'meetingId'],
         data () {
             return{
+                isOpen: this.open,
                 employees: [],
                 priorities: [],
                 departments: [],
@@ -231,6 +235,9 @@
             }
         },
         watch: {
+            open: function(q){
+              this.isOpen = q;
+            },
             isDistribution: function (q){
                 if (this.isDistribution){
                     axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
@@ -251,6 +258,7 @@
             },
             close(){
                 this.fields = clearFields;
+                this.isOpen = false;
                 this.$emit('close', false)
             },
             removePerformers (item) {
@@ -267,10 +275,8 @@
                 if(this.isDistribution){
                     this.fields.meeting_id = this.meetingId;
                     axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
-                        // window.location.href = `/tasks/${this.fields.id}`;
-                        alert('задача распределена успешно!!!');
+                        this.$emit('close', false)
                     }).catch(error => {
-
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors || {};
                         }

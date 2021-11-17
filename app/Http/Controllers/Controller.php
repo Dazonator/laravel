@@ -7,16 +7,32 @@ use App\Models\MessagesUser;
 use App\Models\Priority;
 use App\Models\Status;
 use App\Models\User;
+//use http\Env\Request;
+
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function editorUpload(Request $request){
+//        print_r($request);
+        $file = $request->upload;
+        $path   = 'images/users';
+
+        return [
+            'result' => 'success',
+            'url' => '/storage/'.Storage::disk('public')->putFile($path, $file),
+            'message' => 'Сообщение'
+        ];
+
+    }
 
     public function mainAppParameters()
     {
@@ -30,23 +46,4 @@ class Controller extends BaseController
         ];
     }
 
-    public function editorImageUpload(Request $request)
-    {
-        if($request->hasFile('upload')) {
-            $originName = $request->file('upload')->getClientOriginalName();
-            $fileName = pathinfo($originName, PATHINFO_FILENAME);
-            $extension = $request->file('upload')->getClientOriginalExtension();
-            $fileName = $fileName.'_'.time().'.'.$extension;
-
-            $request->file('upload')->move(public_path('images'), $fileName);
-
-            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-            $url = asset('images/'.$fileName);
-            $msg = 'Image uploaded successfully';
-            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
-
-            @header('Content-type: text/html; charset=utf-8');
-            echo $response;
-        }
-    }
 }

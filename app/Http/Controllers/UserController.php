@@ -71,6 +71,7 @@ class UserController extends Controller
         return Storage::disk('public')->putFile($path, $file);
     }
 
+
     public function profile($id=null)
     {
         if ($id){

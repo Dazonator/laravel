@@ -16,7 +16,11 @@
         </template>
         <v-card>
 
-            <form @submit.prevent="submit">
+            <v-form
+                @submit.prevent="submit"
+                lazy-validation
+                v-model="valid"
+            >
                 <v-card-title>
                     <span class="text-h5">Создать собрание</span>
                 </v-card-title>
@@ -209,7 +213,7 @@
                         {{updateId ? 'Изменить' : 'Создать'}}
                     </v-btn>
                 </v-card-actions>
-            </form>
+            </v-form>
         </v-card>
     </v-dialog>
 </template>
@@ -237,6 +241,7 @@
             },
         },
         data: () => ({
+            valid: true,
             dialog: false,
             fields: {
                 startDate: '',
