@@ -18,8 +18,6 @@
 
             <v-form
                 @submit.prevent="submit"
-                lazy-validation
-                v-model="valid"
             >
                 <v-card-title>
                     <span class="text-h5">Создать собрание</span>
@@ -241,7 +239,6 @@
             },
         },
         data: () => ({
-            valid: true,
             dialog: false,
             fields: {
                 startDate: '',
