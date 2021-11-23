@@ -29,6 +29,7 @@ class Tasks extends Model
         'distribution_department',
         'is_distributed',
         'meeting_id',
+        'structure_id',
         'creator_id',
     ];
 
@@ -118,5 +119,8 @@ class Tasks extends Model
         return $this->hasManyThrough(MessagesUser::class, Messages::class, 'task_id', 'messages_id');
     }
 
-
+    public function structure()
+    {
+        return $this->hasOne(Structure::class, 'id', 'structure_id');
+    }
 }

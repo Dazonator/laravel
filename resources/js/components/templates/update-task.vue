@@ -28,15 +28,6 @@
                 </v-btn>
                 <v-toolbar-title>Изменить задание</v-toolbar-title>
                 <v-spacer></v-spacer>
-<!--                <v-toolbar-items>-->
-<!--                    <v-btn-->
-<!--                        dark-->
-<!--                        text-->
-<!--                        @click="$emit('close', false)"-->
-<!--                    >-->
-<!--                        Сохранить-->
-<!--                    </v-btn>-->
-<!--                </v-toolbar-items>-->
             </v-toolbar>
             <v-card-text
                 class="py-6"
@@ -65,8 +56,58 @@
                                 :defaultText = fields.text
                             ></ck-editor>
                         </v-col>
+
                         <v-col
-                            cols="6"
+                            cols="4 d-flex flex-wrap align-center"
+                        >
+                            <v-menu
+                                v-model="menuStructure"
+                                :close-on-content-click="false"
+                                :nudge-width="200"
+                                offset-x
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        color="primary"
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        Структура
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-radio-group
+                                        v-model="fields.structure"
+                                        @change="structureValueChenge($event)"
+                                    >
+                                        <v-treeview
+                                            dense
+                                            :items="structures"
+                                        >
+                                            <template v-slot:label="props">
+                                                <div>
+                                                    <v-radio
+                                                        :label="props.item.name"
+                                                        :value="props.item"
+                                                    >
+
+                                                    </v-radio>
+                                                </div>
+                                            </template>
+                                        </v-treeview>
+                                    </v-radio-group>
+                                </v-card>
+                            </v-menu>
+                            <span
+                                class="mx-1"
+                            >
+                                {{structureValue}}
+                            </span>
+                        </v-col>
+
+                        <v-col
+                            cols="4"
                         >
                             <v-autocomplete
                                 :items="employees"
@@ -112,7 +153,7 @@
                             </v-autocomplete>
                         </v-col>
                         <v-col
-                            cols="6"
+                            cols="4"
                         >
                             <v-select
                                 :items=priorities
@@ -188,6 +229,7 @@
                                 large
                                 block
                             >
+                                {{isDistribution ? 'Распределить' : ''}}
     <!--                                {{isEdit ? 'Сохранить изменения' : ''}}-->
     <!--                                {{isSubtask ? 'Создать подзадачу' : ''}}-->
     <!--                                {{isTask ? 'Создать задачу' : ''}}-->
@@ -220,18 +262,25 @@
                 employees: [],
                 priorities: [],
                 departments: [],
+                structures: [],
 
                 loaded: false,
                 // isDistribution: false,
                 fields: {
                     text: '',
+                    structure: {
+                        name: '',
+                        id: null,
+                    }
                 },
                 errors: {},
+                structureValue: '',
 
                 date: null,
                 date2: null,
                 menu: false,
                 menu2: false,
+                menuStructure: false,
             }
         },
         watch: {
@@ -243,6 +292,7 @@
                     axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
                         console.log(response.data);
                         this.fields = response.data;
+                        this.structureValue = this.fields.structure.name;
                     });
                 }
             },
@@ -250,9 +300,11 @@
         methods: {
             init(){
                 axios.post('/api/add-task-params').then(response => {
+                    console.log(response.data);
                     this.employees = response.data.employees;
                     this.priorities = response.data.priorities;
                     this.departments = response.data.departments;
+                    this.structures = response.data.structures;
                     this.loaded = true;
                 });
             },
@@ -283,6 +335,11 @@
                     });
                 }
             },
+            structureValueChenge(val){
+                this.structureValue = this.fields.structure.name;
+                this.fields.structure_id = null;
+                this.fields.structure_id = this.fields.structure.id;
+            }
         },
         created(){
             this.init();

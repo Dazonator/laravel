@@ -127,7 +127,11 @@ class MeetingsController extends Controller
 
     public function getMaxNumber($id)
     {
-        $number = Meetings::where('department_id', $id)->max('number');
-        return $number;
+        if($id){
+            return Meetings::where('department_id', $id)->max('number');
+        } else {
+            return Meetings::whereNull('department_id')->max('number');
+        }
+
     }
 }

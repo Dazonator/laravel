@@ -44,7 +44,7 @@ const routes = [
     },
     {
         path: "/messages/:taskId",
-        name: 'messages',
+        name: 'messages-task',
         component: messages,
         props: true
     },
@@ -58,11 +58,6 @@ const routes = [
         name: 'profile_id',
         component: profile,
         props: true
-    },
-    {
-        path: "/structure",
-        name: 'structure',
-        component: structure
     },
     {
         path: "/tasks",
@@ -104,7 +99,17 @@ const routes = [
         name: 'team-user',
         component: team,
         props: true
-    }
+    },
+    {
+        path: "/structure",
+        name: 'structure',
+        component: structure
+    },
+    {
+        path: "/structure/:categoryId",
+        name: 'structure-id',
+        component: structure
+    },
 ];
 
 export default new VueRouter({

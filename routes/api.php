@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\StepsController;
+use App\Http\Controllers\StructureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,8 @@ Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesA
 
 Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
+Route::get('/tasks/structure/{id}', [TasksController::class, 'tasksByStructure']);
+
 Route::get('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
 Route::post('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
@@ -110,6 +113,15 @@ Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
 
 Route::get('/messages', [MessagesController::class, 'messagesNotifications']);
 Route::get('/notifications', [MessagesController::class, 'getNotifications']);
+
+
+
+Route::post('/structure/getStructure', [StructureController::class, 'getStructure']);
+Route::post('/structure/create', [StructureController::class, 'createCategory']);
+Route::post('/structure/update', [StructureController::class, 'updateCategory']);
+Route::post('/structure/delete/{id}', [StructureController::class, 'deleteCategory']);
+
+
 
 
 

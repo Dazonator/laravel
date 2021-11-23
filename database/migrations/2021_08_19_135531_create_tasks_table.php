@@ -29,6 +29,7 @@ class CreateTasksTable extends Migration
             $table->integer('distribution_department',)->nullable();
             $table->boolean('is_distributed',)->nullable();
             $table->integer('meeting_id',)->nullable();
+            $table->integer('structure_id',)->nullable();
             $table->integer('creator_id')->nullable();
             $table->softDeletes();
             $table->timestamps();

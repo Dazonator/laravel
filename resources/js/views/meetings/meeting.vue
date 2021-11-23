@@ -192,7 +192,14 @@
                     v-for="item in distributionTasksTrue"
                     :key="item.id"
                 >
-                    <td>{{ item.title }}</td>
+                    <td>
+                        <router-link
+
+                            :to="'/tasks/task/' + item.id"
+                        >
+                            {{ item.title }}
+                        </router-link>
+                    </td>
                     <td>{{ item.text }}</td>
                 </tr>
                 </tbody>

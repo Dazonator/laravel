@@ -58,6 +58,8 @@ Vue.component('department-tasks', require('./views/tasks/department-tasks').defa
 Vue.component('task', require('./views/tasks/task').default);
 
 
+Vue.component('structure-tasks', require('./views/structure/structure-tasks').default);
+
 Vue.component('ck-editor', require('./components/templates/ckeditor').default);
 
 /**

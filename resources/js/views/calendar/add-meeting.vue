@@ -272,7 +272,7 @@
                     // console.log(response.data);
                     this.users = response.data;
                 });
-                // this.getMeetingNumber();
+                this.getMeetingNumber(null);
             },
             removePerformers (item) {
                 const index = this.fields.additional_staff.indexOf(item.id);

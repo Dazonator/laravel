@@ -6,6 +6,7 @@ use App\Http\Requests\AddTaskRequest;
 use App\Models\Departments;
 use App\Models\Priority;
 use App\Models\Steps;
+use App\Models\Structure;
 use App\Models\Tasks;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,6 +21,9 @@ class AddTaskController extends Controller
             'employees' => User::select('id', 'img', 'name', 'lastname', 'position')->get(),
             'priorities' => Priority::all(),
             'departments' => Departments::all(),
+            'structures' => Structure::whereNull('structure_id')
+                ->with('children')
+                ->get(),
         ];
     }
 
