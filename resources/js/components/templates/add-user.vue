@@ -9,7 +9,6 @@
                 <v-btn
                     color="primary"
                     large
-                    block
                     v-bind="attrs"
                     v-on="on"
                 >
@@ -78,6 +77,19 @@
                                         required
                                         v-model="fields.password"
                                     ></v-text-field>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                >
+                                    <v-select
+                                        v-model="fields.roles"
+                                        :items="roles"
+                                        item-text="name"
+                                        item-value="id"
+                                        :menu-props="{ maxHeight: '400' }"
+                                        label="Роли"
+                                        multiple
+                                    ></v-select>
                                 </v-col>
                                 <v-col
                                     cols="12"
@@ -169,6 +181,7 @@ export default {
     data: () => ({
         fields: {},
         departments: [],
+        roles: [],
         dialog: false,
         errors: {},
     }),
@@ -178,8 +191,9 @@ export default {
         // }
     },
     created() {
-        axios.get('/api/departments').then(response => {
-            this.departments = response.data;
+        axios.get('/api/add-user-parameters').then(response => {
+            this.departments = response.data.departments;
+            this.roles = response.data.roles;
             console.log(response.data);
         });
     },

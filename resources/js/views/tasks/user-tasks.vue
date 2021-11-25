@@ -15,7 +15,10 @@
                 loading-text="Загрузка задач..."
             >
                 <template v-slot:top>
-                    <v-toolbar flat>
+                    <v-toolbar
+                        flat
+                        class="align-items-center"
+                    >
                         <v-spacer></v-spacer>
                         <v-text-field
                             v-model="search"
@@ -74,13 +77,11 @@
                     <v-icon
                         small
                         class="mr-2"
-                        @click="editItem(item)"
                     >
                         mdi-pencil
                     </v-icon>
                     <v-icon
                         small
-                        @click="deleteItem(item)"
                     >
                         mdi-delete
                     </v-icon>
@@ -142,7 +143,7 @@ export default {
                     value: 'status.status',
                     sortable: true,
                 },
-                { text: 'Actions', value: 'actions', sortable: false },
+                { text: '', value: 'actions', sortable: false },
                 {
                     text: '',
                     value: 'data-table-expand'

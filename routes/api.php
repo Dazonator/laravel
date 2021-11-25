@@ -4,6 +4,7 @@ use App\Http\Controllers\AddUserController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StepsController;
 use App\Http\Controllers\StructureController;
 use Illuminate\Http\Request;
@@ -39,6 +40,8 @@ Route::get('/profile/{id?}', [UserController::class, 'profile']);
 Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
+Route::get('/add-user-parameters', [UserController::class, 'addUserParameters']);
+
 
 Route::post('/add-task-params', [AddTaskController::class, 'getParamsAddTask']);
 Route::post('/meetings-users', [UserController::class, 'getUsers']);
@@ -120,6 +123,13 @@ Route::post('/structure/getStructure', [StructureController::class, 'getStructur
 Route::post('/structure/create', [StructureController::class, 'createCategory']);
 Route::post('/structure/update', [StructureController::class, 'updateCategory']);
 Route::post('/structure/delete/{id}', [StructureController::class, 'deleteCategory']);
+
+Route::post('/settings/getUsers', [SettingsController::class, 'getUsers']);
+Route::post('/settings/getRoles', [SettingsController::class, 'getRoles']);
+Route::post('/settings/getRoleForUpdate/{id}', [SettingsController::class, 'getRoleForUpdate']);
+Route::post('/settings/getPermissions', [SettingsController::class, 'getPermissions']);
+Route::post('/settings/role/create', [SettingsController::class, 'createRole']);
+Route::post('/settings/role/update', [SettingsController::class, 'updateRole']);
 
 
 

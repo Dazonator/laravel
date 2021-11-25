@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\AddUserRequest;
+use App\Models\Departments;
 use App\Models\Priority;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +19,8 @@ class UserController extends Controller
 {
 
     public function addUser(AddUserRequest $request){
+//        $roles = ;
+
         $user = new User();
         $user::create([
             'login' => $request->login,
@@ -28,7 +32,7 @@ class UserController extends Controller
             'department_id' => $request->department_id,
             'position' => $request->position,
             'img' => $request->img,
-        ]);
+        ])->roles()->sync($request->roles);
     }
 
     public function changePassword(Request $request){
@@ -97,6 +101,13 @@ class UserController extends Controller
     public function getUsers()
     {
         return User::select('id', 'img', 'name', 'lastname', 'position')->get();
+    }
+
+    public function addUserParameters (){
+        return [
+            'departments' => Departments::all(),
+            'roles' => Role::all(),
+        ];
     }
 
 

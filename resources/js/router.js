@@ -13,6 +13,12 @@ import tasks from "./views/tasks";
 import task from "./views/tasks/task";
 import team from "./views/team";
 import home from "./views/home";
+import settings from "./views/settings";
+
+import settingsUsers from "./views/settings/settings-users";
+import settingsRoles from "./views/settings/settings-roles";
+import createRole from "./views/settings/roles/create-role";
+
 
 const routes = [
     {
@@ -109,6 +115,32 @@ const routes = [
         path: "/structure/:categoryId",
         name: 'structure-id',
         component: structure
+    },
+    {
+        path: "/settings/",
+        name: 'settings',
+        component: settings
+    },
+    {
+        path: "/settings/users",
+        name: 'settings-users',
+        component: settingsUsers
+    },
+    {
+        path: "/settings/roles",
+        name: 'settings-roles',
+        component: settingsRoles
+    },
+    {
+        path: "/settings/roles/create-role",
+        name: 'create-role',
+        component: createRole
+    },
+    {
+        path: "/settings/roles/update-role/:roleId",
+        name: 'update-role',
+        component: createRole,
+        props: true
     },
 ];
 

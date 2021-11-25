@@ -1,6 +1,6 @@
 <template>
     <main class="col py-4" v-if="loaded">
-        <h1 class="mb-8">Календарь</h1>
+        <h1 class="mb-8">Собрания</h1>
         <div class="mb-4">
             <add-meeting></add-meeting>
         </div>
