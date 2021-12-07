@@ -2,38 +2,135 @@
     <main class="col py-4">
         <div class="row">
             <div class="col task-page"  v-if="loaded">
-                <h1>{{task.title}}</h1>
-                <!--            <pre v-html="tasks"></pre>-->
-                <div class="task-page__deadline" v-if="task.deadline">
-                    Дедлайн  {{ task.deadline | deadLine }}
+                <div
+                    class="task-header d-flex justify-space-between align-items-center mb-4"
+                >
+                    <h1>{{task.title}} ({{task.status.status}})</h1>
+                    <v-btn-toggle
+                        shaped
+                    >
+                        <v-btn
+                            v-if="statusActive"
+                            @click="update()"
+                        >
+                            <v-icon color="warning">mdi-pencil</v-icon>
+                        </v-btn>
+
+                        <v-btn
+                            @click="dialogDelete = true"
+                        >
+                            <v-icon color="error">mdi-delete</v-icon>
+                        </v-btn>
+
+                        <v-btn
+                            v-if="!task.distribution_department && statusActive"
+                            :disabled="!statusActive"
+                            @click.stop="taskCompleted()"
+                        >
+                            <v-icon color="success">mdi-check-bold</v-icon>
+                        </v-btn>
+
+                        <v-btn
+                            @click="pauseTask()"
+                            v-if="task.status.id === 2"
+                        >
+                            <v-icon color="primary">mdi-pause</v-icon>
+                        </v-btn>
+
+                        <v-btn
+                            @click="startTask()"
+                            v-if="task.status.id !== 2"
+                        >
+                            <v-icon color="primary">mdi-play</v-icon>
+                        </v-btn>
+
+                    </v-btn-toggle>
+                    <v-dialog
+                        v-model="dialogDelete"
+                        max-width="290"
+                    >
+                        <v-card>
+                            <v-card-title class="text-h5">
+                                Вы действительно хотите удалить Задачу?
+                            </v-card-title>
+
+                            <v-card-actions>
+
+                                <v-btn
+                                    color="green darken-1"
+                                    text
+                                    @click="dialogDelete = false"
+                                >
+                                    Нет
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="green darken-1"
+                                    text
+                                    @click="taskDelete()"
+                                >
+                                    Да
+                                </v-btn>
+
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                </div>
+                <div class="mb-4">
+                    <h5 class="" v-if="task.deadline">
+                        Дедлайн  {{ task.deadline | deadLine }}
+                    </h5>
+                    <h5 class="">
+                        Создано {{ task.created_at | createDate }}
+                    </h5>
+                    <div class="" v-if="task.priority">
+                        <span>Приоритет: {{task.priority.priority}}</span>
+                    </div>
                 </div>
 
-
-                <div class="task-page__status">
-                    <span>{{task.status.status}}</span>
+                <div class="bg pa-4 mb-4">
+                    <h5>Текст задания</h5>
+                    <div class="task-page__text" v-if="task.text" v-html="task.text"></div>
                 </div>
 
-                <div class="task-page__priority" v-if="task.priority">
-                    <span>{{task.priority.priority}}</span>
-                </div>
-
-                <div class="task-page__text" v-if="task.text" v-html="task.text">
-                </div>
-
-                <div class="task-page__created">
-                    Создано {{ task.created_at | createDate }}
-                </div>
-
-                <div class="responsibles">
-                    <h6 class="responsibles__title">Исполнителей в этой задаче: {{task.responsibles.length}}</h6>
-                    <ul class="responsibles__items">
+                <div
+                    class="bg pa-4 mb-4"
+                    v-if="task.files.length > 0"
+                >
+                    <h5>Файлы</h5>
+                    <ul>
                         <li
+                            v-for="item in task.files"
+                            :key="item.id"
+                        >
+                            <a :href=item.path download>
+                                {{item.name}}
+                            </a>
+                            <v-btn
+                                icon
+                                color="grey"
+                                x-small
+                                class="ml-4"
+                                @click="deleteFile(item.id)"
+                            >
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </li>
+                    </ul>
+                </div>
+                <div class="responsibles bg pa-4 mb-4">
+                    <h5 class="mb-2">Ответственные</h5>
+                    <div class="responsibles--items">
+                        <v-chip
+                            class="mr-2 mb-2"
                             v-for="item in task.responsibles"
                             :key="item.id"
                         >
                             <router-link
                                 :to="'/profile/' + item.id"
                             >
+
                                 <v-avatar
                                     left
                                     size="28"
@@ -43,55 +140,183 @@
                                         alt=item.name
                                     ></v-img>
                                 </v-avatar>
+
+                                {{item.name}} {{item.lastname}}
                             </router-link>
-                        </li>
-                    </ul>
+                        </v-chip>
+                    </div>
+                </div>
+                <div
+                    class="subtasks bg mb-4 pa-4"
+                    v-if=""
+                >
+                    <div
+                        class="d-flex justify-space-between mb-4"
+                    >
+                        <h5 class="subtasks__title mr-4">Подзадачи</h5>
+                        <v-btn
+                            v-if="statusActive && !task.distribution_department"
+                            fab
+                            x-small
+                            icon
+                            @click="subtask()"
+                        >
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+
+                    </div>
+                    <div class="subtasks-table px-4 mb-6">
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <tbody>
+                                <tr
+                                    v-for="item in task.children"
+                                >
+                                    <td>
+                                        <router-link
+                                            :to="'/tasks/task/' + item.id"
+                                        >
+                                            {{item.title}}
+                                        </router-link>
+                                    </td>
+                                    <td>
+                                        {{ item.text }}
+                                    </td>
+
+                                    <td class="text-right">
+
+                                        <v-select
+                                            class="subtasks-input d-inline-block"
+                                            :items=task.steps
+
+                                            single-line
+                                            label="Этап"
+                                            item-text="title"
+                                            item-selection="title"
+                                            item-value="id"
+                                            v-model="item.in_step"
+                                            @change="updateTaskStep(item)"
+                                        ></v-select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </div>
+
+                    <div
+                        v-if="task.steps && task.steps.length > 0"
+                    >
+                        <h5 class="subtasks__title mr-4">Этапы</h5>
+                        <div
+                            v-for="(step, id) in task.steps"
+                        >
+                            <div class="px-4 d-flex align-items-center">
+                                <v-text-field
+                                    v-model=step.title
+                                    v-on:blur="updateStep(id)"
+                                    @keypress.enter="blurInput($event)"
+                                    style="width: 100%;"
+                                    class="py-2"
+                                ></v-text-field>
+
+                                <v-icon
+                                    small
+                                    @click="deleteStep(id)"
+                                >
+                                    mdi-delete
+                                </v-icon>
+                            </div>
+                            <div class="subtasks-table px-4 mb-2">
+                                <v-simple-table>
+                                    <template v-slot:default>
+                                        <tbody>
+                                        <tr
+                                            v-for="(item, taskId) in step.tasks"
+                                        >
+                                            <td>
+                                                <router-link
+                                                    :to="'/tasks/task/' + item.id"
+                                                >
+                                                    {{item.title}}
+                                                </router-link>
+                                            </td>
+                                            <td>
+                                                {{ item.text }}
+                                            </td>
+
+                                            <td
+                                                class="text-right"
+                                            >
+                                                <!--                                                {{ item.status_id }}-->
+                                                <v-select
+                                                    class="subtasks-input d-inline-block"
+                                                    :items=task.steps
+
+                                                    single-line
+                                                    label="Этап"
+                                                    item-text="title"
+                                                    item-selection="title"
+                                                    item-value="id"
+                                                    append-icon="mdi-close"
+                                                    v-model="item.in_step"
+                                                    @change="updateTaskStep(item)"
+                                                    @click:append="deleteTaskStep(item)"
+                                                ></v-select>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <v-row>
+                        <v-col
+                            cols="4"
+                        >
+                            <v-text-field
+                                class="mr-2"
+                                v-model="dataStep.title"
+                                label="Добавить этап"
+                                append-icon="mdi-plus"
+                                @click:append="addStep"
+                                v-on:keyup.enter="addStep"
+                                hide-details
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
                 </div>
 
-                <div class="mb-6">
-
-                    <v-btn
-                        color="error"
-                        @click="taskDelete()"
-                    >
-                        Удалить задачу
-                    </v-btn>
-
-                    <v-btn
-                        v-if="!task.distribution_department"
-                        color="success"
-                        @click.stop="taskCompleted()"
-                        :disabled="!statusActive"
-                    >
-                        {{(!statusActive) ? 'Задача завершена' : 'Завершить задачу'}}
-                    </v-btn>
-
-                    <v-btn
-                        color="primary"
-                        @click="restoreTask()"
-                        v-if="!statusActive"
-                    >
-                        Восстановить задачу
-                    </v-btn>
-
-                    <v-btn
-                        v-if="statusActive"
-                        color="yellow darken-3"
-                        dark
-                        @click="edit()"
-                    >
-                        {{task.distribution_department ? 'Распределить' : 'Редактировать'}}
-                    </v-btn>
-
-                    <v-btn
-                        v-if="statusActive && !task.distribution_department"
-                        color="primary"
-                        @click="subtask()"
-                    >
-                        Создать подзадачу
-                    </v-btn>
-
-
+                <div class="parent-tasks bg mb-4 pa-4" v-if="task.parent">
+                    <h5 class="parent-tasks__title">Родительская задача</h5>
+                    <div class="parent-tasks-table">
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <router-link
+                                            :to="'/tasks/task/' + task.parent.id"
+                                        >
+                                            {{task.parent.title}}
+                                        </router-link>
+                                    </td>
+                                    <td>
+                                        {{ task.parent.text }}
+                                    </td>
+                                    <td>
+                                        {{ task.parent.status_id }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </div>
+                </div>
+                <div class="mb-4">
 
                     <v-dialog
                         v-model="dialogCannotBeCompleted"
@@ -115,7 +340,7 @@
                     </v-dialog>
 
                     <v-dialog
-                        v-model="dialogCannotBeRestore"
+                        v-model="dialogCannotBeRestored"
                         max-width="400px"
                     >
                         <v-card>
@@ -127,7 +352,27 @@
                                 <v-btn
                                     color="green darken-1"
                                     text
-                                    @click="dialogCannotBeRestore = false"
+                                    @click="dialogCannotBeRestored = false"
+                                >
+                                    Понятно
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                    <v-dialog
+                        v-model="dialogCannotBeDeleted"
+                        max-width="400px"
+                    >
+                        <v-card>
+                            <h3 class="pa-4">
+                                Задача не может быть удалена, есть подзадачи
+                            </h3>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="green darken-1"
+                                    text
+                                    @click="dialogCannotBeDeleted = false"
                                 >
                                     Понятно
                                 </v-btn>
@@ -135,163 +380,6 @@
                         </v-card>
                     </v-dialog>
                 </div>
-
-                <div class="subtasks mb-12" v-if="">
-                    <h5 class="subtasks__title mr-4">Подзадачи</h5>
-
-                    <div class="subtasks-table px-4 mb-6">
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <tbody>
-                                    <tr
-                                        v-for="item in task.children"
-                                    >
-                                        <td>
-                                            <router-link
-                                                :to="'/tasks/task/' + item.id"
-                                            >
-                                                {{item.title}}
-                                            </router-link>
-                                        </td>
-                                        <td>
-                                            {{ item.text }}
-                                        </td>
-
-                                        <td class="text-right">
-
-                                            <v-select
-                                                class="subtasks-input d-inline-block"
-                                                :items=task.steps
-
-                                                single-line
-                                                label="Этап"
-                                                item-text="title"
-                                                item-selection="title"
-                                                item-value="id"
-                                                v-model="item.in_step"
-                                                @change="updateTaskStep(item)"
-                                            ></v-select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table>
-                    </div>
-
-                    <div
-                        v-for="(step, id) in task.steps"
-                    >
-                        <h6 class="step-title text-subtitle-2 px-4 d-flex">
-                            <input
-                                type="text"
-                                v-model=step.title
-                                v-on:blur="updateStep(id)"
-                                @keypress.enter="blurInput($event)"
-                                style="width: 100%;"
-                                class="py-2"
-                            >
-
-                            <v-icon
-                                small
-                                @click="deleteStep(id)"
-                            >
-                                mdi-delete
-                            </v-icon>
-                        </h6>
-                        <div class="subtasks-table px-4 mb-2">
-                            <v-simple-table>
-                                <template v-slot:default>
-                                    <tbody>
-                                        <tr
-                                            v-for="(item, taskId) in step.tasks"
-                                        >
-                                            <td>
-                                                <router-link
-                                                    :to="'/tasks/task/' + item.id"
-                                                >
-                                                    {{item.title}}
-                                                </router-link>
-                                            </td>
-                                            <td>
-                                                {{ item.text }}
-                                            </td>
-
-                                            <td
-                                                class="text-right"
-                                            >
-<!--                                                {{ item.status_id }}-->
-                                                <v-select
-                                                    class="subtasks-input d-inline-block"
-                                                    :items=task.steps
-
-                                                    single-line
-                                                    label="Этап"
-                                                    item-text="title"
-                                                    item-selection="title"
-                                                    item-value="id"
-                                                    append-icon="mdi-close"
-                                                    v-model="item.in_step"
-                                                    @change="updateTaskStep(item)"
-                                                    @click:append="deleteTaskStep(item)"
-                                                ></v-select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-simple-table>
-                        </div>
-                    </div>
-
-                    <v-row>
-                        <v-col
-                            cols="4"
-                        >
-                            <form class="d-flex" @submit.prevent="addStep">
-                                <v-text-field
-                                    class="mr-2"
-                                    v-model="dataStep.title"
-                                    label="Название этапа"
-                                    solo
-                                    hide-details
-                                ></v-text-field>
-                                <v-btn
-                                    type="submit"
-                                    color="primary"
-                                    elevation="2"
-                                    large
-                                >Добавить этап</v-btn>
-                            </form>
-                        </v-col>
-                    </v-row>
-                </div>
-
-                <div class="parent-tasks mb-12" v-if="task.parent">
-                    <h5 class="parent-tasks__title">Родительская задача</h5>
-                    <div class="parent-tasks-table">
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <router-link
-                                                :to="'/tasks/task/' + task.parent.id"
-                                            >
-                                                {{task.parent.title}}
-                                            </router-link>
-                                        </td>
-                                        <td>
-                                            {{ task.parent.text }}
-                                        </td>
-                                        <td>
-                                            {{ task.parent.status_id }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table>
-                    </div>
-                </div>
-
                 <div class="task-messages bg">
                     <div class="fill-height  pa-6">
                         <v-row
@@ -325,8 +413,7 @@
                                             >
                                                 {{item.user.name}}
                                             </div>
-                                            <div class="mb-1">
-                                                {{ item.message }}
+                                            <div class="mb-1" v-html="item.message">
                                             </div>
                                             <div
                                                 class="container-chat__time text--gray"
@@ -341,31 +428,24 @@
                     </div>
 
                     <v-divider class=""></v-divider>
-                    <div class="d-flex flex-row align-center px-6">
-                        <v-text-field
-                            v-model="message"
-                            dense
-                            placeholder="Текст сообщения..."
-                            @keypress.enter="sendMessage"
-                            class="ma-0"
-                            height="55"
-                        >
-
-                        </v-text-field>
-                        <v-btn icon class="ml-4" @click="sendMessage">
-                            <v-icon>mdi-send</v-icon>
+                    <div class="px-6 py-4">
+                        <ck-editor
+                            @input="ckeditorText"
+                        ></ck-editor>
+                        <v-btn block color="primary" class="mt-2" @click="sendMessage">
+                            Отправить
                         </v-btn>
                     </div>
                 </div>
             </div>
-
-            <add-task
-                v-show="showform"
-                :isEdit="isEdit"
+            <update-task
+                :open="dialogUpdate"
+                @close="closeDialog()"
                 :isSubtask="isSubtask"
                 :parent_id="id"
-                :foredit="foredit"
-            ></add-task>
+                :updateId = updateId
+                :isUpdate = isUpdate
+            ></update-task>
 
         </div>
     </main>
@@ -381,18 +461,23 @@ export default {
     },
     data() {
         return {
+            isSubtask: false,
+            isUpdate: false,
+            updateId: null,
+            // isEdit: false,
+            dialogUpdate: false,
+            dialogDelete: false,
+            deleteId: null,
             chat: {},
             message: '',
             dataStep: {},
             statusActive: true,
             errors: {},
             dialogCannotBeCompleted: false,
-            dialogCannotBeRestore: false,
-            isEdit: false,
-            isSubtask: false,
-            foredit:[],
+            dialogCannotBeRestored: false,
+            dialogCannotBeDeleted: false,
             loaded: false,
-            showform: false,
+            // showform: false,
             id: null,
             task: [],
         }
@@ -428,24 +513,23 @@ export default {
 
             this.initMessages();
         },
-        edit(){
-            this.isEdit = true;
+        update(){
             this.isSubtask = false;
-            this.foredit = this.task;
-            this.showform = true;
+            this.isUpdate = true;
+            this.updateId = this.task.id;
+            this.dialogUpdate = true;
         },
         subtask(){
-            this.isEdit = false;
             this.isSubtask = true;
-            this.foredit = [];
-            this.showform = true;
+            this.isUpdate = false;
+            this.dialogUpdate = true;
+            // this.parent_id = this.id;
         },
         taskCompleted(){
             if(this.task.children.length > 0){
                 for(let child of this.task.children){
                     if(child.status_id !== 3){
-                        this.dialogCannotBeCompleted = true;
-                        return;
+                        return this.dialogCannotBeCompleted = true;
                     }
                 }
             }
@@ -455,15 +539,14 @@ export default {
                     for (let task in this.task.steps[step].tasks) {
                         console.log(task);
                         if (this.task.steps[step].tasks[task].status_id !== 3){
-                            this.dialogCannotBeCompleted = true;
-                            return;
+                            return this.dialogCannotBeCompleted = true;
                         }
                     }
                 }
             }
 
             this.errors = {};
-            axios.post(`/api/tasks/completed/${this.id}`, this.task.id).then(response => {
+            axios.post(`/api/tasks/completed/${this.id}`).then(response => {
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
@@ -471,14 +554,23 @@ export default {
                 }
             });
         },
-        restoreTask(){
+        startTask(){
             if(this.task.parent){
                 if(this.task.parent.status_id === 3){
-                    this.dialogCannotBeRestore = true;
-                    return;
+                    return this.dialogCannotBeRestored = true;
                 }
             }
-            axios.post(`/api/tasks/restore/${this.id}`, this.task.id).then(response => {
+            axios.post(`/api/tasks/start/${this.id}`).then(response => {
+                this.init();
+            }).catch(error => {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data.errors || {};
+                }
+            });
+        },
+        pauseTask(){
+
+            axios.post(`/api/tasks/pause/${this.id}`).then(response => {
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
@@ -487,6 +579,19 @@ export default {
             });
         },
         taskDelete(){
+            if(this.task.children.length > 0){
+                return this.dialogCannotBeDeleted = true;
+            }
+            if(this.task.steps.length > 0){
+                for (let step in this.task.steps) {
+                    for (let task in this.task.steps[step].tasks) {
+                        if (this.task.steps[step].tasks.length > 0){
+                            return this.dialogCannotBeDeleted = true;
+                        }
+                    }
+                }
+            }
+
             axios.post(`/api/tasks/delete/${this.task.id}`).then(response => {
                 alert('Задача завершена!!!');
                 this.init();
@@ -527,11 +632,13 @@ export default {
             }, 100);
         },
         addStep(){
-            this.dataStep.task_id = this.id;
-            axios.post(`/api/tasks/task/create-new-step`, this.dataStep).then(response => {
-                this.init();
-                this.dataStep = {};
-            });
+            if (this.dataStep.title !== '' && this.dataStep.title){
+                this.dataStep.task_id = this.id;
+                axios.post(`/api/tasks/task/create-new-step`, this.dataStep).then(response => {
+                    this.init();
+                    this.dataStep = {};
+                });
+            }
         },
         updateStep(id){
             axios.post(`/api/tasks/task/update-step-title`, this.task.steps[id]).then(response => {
@@ -559,7 +666,23 @@ export default {
             console.log(task);
             task.in_step = null;
             this.updateTaskStep(task);
-        }
+        },
+        deleteFile(id){
+            axios.post(`/api/tasks/task/delete-file/${id}`).then(response => {
+                this.init();
+            });
+        },
+        ckeditorText(data){
+            this.message = data;
+        },
+        closeDialog(data){
+            if(!data){
+                this.dialogUpdate = false;
+                this.updateId = null;
+                this.isUpdate = false;
+                this.init();
+            }
+        },
     },
     filters: {
         deadLine: function (date) {
@@ -598,10 +721,22 @@ export default {
     }
 
     .task-messages .row{
-        height:500px;
+        /*height:500px;*/
         /*scroll-behavior: smooth;*/
+        min-height: 50px;
+        max-height: 500px;
         overflow: auto;
         transition: none;
+    }
+    .task-messages .container-chat figure img{
+        max-width: 100%;
+    }
+    .task-messages .container-chat figure table{
+        max-width: 100%;
+    }
+    .task-messages .container-chat figure table th,
+    .task-messages .container-chat figure table td{
+        word-break: break-word;
     }
 
     .container-chat{

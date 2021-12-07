@@ -88,7 +88,7 @@ class Tasks extends Model
     /* Связь для получения ответственных по задаче */
     public function responsibles()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'tasks_user');
     }
 
 
@@ -123,4 +123,12 @@ class Tasks extends Model
     {
         return $this->hasOne(Structure::class, 'id', 'structure_id');
     }
+
+
+
+    /* Файлы по задаче */
+    public function files(){
+        return $this->hasMany(TasksFiles::class, 'task_id');
+    }
+
 }

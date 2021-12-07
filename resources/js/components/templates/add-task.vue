@@ -146,17 +146,6 @@
             ></v-select>
 
 
-            <v-select
-                v-if="fields.parent_id"
-                :items=steps
-                item-text="title"
-                item-selection="title"
-                item-value="id"
-                label="Этап"
-                dense
-                name="in_step"
-                v-model="fields.in_step"
-            ></v-select>
 
             {{errors.deadline}}
             <v-menu
@@ -329,7 +318,7 @@ export default {
             this.errors = {};
 
             if(this.isEdit){
-                axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
+                axios.post(`/api/tasks/update`, this.fields).then(response => {
                     window.location.href = `/tasks/${this.fields.id}`;
                 }).catch(error => {
                     if (error.response.status === 422) {

@@ -42,6 +42,8 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.component('index', require('./views/index').default);
+
 Vue.component('example-component', require('./components/ExampleComponent').default);
 Vue.component('calendar-component', require('./components/CalendarComponent').default);
 Vue.component('add-event', require('./views/calendar/add-event').default);

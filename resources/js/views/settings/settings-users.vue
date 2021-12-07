@@ -4,6 +4,8 @@
 
         <add-user
             class="mb-4"
+            :updateId="updateId"
+            @close="closeDialog()"
         ></add-user>
         <v-card>
             <v-card-title>
@@ -32,7 +34,7 @@
                         :key="role.id"
                         class="ma-2"
                         close
-                        @click:close=""
+                        @click:close="removeRole(item, role.id)"
                     >
                         {{role.name}}
                     </v-chip>
@@ -46,19 +48,50 @@
                     <v-icon
                         small
                         class="mr-2"
-                        @click="editItem(item)"
+                        @click="updateId=item.id"
                     >
                         mdi-pencil
                     </v-icon>
                     <v-icon
                         small
-                        @click="deleteItem(item)"
+                        @click="deleteId = item.id"
                     >
                         mdi-delete
                     </v-icon>
                 </template>
             </v-data-table>
         </v-card>
+
+        <v-dialog
+            v-model="userDelete"
+            max-width="290"
+        >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Вы действительно хотите удалить роль?
+                </v-card-title>
+
+                <v-card-actions>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="deleteId = null"
+                    >
+                        Нет
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="deleteUser()"
+                    >
+                        Да
+                    </v-btn>
+
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </main>
 </template>
 
@@ -69,6 +102,9 @@
             return{
                 loaded: false,
                 search: '',
+                updateId: null,
+                deleteId: null,
+                userDelete: false,
                 headers: [
                     {
                         text: 'Пользователь ФИО',
@@ -90,6 +126,15 @@
                 users: [],
             }
         },
+        watch:{
+            deleteId: function (q){
+                if (this.deleteId){
+                    this.userDelete = true;
+                } else {
+                    this.userDelete = false;
+                }
+            },
+        },
         created() {
             this.init();
         },
@@ -99,6 +144,25 @@
                     console.log(response.data);
                     this.users = response.data;
                     this.loaded = true;
+                });
+            },
+            closeDialog(){
+                this.updateId = null;
+                this.init();
+            },
+            deleteUser(q){
+                axios.post(`/api/settings/users/delete/${this.deleteId}`).then(response => {
+                    this.deleteId = null;
+                    this.init();
+                });
+            },
+            removeRole(user, role){
+                let fields = {
+                    user: user,
+                    role: role,
+                };
+                axios.post(`/api/settings/removeRoleFromUser`, fields).then(response => {
+                    this.init();
                 });
             }
         }

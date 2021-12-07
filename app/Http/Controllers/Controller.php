@@ -31,18 +31,24 @@ class Controller extends BaseController
             'url' => '/storage/'.Storage::disk('public')->putFile($path, $file),
             'message' => 'Сообщение'
         ];
-
     }
 
     public function mainAppParameters()
     {
         return [
-            'authUser' => User::where('id', Auth::user()->id)->with(['department'])->first(),
+            'authUser' => User::
+            where('id', Auth::user()->id)->
+            with([
+                'department',
+//                'roles' => function($q){
+//                    $q->with('permissions');
+//                }
+            ])->first(),
 //            'statuses' => Status::all(),
 //            'departments' => Departments::all(),
 //            'priorities' => Priority::all(),
 //            'users' => User::with(['department'])->get(),
-            'notifications' => MessagesUser::where('user_id', Auth::user()->id)->count()
+            'notifications' => MessagesUser::where('user_id', Auth::user()->id)->count(),
         ];
     }
 

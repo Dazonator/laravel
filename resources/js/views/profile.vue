@@ -121,7 +121,7 @@
                     </div>
                 </div>
             </div>
-            <add-task></add-task>
+<!--            <add-task></add-task>-->
         </div>
     </main>
 </template>

@@ -18,21 +18,25 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
 
-    public function addUser(AddUserRequest $request){
-//        $roles = ;
+    public function profile($id=null)
+    {
+        if ($id){
 
-        $user = new User();
-        $user::create([
-            'login' => $request->login,
-            'name' => $request->name,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
-            'department_id' => $request->department_id,
-            'position' => $request->position,
-            'img' => $request->img,
-        ])->roles()->sync($request->roles);
+            $isUser = false;
+            $authUser = Auth::id();
+            if($id & ($id == $authUser)){
+                $isUser = true;
+            }
+
+            return [
+                'is_user' => $isUser,
+                'user' => User::where('id', $id)->with(['department'])->first()
+            ];
+        }
+        return [
+            'is_user' => true,
+            'user' => User::where('id', Auth::user()->id)->with(['department'])->first()
+        ];
     }
 
     public function changePassword(Request $request){
@@ -59,6 +63,7 @@ class UserController extends Controller
         $user->save();
     }
 
+
     public function changePhoto(Request $request){
         $file = $request->file;
         $path   = 'images/users';
@@ -67,34 +72,6 @@ class UserController extends Controller
 
         $user->img = Storage::disk('public')->putFile($path, $file);
         $user->save();
-    }
-
-    public function uploadPhoto (Request $request){
-        $file = $request->img;
-        $path   = 'images/users';
-        return Storage::disk('public')->putFile($path, $file);
-    }
-
-
-    public function profile($id=null)
-    {
-        if ($id){
-
-            $isUser = false;
-            $authUser = Auth::id();
-            if($id & ($id == $authUser)){
-                $isUser = true;
-            }
-
-            return [
-                'is_user' => $isUser,
-                'user' => User::where('id', $id)->with(['department'])->first()
-            ];
-        }
-        return [
-            'is_user' => true,
-            'user' => User::where('id', Auth::user()->id)->with(['department'])->first()
-        ];
     }
 
 
@@ -111,9 +88,4 @@ class UserController extends Controller
     }
 
 
-//    public function priorities()
-//    {
-//        return Priority::all();
-//
-//    }
 }

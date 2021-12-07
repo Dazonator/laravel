@@ -1,73 +1,70 @@
 <template>
+    <div class="bg pa-4">
+        <v-data-table
+            :headers="headers"
+            :items="tasks"
+            :single-expand="singleExpand"
+            :expanded.sync="expanded"
+            show-expand
+            :search="search"
+            :loading="tableloading"
+            loading-text="Загрузка задач..."
+        >
+            <template v-slot:top>
+                <v-toolbar flat>
+                    <h3>{{structure.name}}</h3>
+                    <v-spacer></v-spacer>
+                    <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="Поиск..."
+                        single-line
+                        hide-details
+                    ></v-text-field>
+                </v-toolbar>
+            </template>
+            <template #item.title="{ item }">
+                <router-link
 
-    <div class="col">
-        <div class="bg pa-4">
-            <v-data-table
-                :headers="headers"
-                :items="tasks"
-                :single-expand="singleExpand"
-                :expanded.sync="expanded"
-                show-expand
-                :search="search"
-                :loading="tableloading"
-                loading-text="Загрузка задач..."
-            >
-                <template v-slot:top>
-                    <v-toolbar flat>
-                        <h3>{{structure.name}}</h3>
-                        <v-spacer></v-spacer>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Поиск..."
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-toolbar>
-                </template>
-                <template #item.title="{ item }">
-                    <router-link
+                    :to="'/tasks/task/' + item.id"
+                >
+                    {{ item.title }}
+                </router-link>
+            </template>
 
-                        :to="'/tasks/task/' + item.id"
-                    >
-                        {{ item.title }}
-                    </router-link>
-                </template>
-
-                <template #item.responsibles="{ item }">
-                    <router-link
-                        v-for="i in item.responsibles"
-                        :key="i.id"
-                        :to="'/profile/' + i.id"
-                    >
-                        <v-chip>
-                            <v-avatar left>
-                                <v-img :src="i.img"> </v-img>
-                            </v-avatar>
-                        </v-chip>
-                    </router-link>
-                </template>
-
-                <template #item.initiator="{ item }">
-                    <v-chip
-                        v-if="item.initiator"
-                    >
+            <template #item.responsibles="{ item }">
+                <router-link
+                    v-for="i in item.responsibles"
+                    :key="i.id"
+                    :to="'/profile/' + i.id"
+                >
+                    <v-chip>
                         <v-avatar left>
-                            <v-img :src="item.initiator.img"></v-img>
+                            <v-img :src="i.img"> </v-img>
                         </v-avatar>
-                        {{item.initiator.name}}
-                        {{item.initiator.lastname}}
-
                     </v-chip>
-                </template>
+                </router-link>
+            </template>
 
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length">
-                        {{ item.text }}
-                    </td>
-                </template>
-            </v-data-table>
-        </div>
+            <template #item.initiator="{ item }">
+                <v-chip
+                    v-if="item.initiator"
+                >
+                    <v-avatar left>
+                        <v-img :src="item.initiator.img"></v-img>
+                    </v-avatar>
+                    {{item.initiator.name}}
+                    {{item.initiator.lastname}}
+
+                </v-chip>
+            </template>
+
+            <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">
+                    {{ item.text }}
+                </td>
+            </template>
+        </v-data-table>
     </div>
 </template>
 

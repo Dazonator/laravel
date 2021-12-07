@@ -35,7 +35,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/ckeditor/upload', [UserController::class, 'editorUpload']);
 
 Route::get('/profile/{id?}', [UserController::class, 'profile']);
-
+Route::post('/profile/change-password', [UserController::class, 'changePassword']);
+Route::post('/profile/change-photo', [UserController::class, 'changePhoto']);
 
 Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
@@ -48,14 +49,11 @@ Route::post('/meetings-users', [UserController::class, 'getUsers']);
 Route::post('/main-app-parameters', [Controller::class, 'mainAppParameters']);
 
 
-
 Route::post('/calendar/events', [CalendarController::class, 'getEvents']);
 Route::post('/calendar/event/{id}', [CalendarController::class, 'getById']);
 Route::post('/calendar/create', [CalendarController::class, 'submitEvent']);
 Route::post('/calendar/update/{id}', [CalendarController::class, 'updateEvent']);
 Route::post('/calendar/delete/{id}', [CalendarController::class, 'deleteEvent']);
-
-
 
 
 Route::post('/calendar/meetings', [MeetingsController::class, 'getMeetingsCalendar']);
@@ -72,14 +70,14 @@ Route::post('/meetings/get-by-id-for-update/{id}', [MeetingsController::class, '
 Route::post('/meetings/{id}', [MeetingsController::class, 'getById']);
 
 
-
-
 Route::get('/tasks', [TasksController::class, 'userTasks']);
 Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
 
 Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
 Route::get('/tasks/structure/{id}', [TasksController::class, 'tasksByStructure']);
+
+Route::post('/tasks/uploadFiles', [TasksController::class, 'uploadFiles']);
 
 Route::get('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
@@ -89,6 +87,7 @@ Route::post('/tasks/task/update-step-title', [StepsController::class, 'updateSte
 Route::post('/tasks/task/update-task-step', [StepsController::class, 'updateTaskStep']);
 Route::post('/tasks/task/delete-step', [StepsController::class, 'deleteStep']);
 Route::post('/tasks/task/delete-step/{id}', [StepsController::class, 'deleteStep']);
+Route::post('/tasks/task/delete-file/{id}', [TasksController::class, 'deleteFile']);
 Route::post('/tasks/task/update-step/{id}', [StepsController::class, 'updateStep']);
 Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
@@ -99,18 +98,12 @@ Route::get('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers
 Route::get('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
-Route::post('/profile/change-password', [UserController::class, 'changePassword']);
-Route::post('/profile/change-photo', [UserController::class, 'changePhoto']);
-
-Route::post('/team/adduser', [UserController::class, 'addUser']);
-Route::post('/team/adduser/uploadPhoto', [UserController::class, 'uploadPhoto']);
-
-
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
 Route::post('/tasks/create-department-task', [TasksController::class, 'submitTaskDepartment']);
-Route::post('/tasks/update/{id}', [TasksController::class, 'updateTask']);
+Route::post('/tasks/update', [TasksController::class, 'updateTask']);
 Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
-Route::post('/tasks/restore/{id}', [TasksController::class, 'restoreTask']);
+Route::post('/tasks/start/{id}', [TasksController::class, 'startTask']);
+Route::post('/tasks/pause/{id}', [TasksController::class, 'pauseTask']);
 Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
 
 
@@ -125,11 +118,24 @@ Route::post('/structure/update', [StructureController::class, 'updateCategory'])
 Route::post('/structure/delete/{id}', [StructureController::class, 'deleteCategory']);
 
 Route::post('/settings/getUsers', [SettingsController::class, 'getUsers']);
+Route::post('/settings/users/getUser/{id}', [SettingsController::class, 'getUser']);
+Route::post('/settings/users/addUser', [SettingsController::class, 'addUser']);
+Route::post('/settings/users/addUser/uploadPhoto', [SettingsController::class, 'uploadPhoto']);
+Route::post('/settings/users/update', [SettingsController::class, 'updateUser']);
+Route::post('/settings/users/delete/{id}', [SettingsController::class, 'deleteUser']);
+
 Route::post('/settings/getRoles', [SettingsController::class, 'getRoles']);
 Route::post('/settings/getRoleForUpdate/{id}', [SettingsController::class, 'getRoleForUpdate']);
 Route::post('/settings/getPermissions', [SettingsController::class, 'getPermissions']);
+
 Route::post('/settings/role/create', [SettingsController::class, 'createRole']);
 Route::post('/settings/role/update', [SettingsController::class, 'updateRole']);
+Route::post('/settings/role/delete/{id}', [SettingsController::class, 'deleteRole']);
+
+Route::post('/settings/removeRoleFromUser', [SettingsController::class, 'removeRoleFromUser']);
+Route::post('/settings/removePermissionFromRole', [SettingsController::class, 'removePermissionFromRole']);
+
+
 
 
 

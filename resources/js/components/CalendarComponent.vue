@@ -10,7 +10,7 @@
                 >
                 </add-meeting>
             </div>
-            <v-sheet height="64">
+            <v-sheet>
                 <v-toolbar
                     flat
                 >
@@ -82,7 +82,7 @@
                     </v-menu>
                 </v-toolbar>
             </v-sheet>
-            <v-sheet height="100%">
+            <v-sheet>
                 <v-calendar
                     ref="calendar"
                     v-model="focus"

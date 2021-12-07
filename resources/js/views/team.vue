@@ -13,21 +13,17 @@
                                     v-for="(department, i) in departments"
                                     :key="i"main steps
                                 >
-
                                     <router-link
                                         :to="'/team/' + (i+1)"
                                     >
                                         {{ department.department }}
                                     </router-link>
-<!--                                    <v-list-item-title-->
-<!--                                        v-text="department.department"-->
-<!--                                    </v-list-item-title>-->
                                 </v-list-item>
                             </v-list>
                         </v-list-item-group>
                     </div>
 
-                    <add-user></add-user>
+<!--                    <add-user></add-user>-->
                 </div>
             </div>
             <component

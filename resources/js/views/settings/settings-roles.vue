@@ -30,7 +30,7 @@
                         :key="user.id"
                         class="ma-2"
                         close
-                        @click:close=""
+                        @click:close="removeUser(user.id, item.id)"
 
                     >
                         {{user.name}} {{user.lastname}}
@@ -47,7 +47,7 @@
                         :key="permission.id"
                         class="ma-2"
                         close
-                        @click:close=""
+                        @click:close="removePermission(item.id, permission.id)"
 
                     >
                         {{permission.name}}
@@ -64,13 +64,43 @@
                     </router-link>
                     <v-icon
                         small
-                        @click="deleteItem(item)"
+                        @click="deleteId = item.id"
                     >
                         mdi-delete
                     </v-icon>
                 </template>
             </v-data-table>
         </v-card>
+        <v-dialog
+            v-model="dialogDelete"
+            max-width="290"
+        >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Вы действительно хотите удалить роль?
+                </v-card-title>
+
+                <v-card-actions>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="deleteId = null"
+                    >
+                        Нет
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="deleteRole()"
+                    >
+                        Да
+                    </v-btn>
+
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </main>
 </template>
 
@@ -80,6 +110,8 @@
         data(){
             return{
                 loaded: false,
+                dialogDelete: false,
+                deleteId: null,
                 roles: [],
                 search: '',
                 headers: [
@@ -107,6 +139,15 @@
                 ],
             }
         },
+        watch:{
+            deleteId: function (q){
+                if (this.deleteId){
+                    this.dialogDelete = true;
+                } else {
+                    this.dialogDelete = false;
+                }
+            },
+        },
         created() {
             this.init();
         },
@@ -116,6 +157,30 @@
                     console.log(response.data);
                     this.roles = response.data;
                     this.loaded = true;
+                });
+            },
+            deleteRole(){
+                axios.post(`/api/settings/role/delete/${this.deleteId}`).then(response => {
+                    this.deleteId = null;
+                    this.init();
+                });
+            },
+            removeUser(user, role){
+                let fields = {
+                    user: user,
+                    role: role,
+                };
+                axios.post(`/api/settings/removeRoleFromUser`, fields).then(response => {
+                    this.init();
+                });
+            },
+            removePermission(role, permission){
+                let fields = {
+                    role: role,
+                    permission: permission,
+                };
+                axios.post(`/api/settings/removePermissionFromRole`, fields).then(response => {
+                    this.init();
                 });
             }
         }

@@ -24,117 +24,138 @@ const routes = [
     {
         path: "/",
         name: 'home',
-        component: home
+        component: home,
+        meta: {title: 'Домашняя страница'}
     },
     {
         path: "/calendar",
         name: 'calendar',
-        component: calendar
+        component: calendar,
+        meta: {title: 'Календарь'}
     },
     {
         path: "/meetings",
         name: 'meetings',
-        component: meetings
+        component: meetings,
+        meta: {title: 'Собрания'}
     },
     {
         path: "/meetings/:meetingId",
         name: 'meeting',
         component: meeting,
-        props: true
+        props: true,
+        meta: {title: 'Собрание'}
     },
     {
         path: "/messages",
         name: 'messages',
         component: messages,
-        props: true
+        props: true,
+        meta: {title: 'Сообщения'}
     },
     {
         path: "/messages/:taskId",
         name: 'messages-task',
         component: messages,
-        props: true
+        props: true,
+        meta: {title: 'Сообщения'}
     },
     {
         path: "/profile",
         name: 'profile',
         component: profile,
+        meta: {title: 'Профиль'}
     },
     {
         path: "/profile/:id",
         name: 'profile_id',
         component: profile,
-        props: true
+        props: true,
+        meta: {title: 'Профиль'}
     },
     {
         path: "/tasks",
         name: 'tasks',
-        component: tasks
+        component: tasks,
+        meta: {title: 'Задания'}
     },
     {
         path: "/tasks/status/:statusId",
         name: 'tasks_id',
         component: tasks,
-        props: true
+        props: true,
+        meta: {title: 'Задания'}
     },
     {
         path: "/tasks/department/:departmentId",
         name: 'department_id',
         component: tasks,
-        props: true
+        props: true,
+        meta: {title: 'Задания'}
     },
     {
         path: "/tasks/task/:id",
         name: 'task',
         component: task,
-        props: true
+        props: true,
+        meta: {title: 'Задания'}
     },
     {
         path: "/team",
         name: 'team',
-        component: team
+        component: team,
+        meta: {title: 'Команда'}
     },
 
     {
         path: "/team/:department",
         name: 'team-department',
         component: team,
-        props: true
+        props: true,
+        meta: {title: 'Команда'}
     },
     {
         path: "/team/users/:userId",
         name: 'team-user',
         component: team,
-        props: true
+        props: true,
+        meta: {title: 'Команда'}
     },
     {
         path: "/structure",
         name: 'structure',
-        component: structure
+        component: structure,
+        meta: {title: 'Структура'}
     },
     {
         path: "/structure/:categoryId",
         name: 'structure-id',
-        component: structure
+        component: structure,
+        meta: {title: 'Структура'}
     },
     {
         path: "/settings/",
         name: 'settings',
-        component: settings
+        component: settings,
+        meta: {title: 'Настройки'}
     },
     {
         path: "/settings/users",
         name: 'settings-users',
-        component: settingsUsers
+        component: settingsUsers,
+        meta: {title: 'Пользователи'}
     },
     {
         path: "/settings/roles",
         name: 'settings-roles',
-        component: settingsRoles
+        component: settingsRoles,
+        meta: {title: 'Роли'}
     },
     {
         path: "/settings/roles/create-role",
         name: 'create-role',
-        component: createRole
+        component: createRole,
+        meta: {title: 'Роли'}
     },
     {
         path: "/settings/roles/update-role/:roleId",

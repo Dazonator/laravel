@@ -50,19 +50,35 @@
                     </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon
-                        small
-                        class="mr-2"
-                        @click="distributionTask(item.id)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                        small
-                        @click="deleteId = item.id"
-                    >
-                        mdi-delete
-                    </v-icon>
+                    <div>
+                        <v-btn-toggle
+                            v-model="toggle_exclusive"
+                            rounded
+                            small
+                        >
+                            <v-btn
+                                x-small
+                                @click="distributionTask(item.id)"
+                            >
+                                <v-icon
+                                    x-small
+                                    class="mr-2"
+                                >
+                                    mdi-pencil
+                                </v-icon>
+                            </v-btn>
+                            <v-btn
+                                x-small
+                                @click="deleteId = item.id"
+                            >
+                                <v-icon
+                                    x-small
+                                >
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
                 </template>
                 <template
                     v-slot:item.department_id="{ item }"
@@ -136,19 +152,36 @@
                     </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon
-                        small
-                        class="mr-2"
-                        @click="distributionTask(item.id)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                        small
-                        @click="deleteId = item.id"
-                    >
-                        mdi-delete
-                    </v-icon>
+                    <div>
+                        <v-btn-toggle
+                            v-model="toggle_exclusive"
+                            rounded
+                            small
+                        >
+
+                            <v-btn
+                                x-small
+                                @click="distributionTask(item.id)"
+                            >
+                                <v-icon
+                                    x-small
+                                    class="mr-2"
+                                >
+                                    mdi-pencil
+                                </v-icon>
+                            </v-btn>
+                            <v-btn
+                                x-small
+                                @click="deleteId = item.id"
+                            >
+                                <v-icon
+                                    x-small
+                                >
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
                 </template>
                 <template
                     v-slot:item.department_id="{ item }"

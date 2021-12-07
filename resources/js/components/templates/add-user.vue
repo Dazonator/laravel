@@ -12,7 +12,7 @@
                     v-bind="attrs"
                     v-on="on"
                 >
-                    Добавить пользователя
+                    {{updateId ? 'Изменить пользователя' : 'Добавить пользователя'}}
                 </v-btn>
             </template>
 
@@ -74,7 +74,6 @@
                                     <v-text-field
                                         label="Password*"
                                         type="password"
-                                        required
                                         v-model="fields.password"
                                     ></v-text-field>
                                 </v-col>
@@ -166,7 +165,7 @@
                             color="primary"
                             min-width="200px"
                         >
-                            Добавить
+                            {{updateId ? 'Изменить' : 'Добавить'}}
                         </v-btn>
                     </v-card-actions>
 
@@ -185,10 +184,9 @@ export default {
         dialog: false,
         errors: {},
     }),
+    props: ['updateId'],
     computed: {
-        // departments: function (){
-        //     return this.$store.getters['user/departments'];
-        // }
+
     },
     created() {
         axios.get('/api/add-user-parameters').then(response => {
@@ -200,7 +198,26 @@ export default {
     watch:{
         dialog: function (q){
             if(!this.dialog){
-                this.fields = {}
+                this.fields = {};
+                this.$emit('close', true);
+            }
+        },
+        updateId: function (q) {
+            if (this.updateId){
+                axios.post(`/api/settings/users/getUser/${this.updateId}`).then(response => {
+                    console.log(response.data);
+                    this.dialog = true;
+                    this.fields = response.data;
+
+                    let roles = [];
+                    for (let role of this.fields.roles) {
+                        roles.push(role.id);
+                    }
+                    this.fields.roles = [];
+                    this.fields.roles = roles;
+                    delete this.fields.img;
+                    console.log(response.data);
+                });
             }
         }
     },
@@ -210,28 +227,36 @@ export default {
                 console.log(file);
                 let formData = new FormData();
                 formData.append('img', file);
-                axios.post('/api/team/adduser/uploadPhoto', formData).then(response => {
-                    console.log(response.data);
+                axios.post('/api/settings/users/addUser/uploadPhoto', formData).then(response => {
                     this.$set(this.fields, 'img', response.data);
                 }).catch(error => {
                     if (error.response.status == 422) {
                         if(error.response.data.errors) {
                             alert('Не удалось загрузить изображение!');
                         }
-                    };
+                    }
                 });
             }
         },
         submit(){
-            axios.post('/api/team/adduser', this.fields).then(response => {
-                alert('Новый пользователь добавлен!!!');
-                window.location.href = "/team";
-            }).catch(error => {
-                if (error.response.status === 422) {
-                    this.errors = error.response.data.errors || {};
-                }
-            });
-        }
+            if(this.updateId){
+                axios.post('/api/settings/users/update', this.fields).then(response => {
+                    this.dialog = false;
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+            } else {
+                axios.post('/api/settings/users/addUser', this.fields).then(response => {
+                    this.dialog = false;
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                    }
+                });
+            }
+        },
     }
 }
 </script>

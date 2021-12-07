@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CalendarController extends Controller
 {
 
+
     public function submitEvent(AddEventRequest $request){
         $user = Auth::user();
         $event = new Events();

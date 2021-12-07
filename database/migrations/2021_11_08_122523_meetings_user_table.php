@@ -14,8 +14,11 @@ class MeetingsUserTable extends Migration
     public function up()
     {
         Schema::create('meetings_user', function (Blueprint $table) {
-            $table->integer('meetings_id');
-            $table->integer('user_id');
+            $table->unsignedBigInteger('meetings_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('meetings_id')->references('id')->on('meetings')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->primary(['meetings_id','user_id']);
         });
     }
 

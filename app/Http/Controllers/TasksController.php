@@ -10,18 +10,20 @@ use App\Models\Status;
 use App\Models\Steps;
 use App\Models\Structure;
 use App\Models\Tasks;
+use App\Models\TasksFiles;
 use App\Models\TasksHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TasksController extends Controller
 {
-    public function submitTask(AddTaskRequest $request){
+    public function submitTask(Request $request){
         $user = Auth::user()->id;
         $performers = $request->performers_id;
-        Tasks::create([
+        $task = Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
             'performers_id' => $request->performers_id,
@@ -33,23 +35,35 @@ class TasksController extends Controller
             'in_step' => $request->in_step,
             'structure_id' => $request->structure_id,
             'creator_id' => $user,
-        ])->responsibles()->sync($performers);
+        ]);
+        $task->responsibles()->sync($performers);
+
+        if(count($request->post('files')) > 0){
+            foreach ($request->post('files') as $key => $file) {
+                TasksFiles::create([
+                    'name' => $file['name'],
+                    'path' => $file['path'],
+                    'attached' => true,
+                    'task_id' => $task->id,
+                ]);
+            }
+        }
+
     }
 
     public function submitTaskDepartment(Request $request){
-        $user = Auth::user()->id;
+        $user = Auth::user();
         Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
-            'initiator_id' => $user,
-            'initial_department' => $request->department_id,
+            'initiator_id' => $user->id,
+            'initial_department' => $user->department_id,
             'is_distributed' => false,
-            'structure_id' => $request->structure_id,
-            'creator_id' => $user,
+            'creator_id' => $user->id,
         ]);
     }
 
-    public function updateTask(AddTaskRequest $request){
+    public function updateTask(Request $request){
         $id = $request->id;
         $performers = $request->performers_id;
 
@@ -75,18 +89,33 @@ class TasksController extends Controller
             'is_distributed' => $isDistributed,
         ]);
         $task->responsibles()->sync($performers);
+
+        if(count($request->post('files')) > 0){
+            foreach ($request->post('files') as $key => $file) {
+                TasksFiles::create([
+                    'name' => $file['name'],
+                    'path' => $file['path'],
+                    'attached' => true,
+                    'task_id' => $task->id,
+                ]);
+            }
+        }
     }
 
-    public function completedTask(Request $request){
-        $id = $request->id;
+    public function completedTask($id){
         $task = Tasks::where('id', $id)->first();
         $task->update([
             'status_id' => '3',
         ]);
     }
-    public function restoreTask(Request $request){
-        $id = $request->id;
-        $task = Tasks::where('id', $id)->first();
+    public function startTask($id){
+        $task = Tasks::find($id);
+        $task->update([
+            'status_id' => '2',
+        ]);
+    }
+    public function pauseTask($id){
+        $task = Tasks::find($id);
         $task->update([
             'status_id' => '1',
         ]);
@@ -96,10 +125,28 @@ class TasksController extends Controller
         Tasks::where('id', $id)->first()->delete();
     }
 
+    public function uploadFiles(Request $request){
+        if ($request->items && count($request->items) > 0){
+            $files = $request->items;
+            $path   = 'images/users';
+            $results = [];
+            foreach ($files as $key => $file) {
+                array_push($results,  [
+                    'name' => $file->getClientOriginalName(),
+                    'path' => Storage::disk('public')->putFile($path, $file)
+                ]);
+            }
+            return $results;
+        }
+    }
+    public function deleteFile($id){
+        TasksFiles::where('id', $id)->first()->delete();
+    }
+
     public function getStatusesAndDepartments(){
         return [
             'statuses' => Status::all(),
-            'departments' => Departments::all()
+            'department' => Departments::where('id', Auth::user()->department_id)->first(),
         ];
     }
 
@@ -116,7 +163,7 @@ class TasksController extends Controller
     }
 
     public function statusTasks($id){
-        return Tasks::where('status_id', $id) -> where(function ($query){
+        return Tasks::where('status_id', $id) -> with(['children', 'parent']) -> where(function ($query){
             $query->where('initiator_id', Auth::user()->id)->orWhereHas('responsibles', function ($q){
                 $q->where('id', Auth::user()->id);
             });
@@ -139,6 +186,7 @@ class TasksController extends Controller
             'status',
             'initiator',
             'parent',
+            'files',
             'children' => function ($q){
                 $q->where('in_step', null);
             },

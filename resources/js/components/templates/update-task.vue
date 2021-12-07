@@ -26,7 +26,11 @@
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Изменить задание</v-toolbar-title>
+                <v-toolbar-title>
+                    {{isUpdate ? 'Изменить задачу' : ''}}
+                    {{isDistribution ? 'Распределить задачу' : ''}}
+                    {{newTask ? 'Создать задачу' : ''}}
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text
@@ -59,6 +63,7 @@
 
                         <v-col
                             cols="4 d-flex flex-wrap align-center"
+                            v-if="!forDistribution"
                         >
                             <v-menu
                                 v-model="menuStructure"
@@ -72,6 +77,7 @@
                                         dark
                                         v-bind="attrs"
                                         v-on="on"
+                                        block
                                     >
                                         Структура
                                     </v-btn>
@@ -108,6 +114,7 @@
 
                         <v-col
                             cols="4"
+                            v-if="!forDistribution"
                         >
                             <v-autocomplete
                                 :items="employees"
@@ -154,6 +161,7 @@
                         </v-col>
                         <v-col
                             cols="4"
+                            v-if="!forDistribution"
                         >
                             <v-select
                                 :items=priorities
@@ -166,7 +174,22 @@
                             ></v-select>
                         </v-col>
                         <v-col
-                            cols-6
+                            cols="4"
+                        >
+                            <v-file-input
+                                v-model="fields.loadingFiles"
+                                show-size
+                                multiple
+
+                                :loading="fileLoading"
+                                label="File input"
+                                @click:clear="fields.files = null"
+                                v-on:change="fileUpload($event)"
+                            ></v-file-input>
+                        </v-col>
+                        <v-col
+                            cols="4"
+                            v-if="!forDistribution"
                         >
                             <v-menu
                                 v-model="menu"
@@ -193,7 +216,8 @@
                             </v-menu>
                         </v-col>
                         <v-col
-                            cols-6
+                            cols="4"
+                            v-if="!forDistribution"
                         >
                             <v-menu
                                 v-model="menu2"
@@ -221,6 +245,21 @@
                             </v-menu>
                         </v-col>
                         <v-col
+                            cols="4"
+                            v-if="fields.parent_id"
+                        >
+                            <v-select
+                                :items=steps
+                                item-text="title"
+                                item-selection="title"
+                                item-value="id"
+                                label="Этап"
+                                dense
+                                name="in_step"
+                                v-model="fields.in_step"
+                            ></v-select>
+                        </v-col>
+                        <v-col
                             cols="12"
                         >
                             <v-btn
@@ -229,18 +268,18 @@
                                 large
                                 block
                             >
+                                {{isUpdate ? 'Изменить' : ''}}
                                 {{isDistribution ? 'Распределить' : ''}}
-    <!--                                {{isEdit ? 'Сохранить изменения' : ''}}-->
-    <!--                                {{isSubtask ? 'Создать подзадачу' : ''}}-->
-    <!--                                {{isTask ? 'Создать задачу' : ''}}-->
-    <!--                                {{isDistribution ? 'Создать задачу для отдела' : ''}}-->
+                                {{newTask ? 'Создать' : ''}}
                             </v-btn>
                         </v-col>
 
                         <v-col
                             cols="12"
                         >
-                            {{fields}}
+                            <pre>
+                                {{fields}}
+                            </pre>
                         </v-col>
                     </v-row>
                 </form>
@@ -255,14 +294,17 @@
     };
     export default {
         name: "update-task",
-        props: ['open', 'updateId', 'isDistribution', 'meetingId'],
+        props: ['open', 'updateId', 'isDistribution', 'meetingId', 'isUpdate', 'isSubtask', 'parent_id', 'forDistribution'],
         data () {
             return{
+                fileLoading: false,
                 isOpen: this.open,
+                newTask: false,
                 employees: [],
                 priorities: [],
                 departments: [],
                 structures: [],
+                steps: [],
 
                 loaded: false,
                 // isDistribution: false,
@@ -286,21 +328,42 @@
         watch: {
             open: function(q){
               this.isOpen = q;
+              if(!this.isDistribution && !this.isUpdate){
+                  this.newTask = true;
+              }
             },
             isDistribution: function (q){
                 if (this.isDistribution){
                     axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         this.fields = response.data;
                         this.structureValue = this.fields.structure.name;
                     });
                 }
             },
+
+            isUpdate: function (q){
+                if (this.isUpdate){
+                    axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
+                        this.fields = response.data;
+                        this.fields.files = [];
+                    });
+                }
+            },
+            isSubtask: function (q) {
+                if (this.isSubtask){
+                    axios.get(`/api/tasks/parent-steps/${this.parent_id}`).then(response => {
+                        this.steps = response.data;
+                    });
+                    this.fields = {};
+                    this.fields.parent_id = this.parent_id;
+                }
+            }
         },
         methods: {
             init(){
                 axios.post('/api/add-task-params').then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.employees = response.data.employees;
                     this.priorities = response.data.priorities;
                     this.departments = response.data.departments;
@@ -324,10 +387,34 @@
             },
             submit() {
                 this.errors = {};
-                if(this.isDistribution){
+                if(this.isUpdate){
+                    axios.post(`/api/tasks/update`, this.fields).then(response => {
+                        this.$emit('close', false);
+                    }).catch(error => {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors || {};
+                        }
+                    });
+                } else if(this.isDistribution){
                     this.fields.meeting_id = this.meetingId;
                     axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
-                        this.$emit('close', false)
+                        this.$emit('close', false);
+                    }).catch(error => {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors || {};
+                        }
+                    });
+                } else if(this.forDistribution){
+                    axios.post('/api/tasks/create-department-task', this.fields).then(response => {
+                        this.$emit('close', false);
+                    }).catch(error => {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors || {};
+                        }
+                    });
+                } else {
+                    axios.post('/api/tasks/create', this.fields).then(response => {
+                        this.$emit('close', false);
                     }).catch(error => {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors || {};
@@ -339,7 +426,26 @@
                 this.structureValue = this.fields.structure.name;
                 this.fields.structure_id = null;
                 this.fields.structure_id = this.fields.structure.id;
-            }
+            },
+            fileUpload(files){
+                if(files.length > 0){
+                    this.fileLoading = true;
+                    console.log(files);
+                    let formData = new FormData();
+                    for (const file of files) {
+
+                        formData.append('items[]', file);
+                    }
+
+                    axios.post('/api/tasks/uploadFiles', formData).then(response => {
+                        console.log(response.data);
+                        this.$set(this.fields, 'files', response.data);
+                        this.fileLoading = false;
+                    }).catch(error => {
+                        alert('Не удалось загрузить изображение!');
+                    });
+                }
+            },
         },
         created(){
             this.init();
