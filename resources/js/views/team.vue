@@ -1,37 +1,35 @@
 <template>
-    <main class="col py-4">
-        <div class="row" v-if="loaded">
-            <div class="col team-nav" >
-                <div class="">
-                    <div class="bg py-6 px-10 mb-2">
-                        <h5 class="team-nav__title">ОДЕЖДА</h5>
-                        <v-list-item-group
-                            color="primary"
-                        >
-                            <v-list>
-                                <v-list-item
-                                    v-for="(department, i) in departments"
-                                    :key="i"main steps
-                                >
-                                    <router-link
-                                        :to="'/team/' + (i+1)"
-                                    >
-                                        {{ department.department }}
-                                    </router-link>
-                                </v-list-item>
-                            </v-list>
-                        </v-list-item-group>
-                    </div>
+    <v-row v-if="loaded">
+        <v-col
+            cols="12"
+            md="3"
+        >
+            <div class="">
+                <div class="bg py-4 px-4 mb-2">
+                    <h5 class="team-nav__title">ОДЕЖДА</h5>
+                    <v-list-item-group
+                        color="primary"
+                    >
+                        <v-list>
+                            <v-list-item
+                                v-for="(department, i) in departments"
+                                :key="i"main steps
+                                :to="'/team/' + (i+1)"
+                            >
+                                {{ department.department }}
+                            </v-list-item>
+                        </v-list>
+                    </v-list-item-group>
+                </div>
 
 <!--                    <add-user></add-user>-->
-                </div>
             </div>
-            <component
-                v-bind:is="getComponent"
-                v-bind:id="postData"
-            ></component>
-        </div>
-    </main>
+        </v-col>
+        <component
+            v-bind:is="getComponent"
+            v-bind:id="postData"
+        ></component>
+    </v-row>
 </template>
 
 <script>
@@ -56,11 +54,6 @@ export default {
             this.init();
         },
     },
-    // computed: {
-    //     departments: function (){
-    //         return this.$store.getters['user/departments'];
-    //     }
-    // },
     created(){
         axios.get('/api/team/departments').then(response => {
             this.departments = response.data;

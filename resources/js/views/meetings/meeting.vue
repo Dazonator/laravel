@@ -1,6 +1,6 @@
 <template>
 
-    <main class="col py-4" v-if="loaded">
+    <div v-if="loaded">
         <h1 class="mb-6">Собрание №{{meeting.number}}</h1>
 
         <div
@@ -44,7 +44,6 @@
                         <v-avatar left>
                             <v-img :src="item.initiator.img"></v-img>
                         </v-avatar>
-                        {{item.initiator.name}}
                         {{item.initiator.lastname}}
 
                     </v-chip>
@@ -52,8 +51,8 @@
                 <template v-slot:item.actions="{ item }">
                     <div>
                         <v-btn-toggle
+                            v-if="isPermission('distributed-tasks')"
                             v-model="toggle_exclusive"
-                            rounded
                             small
                         >
                             <v-btn
@@ -62,7 +61,6 @@
                             >
                                 <v-icon
                                     x-small
-                                    class="mr-2"
                                 >
                                     mdi-pencil
                                 </v-icon>
@@ -146,7 +144,6 @@
                         <v-avatar left>
                             <v-img :src="item.initiator.img"></v-img>
                         </v-avatar>
-                        {{item.initiator.name}}
                         {{item.initiator.lastname}}
 
                     </v-chip>
@@ -154,6 +151,7 @@
                 <template v-slot:item.actions="{ item }">
                     <div>
                         <v-btn-toggle
+                            v-if="isPermission('distributed-tasks')"
                             v-model="toggle_exclusive"
                             rounded
                             small
@@ -165,7 +163,6 @@
                             >
                                 <v-icon
                                     x-small
-                                    class="mr-2"
                                 >
                                     mdi-pencil
                                 </v-icon>
@@ -249,7 +246,7 @@
 
 
         <v-btn
-            v-if="!is_completed"
+            v-if="!is_completed && isPermission('distributed-tasks')"
             class="mt-6"
             color="error"
             block
@@ -289,8 +286,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
-    </main>
+    </div>
 </template>
 
 <script>
@@ -360,10 +356,22 @@
                 }
             },
         },
+        computed:{
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
+        },
         created() {
             this.init();
         },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             init(){
                 axios.get(`/api/departments`).then(response => {
                     this.departments = response.data;

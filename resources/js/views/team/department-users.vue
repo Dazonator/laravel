@@ -1,6 +1,5 @@
 <template>
-
-    <div class="col">
+    <v-col>
         <div class="bg pa-4" v-if="loaded">
             <v-data-table
                 :headers="headers"
@@ -39,20 +38,22 @@
                 </template>
                 <template #item.name="{ item }">
                     <router-link
+                        v-if="isPermission('view-tasks-other-users')"
                         :to="'/team/users/' + item.id"
                     >
                         {{ item.lastname }} {{ item.name }}
                     </router-link>
-<!--                    <v-btn-->
-<!--                        plain-->
-<!--                        @click="userTasks(item.id)"-->
-<!--                    >-->
-<!--                        {{ item.lastname }} {{ item.name }}-->
-<!--                    </v-btn>-->
+
+                    <router-link
+                        v-else
+                        :to="'/profile/' + item.id"
+                    >
+                        {{ item.lastname }} {{ item.name }}
+                    </router-link>
                 </template>
             </v-data-table>
         </div>
-    </div>
+    </v-col>
 </template>
 
 <script>
@@ -89,20 +90,27 @@ export default {
                     sortable: true,
                     value: 'position',
                 },
-                {
-                    text: 'Отдел',
-                    align: 'start',
-                    sortable: true,
-                    value: 'department.department',
-                },
             ],
         }
 
+    },
+
+    computed:{
+        permissions: function (){
+            return this.$store.getters['user/permissions'];
+        }
     },
     created() {
         this.init();
     },
     methods: {
+        isPermission(per){
+            let permissions = this.permissions;
+            if(String(permissions).indexOf(per) >= 0){
+                return true;
+            }
+            return false;
+        },
         init: function (){
             axios.get(`/api/team/departments/${this.id}`).then(response => {
                 this.users = response.data;

@@ -14,6 +14,7 @@ import task from "./views/tasks/task";
 import team from "./views/team";
 import home from "./views/home";
 import settings from "./views/settings";
+import notifications from "./views/notifications";
 
 import settingsUsers from "./views/settings/settings-users";
 import settingsRoles from "./views/settings/settings-roles";
@@ -22,10 +23,16 @@ import createRole from "./views/settings/roles/create-role";
 
 const routes = [
     {
-        path: "/",
-        name: 'home',
-        component: home,
-        meta: {title: 'Домашняя страница'}
+        path: "/calendar",
+        name: 'calendar',
+        component: calendar,
+        meta: {title: 'Календарь'}
+    },
+    {
+        path: "/notifications",
+        name: 'notifications',
+        component: notifications,
+        meta: {title: 'Уведомления'}
     },
     {
         path: "/calendar",

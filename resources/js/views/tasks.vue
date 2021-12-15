@@ -2,35 +2,28 @@
     <div class="row">
         <v-col
             cols="12"
-            lg="4"
-            class="tasks-nav"
+            md="3"
         >
             <div class="">
-                <div class="bg py-6 px-10 mb-2">
+                <div class="bg py-4 px-4 mb-2">
                     <v-list-item-group
                         color="primary"
                     >
                         <v-list>
-
                             <h5 class="team-nav__title">Мои задачи</h5>
                             <v-list-item
                                 v-for="(status, i) in statuses"
                                 :key="i"
+                                :to="'/tasks/status/' + status.id"
                             >
-                                <router-link
-                                    :to="'/tasks/status/' + status.id"
-                                >
-                                    {{status.status}}
-                                </router-link>
+                                {{status.status}}
                             </v-list-item>
                             <v-divider></v-divider>
                             <h5 class="team-nav__title">Задачи отдела</h5>
-                            <v-list-item>
-                                <router-link
-                                    :to="'/tasks/department/' + department.id"
-                                >
-                                   {{department.department}}
-                                </router-link>
+                            <v-list-item
+                                :to="'/tasks/department/' + department.id"
+                            >
+                                {{department.department}}
                             </v-list-item>
                         </v-list>
                     </v-list-item-group>
@@ -39,24 +32,23 @@
                     class="mb-2"
                 >
                     <v-col
+                        v-if="isPermission('create-tasks-for-department')"
                         cols="12"
-                        sm="6"
-                        lg="12"
                         class="pb-0"
+
                     >
                         <v-btn
                             color="primary"
                             @click="newDepartmentTask()"
                             block
                         >
-                            Создать задачу для отдела
+                            Задача для отдела
                         </v-btn>
                     </v-col>
                     <v-col
                         cols="12"
-                        sm="6"
-                        lg="12"
                         class="pb-0 or"
+                        v-if="isPermission('create-tasks')"
                     >
                         <v-btn
                             color="primary"
@@ -67,12 +59,11 @@
                         </v-btn>
                     </v-col>
                 </v-row>
-
             </div>
         </v-col>
         <v-col
             cols="12"
-            lg="8"
+            md="9"
         >
             <component
                 :is="getComponent"
@@ -80,12 +71,6 @@
                 :title="childrenTitle"
             ></component>
         </v-col>
-
-<!--            <add-task-->
-<!--                v-if="addTask"-->
-<!--                :whatCreate="whatCreate"-->
-<!--            ></add-task>-->
-
         <update-task
             :open="dialog"
             @close="closeDialog()"
@@ -120,29 +105,27 @@ export default {
             this.init();
         }
     },
+    computed:{
+        permissions: function (){
+            return this.$store.getters['user/permissions'];
+        }
+    },
     created(){
-        // axios.get('/api/tasks/statuses').then(response => {
-        //     this.statuses = response.data;
-        //     // console.log(response.data);
-        //     console.log(this.statuses);
-        //
-        // });
-        // axios.get('/api/tasks/departments').then(response => {
-        //     this.departments = response.data;
-        //     // console.log(this.departments);
-        // });
         axios.get('/api/tasks/statuses-departments').then(response => {
             this.statuses = response.data.statuses;
             this.department = response.data.department;
-            // console.log(this.departments);
             this.init();
             this.loaded = true;
         });
-
-
-        // this.init();
     },
     methods: {
+        isPermission(per){
+            let permissions = this.permissions;
+            if(String(permissions).indexOf(per) >= 0){
+                return true;
+            }
+            return false;
+        },
         init(){
             if(this.statusId){
                 this.statusTasks(this.statusId);

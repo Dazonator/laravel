@@ -1,5 +1,7 @@
 <template>
-    <div class="col" v-if="loaded">
+    <v-col
+        v-if="loaded"
+    >
         <div class="user-inform mb-4">
             <router-link
                 :to="'/profile/' + user.id"
@@ -38,25 +40,35 @@
                         <v-simple-table>
                             <template v-slot:default>
                                 <thead>
-                                <tr>
-                                    <th class="text-left">
-                                        id
-                                    </th>
-                                    <th class="text-left">
-                                        title
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th class="text-left">
+                                            title
+                                        </th>
+                                        <th class="text-center">
+                                            Постановщик
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr
-                                    v-for="item in status.status_tasks"
-                                    :key="item.name"
-                                >
-                                    <td>{{ item.id }}</td>
-                                    <td>
-                                        <router-link :to="'/tasks/task/' + item.id">{{ item.title }}</router-link>
-                                    </td>
-                                </tr>
+                                    <tr
+                                        v-for="item in status.status_tasks"
+                                        :key="item.name"
+                                    >
+                                        <td>
+                                            <router-link :to="'/tasks/task/' + item.id">{{ item.title }}</router-link>
+                                        </td>
+                                        <td class="text-center">
+                                            <v-chip
+                                                pill
+                                            >
+                                                <v-avatar left>
+                                                    <v-img :src="item.initiator.img"></v-img>
+                                                </v-avatar>
+                                                {{item.initiator.lastname}}
+
+                                            </v-chip>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </template>
                         </v-simple-table>
@@ -64,7 +76,7 @@
                 </v-tab-item>
             </v-tabs-items>
         </div>
-    </div>
+    </v-col>
 </template>
 
 <script>

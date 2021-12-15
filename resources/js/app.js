@@ -59,11 +59,9 @@ Vue.component('user-tasks', require('./views/tasks/user-tasks').default);
 Vue.component('department-tasks', require('./views/tasks/department-tasks').default);
 Vue.component('task', require('./views/tasks/task').default);
 
-
 Vue.component('structure-tasks', require('./views/structure/structure-tasks').default);
 
-
-// Vue.component('settings-users', require('./views/structure/structure-tasks').default);
+Vue.component('add-notification', require('./views/notifications/add-notification').default);
 
 Vue.component('ck-editor', require('./components/templates/ckeditor').default);
 

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="col">
+    <div>
         <h1>{{title}}</h1>
         <div class="bg pa-4">
             <template>
@@ -32,20 +32,6 @@
                             :to="'/tasks/task/' + item.id"
                         >
                             {{ item.title }}
-                        </router-link>
-                    </template>
-
-                    <template #item.responsibles="{ item }">
-                        <router-link
-                            v-for="i in item.responsibles"
-                            :key="i.id"
-                            :to="'/profile/' + i.id"
-                        >
-                            <v-chip>
-                                <v-avatar left>
-                                    <v-img :src="i.img"> </v-img>
-                                </v-avatar>
-                            </v-chip>
                         </router-link>
                     </template>
 
@@ -101,28 +87,8 @@ export default {
                     value: 'title',
                 },
                 {
-                    text: 'Ответственные',
-                    value: 'responsibles',
-                    sortable: true,
-                },
-                {
                     text: 'Постановщик',
                     value: 'initiator',
-                    sortable: true,
-                },
-                {
-                    text: 'Дедлайн',
-                    value: 'deadline',
-                    sortable: true,
-                },
-                {
-                    text: 'Приоритет',
-                    value: 'priority.priority',
-                    sortable: true,
-                },
-                {
-                    text: 'Статус',
-                    value: 'status.status',
                     sortable: true,
                 },
                 {

@@ -4,6 +4,7 @@ use App\Http\Controllers\AddUserController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StepsController;
 use App\Http\Controllers\StructureController;
@@ -42,6 +43,7 @@ Route::get('/employees', [UserController::class, 'employees']);
 Route::get('/priorities', [UserController::class, 'priorities']);
 Route::get('/departments', [AddUserController::class, 'getDepartments']);
 Route::get('/add-user-parameters', [UserController::class, 'addUserParameters']);
+Route::post('/permissions', [UserController::class, 'getPermissions']);
 
 
 Route::post('/add-task-params', [AddTaskController::class, 'getParamsAddTask']);
@@ -136,8 +138,10 @@ Route::post('/settings/removeRoleFromUser', [SettingsController::class, 'removeR
 Route::post('/settings/removePermissionFromRole', [SettingsController::class, 'removePermissionFromRole']);
 
 
-
-
-
+Route::post('/notifications/getAllNotifications', [NotificationsController::class, 'getAllNotifications']);
+Route::post('/notifications/getById/{id}', [NotificationsController::class, 'getById']);
+Route::post('/notifications/create', [NotificationsController::class, 'createNotification']);
+Route::post('/notifications/updateNotification', [NotificationsController::class, 'updateNotification']);
+Route::post('/notifications/deleteNotification/{id}', [NotificationsController::class, 'deleteNotification']);
 
 

@@ -1,13 +1,21 @@
 <template>
     <div>
         <div
-            class="mb-6"
+            class="mb-6 d-flex justify-space-between"
         >
             <add-meeting
+                v-if="isPermission('create-meeting')"
                 :updateId = "updateMeetingId"
                 @updateId = "clearId()"
             >
             </add-meeting>
+
+            <v-spacer></v-spacer>
+
+            <add-event
+                :updateId = "updateId"
+                @updateId = "clearId()"
+            ></add-event>
         </div>
         <v-sheet>
             <v-toolbar
@@ -121,7 +129,7 @@
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
                         <v-btn
-                            v-if="selectedEvent.isMeeting && !selectedEvent.isCompleted"
+                            v-if="selectedEvent.isMeeting && !selectedEvent.isCompleted && isPermission('update-meeting')"
                             icon
                             @click="updateMeetingId = selectedEvent.id"
                         >
@@ -135,7 +143,7 @@
                             <v-icon>mdi-delete-outline</v-icon>
                         </v-btn>
                         <v-btn
-                            v-if="selectedEvent.isMeeting  && !selectedEvent.isCompleted"
+                            v-if="selectedEvent.isMeeting  && !selectedEvent.isCompleted && isPermission('delete-meeting')"
                             icon
                             @click="deleteMeetingId = selectedEvent.id"
                         >
@@ -165,10 +173,6 @@
             </v-menu>
         </v-sheet>
 
-        <add-event
-            :updateId = "updateId"
-            @updateId = "clearId()"
-        ></add-event>
 
         <v-dialog
             v-model="dialogDelete"
@@ -286,10 +290,19 @@
         mounted () {
             this.$refs.calendar.checkChange()
         },
-        created() {
-            this.init();
+        computed:{
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
         },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             viewDay ({ date }) {
                 this.focus = date
                 this.type = 'day'
@@ -341,8 +354,6 @@
                 axios.post(`/api/calendar/meetings`, {start: start.date, end: end.date}).then(response => {
                     // this.tasks = response.data;
                     let meetings = response.data;
-                    console.log(response.data);
-                    console.log(meetings);
                     for (let meeting in meetings) {
                         events.push({
                             isMeeting: true,
@@ -358,20 +369,17 @@
                 });
 
                 this.events = events;
-                // console.log(this.events);
             },
             rnd (a, b) {
                 return Math.floor((b - a + 1) * Math.random()) + a
             },
             deleteEvent(){
                 axios.post(`/api/calendar/delete/${this.deleteId}`).then(response => {
-                    // console.log(response.data);
                     window.location.reload();
                 });
             },
             deleteMeeting(){
                 axios.post(`/api/calendar/meetings/delete/${this.deleteMeetingId}`).then(response => {
-                    // console.log(response.data);
                     window.location.reload();
                 });
             },

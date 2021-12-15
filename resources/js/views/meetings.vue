@@ -1,8 +1,9 @@
 <template>
-    <main class="col py-4" v-if="loaded">
-        <h1 class="mb-8">Собрания</h1>
+    <div v-if="loaded">
         <div class="mb-4">
-            <add-meeting></add-meeting>
+            <add-meeting
+                v-if="isPermission('create-meeting')"
+            ></add-meeting>
         </div>
         <v-card>
             <v-card-title>
@@ -32,7 +33,7 @@
                 </template>
             </v-data-table>
         </v-card>
-    </main>
+    </div>
 </template>
 
 <script>
@@ -70,10 +71,22 @@
                 ],
             }
         },
+        computed:{
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
+        },
         created() {
             this.init();
         },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             init(){
                 axios.post(`/api/meetings`).then(response => {
                     console.log(response.data);

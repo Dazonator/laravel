@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddUserRequest;
 use App\Models\Departments;
+use App\Models\Permission;
 use App\Models\Priority;
 use App\Models\Role;
 use App\Models\User;
@@ -87,5 +88,17 @@ class UserController extends Controller
         ];
     }
 
+    public function getPermissions(){
+        $user = User::where('id', Auth::user()->id)->first();
+        $permissions = Permission::all()->pluck('slug');
+
+        $result = array();
+        foreach ($permissions as $permission){
+            if($user->hasPermission($permission)){
+                array_push($result, $permission);
+            }
+        }
+        return $result;
+    }
 
 }

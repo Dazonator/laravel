@@ -1,7 +1,5 @@
 <template>
-    <main class="col py-4" v-if="loaded">
-        <h1>Пользователи</h1>
-
+    <div v-if="loaded">
         <add-user
             class="mb-4"
             :updateId="updateId"
@@ -45,19 +43,28 @@
                     </span>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon
-                        small
-                        class="mr-2"
-                        @click="updateId=item.id"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                        small
-                        @click="deleteId = item.id"
-                    >
-                        mdi-delete
-                    </v-icon>
+                    <v-btn-toggle>
+                        <v-btn
+                            x-small
+                            @click="updateId=item.id"
+                        >
+                            <v-icon
+                                small
+                            >
+                                mdi-pencil
+                            </v-icon>
+                        </v-btn>
+                        <v-btn
+                            x-small
+                            @click="deleteId = item.id"
+                        >
+                            <v-icon
+                                small
+                            >
+                                mdi-delete
+                            </v-icon>
+                        </v-btn>
+                    </v-btn-toggle>
                 </template>
             </v-data-table>
         </v-card>
@@ -92,7 +99,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </main>
+    </div>
 </template>
 
 <script>
@@ -163,6 +170,8 @@
                 };
                 axios.post(`/api/settings/removeRoleFromUser`, fields).then(response => {
                     this.init();
+
+                    this.$store.dispatch('user/getAppParameters');
                 });
             }
         }

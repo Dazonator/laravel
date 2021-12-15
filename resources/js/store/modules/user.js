@@ -7,7 +7,7 @@ export default {
         // priorities: {},
         // users: {},
         notifications: null,
-        // permissions: [],
+        permissions: {},
     },
     mutations: {
         setAuthUser(state, authUser){
@@ -29,9 +29,9 @@ export default {
             state.notifications = notifications;
         },
 
-        // setPermissions(state, permissions){
-        //     state.permissions = permissions;
-        // }
+        setPermissions(state, permissions){
+            state.permissions = permissions;
+        }
     },
     getters: {
         authUser(state) {
@@ -52,9 +52,9 @@ export default {
         notifications(state) {
             return state.notifications;
         },
-        // permissions(state) {
-        //     return state.permissions;
-        // }
+        permissions(state) {
+            return state.permissions;
+        }
     },
     actions: {
         getAppParameters(context){
@@ -66,7 +66,7 @@ export default {
                 // context.commit('setPriorities', response.data.priorities);
                 // context.commit('setUsers', response.data.users);
                 context.commit('setNotifications', response.data.notifications);
-                // context.commit('setPermissions', response.data.permissions);
+                context.commit('setPermissions', response.data.permissions);
             });
         },
     }

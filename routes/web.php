@@ -21,7 +21,6 @@ use \App\Http\Controllers\HomeController;
 Route::get('/{any}', function () {
     if (Auth::check()) {
         return view('home');
-//        return Auth::user();
     }
     return view('auth.login');
 })->where('any', '.*');

@@ -5,7 +5,6 @@
         hide-overlay
         transition="dialog-bottom-transition"
         scrollable
-
         persistent
         :retain-focus="false"
     >
@@ -37,9 +36,12 @@
                 class="py-6"
             >
 
-                <form
+                <v-form
                     v-if="loaded"
+                    ref="form"
                     @submit.prevent="submit"
+                    v-model="valid"
+                    lazy-validation
                 >
                     <v-row>
                         <v-col
@@ -49,6 +51,8 @@
                                 label="Название"
                                 name="title"
                                 v-model="fields.title"
+                                :rules="[v => !!v || 'Обязательное поле']"
+                                required
                             ></v-text-field>
                         </v-col>
 
@@ -62,7 +66,9 @@
                         </v-col>
 
                         <v-col
-                            cols="4 d-flex flex-wrap align-center"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="!forDistribution"
                         >
                             <v-menu
@@ -105,15 +111,12 @@
                                     </v-radio-group>
                                 </v-card>
                             </v-menu>
-                            <span
-                                class="mx-1"
-                            >
-                                {{structureValue}}
-                            </span>
                         </v-col>
 
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="!forDistribution"
                         >
                             <v-autocomplete
@@ -124,6 +127,8 @@
                                 multiple
                                 name="performers_id"
                                 v-model=fields.performers_id
+                                :rules="[v => !!fields.performers_id || 'Обязательное поле']"
+                                required
                             >
                                 <template v-slot:selection="data">
                                     <v-chip
@@ -160,7 +165,9 @@
                             </v-autocomplete>
                         </v-col>
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="!forDistribution"
                         >
                             <v-select
@@ -174,7 +181,9 @@
                             ></v-select>
                         </v-col>
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                         >
                             <v-file-input
                                 v-model="fields.loadingFiles"
@@ -182,13 +191,15 @@
                                 multiple
 
                                 :loading="fileLoading"
-                                label="File input"
+                                label="Добавить файлы"
                                 @click:clear="fields.files = null"
                                 v-on:change="fileUpload($event)"
                             ></v-file-input>
                         </v-col>
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="!forDistribution"
                         >
                             <v-menu
@@ -216,7 +227,9 @@
                             </v-menu>
                         </v-col>
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="!forDistribution"
                         >
                             <v-menu
@@ -245,7 +258,9 @@
                             </v-menu>
                         </v-col>
                         <v-col
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="4"
                             v-if="fields.parent_id"
                         >
                             <v-select
@@ -282,7 +297,7 @@
                             </pre>
                         </v-col>
                     </v-row>
-                </form>
+                </v-form>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -290,6 +305,7 @@
 
 <script>
     var clearFields = {
+        title: null,
         text: '',
     };
     export default {
@@ -323,6 +339,8 @@
                 menu: false,
                 menu2: false,
                 menuStructure: false,
+
+                valid: false,
             }
         },
         watch: {
@@ -381,45 +399,50 @@
                 if (index >= 0) {
                     this.fields.performers_id.splice(index, 1)
                 }
+                if(this.fields.performers_id.length === 0){
+                    this.fields.performers_id = null;
+                }
             },
             ckeditorText(data){
                 this.fields.text = data;
             },
             submit() {
-                this.errors = {};
-                if(this.isUpdate){
-                    axios.post(`/api/tasks/update`, this.fields).then(response => {
-                        this.$emit('close', false);
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                        }
-                    });
-                } else if(this.isDistribution){
-                    this.fields.meeting_id = this.meetingId;
-                    axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
-                        this.$emit('close', false);
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                        }
-                    });
-                } else if(this.forDistribution){
-                    axios.post('/api/tasks/create-department-task', this.fields).then(response => {
-                        this.$emit('close', false);
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                        }
-                    });
-                } else {
-                    axios.post('/api/tasks/create', this.fields).then(response => {
-                        this.$emit('close', false);
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                        }
-                    });
+                if(this.$refs.form.validate()){
+                    this.errors = {};
+                    if(this.isUpdate){
+                        axios.post(`/api/tasks/update`, this.fields).then(response => {
+                            this.$emit('close', false);
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    } else if(this.isDistribution){
+                        this.fields.meeting_id = this.meetingId;
+                        axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
+                            this.$emit('close', false);
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    } else if(this.forDistribution){
+                        axios.post('/api/tasks/create-department-task', this.fields).then(response => {
+                            this.$emit('close', false);
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    } else {
+                        axios.post('/api/tasks/create', this.fields).then(response => {
+                            this.$emit('close', false);
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    }
                 }
             },
             structureValueChenge(val){

@@ -38,14 +38,16 @@ class TasksController extends Controller
         ]);
         $task->responsibles()->sync($performers);
 
-        if(count($request->post('files')) > 0){
-            foreach ($request->post('files') as $key => $file) {
-                TasksFiles::create([
-                    'name' => $file['name'],
-                    'path' => $file['path'],
-                    'attached' => true,
-                    'task_id' => $task->id,
-                ]);
+        if($request->post('files')){
+            if(count($request->post('files')) > 0){
+                foreach ($request->post('files') as $key => $file) {
+                    TasksFiles::create([
+                        'name' => $file['name'],
+                        'path' => $file['path'],
+                        'attached' => true,
+                        'task_id' => $task->id,
+                    ]);
+                }
             }
         }
 
@@ -163,7 +165,7 @@ class TasksController extends Controller
     }
 
     public function statusTasks($id){
-        return Tasks::where('status_id', $id) -> with(['children', 'parent']) -> where(function ($query){
+        return Tasks::where('status_id', $id) -> with(['children', 'parent', 'initiator', 'responsibles', 'priority', 'status']) -> where(function ($query){
             $query->where('initiator_id', Auth::user()->id)->orWhereHas('responsibles', function ($q){
                 $q->where('id', Auth::user()->id);
             });

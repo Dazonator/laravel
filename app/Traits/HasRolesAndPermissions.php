@@ -3,6 +3,10 @@ namespace App\Traits;
 
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\RolesPermissions;
+use App\Models\User;
+use App\Models\UsersRoles;
+use Illuminate\Support\Facades\Auth;
 
 trait HasRolesAndPermissions
 {
@@ -19,12 +23,10 @@ trait HasRolesAndPermissions
     */
     public function permissions()
     {
+//        return $this->belongsToMany(Permission::class,'users_permissions');
         return $this->belongsToMany(Permission::class,'users_permissions');
-//        return $this->hasManyThrough(
-//            , Role::class,
-//            'user_id', 'role_id', 'id'
-//        );
     }
+
 
     //Чтобы проверить, есть ли у текущего залогиненного Пользователя Роль
     public function hasRole(... $roles ) {

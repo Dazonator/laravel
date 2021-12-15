@@ -1,9 +1,7 @@
 <template>
 
-    <div class="col">
+    <div>
         <h1>{{title}}</h1>
-        <!--            <pre v-html="tasks"></pre>-->
-
         <div class="bg pa-4">
             <v-data-table
                 :headers="headers"
@@ -45,22 +43,25 @@
                         :key="i.id"
                         :to="'/profile/' + i.id"
                     >
-                        <v-chip>
+                        <v-chip
+                            pill
+                        >
                             <v-avatar left>
                                 <v-img :src="i.img"> </v-img>
                             </v-avatar>
+                            {{item.initiator.lastname}}
                         </v-chip>
                     </router-link>
                 </template>
 
                 <template #item.initiator="{ item }">
                     <v-chip
+                        pill
                         v-if="item.initiator"
                     >
                         <v-avatar left>
                             <v-img :src="item.initiator.img"></v-img>
                         </v-avatar>
-                        {{item.initiator.name}}
                         {{item.initiator.lastname}}
 
                     </v-chip>
@@ -195,6 +196,8 @@ export default {
             updateId: null,
             dialogUpdate: false,
 
+            toggle_exclusive: null,
+
             dialogCannotBeCompleted: false,
             dialogCannotBeRestored: false,
             dialogCannotBeDeleted: false,
@@ -231,11 +234,6 @@ export default {
                 {
                     text: 'Приоритет',
                     value: 'priority.priority',
-                    sortable: true,
-                },
-                {
-                    text: 'Статус',
-                    value: 'status.status',
                     sortable: true,
                 },
                 { text: '', value: 'actions', sortable: false },

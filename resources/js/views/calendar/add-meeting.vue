@@ -17,7 +17,10 @@
         <v-card>
 
             <v-form
+                ref="form"
                 @submit.prevent="submit"
+                v-model="valid"
+                lazy-validation
             >
                 <v-card-title>
                     <span class="text-h5">Создать собрание</span>
@@ -115,6 +118,8 @@
                                             readonly
                                             v-bind="attrs"
                                             v-on="on"
+                                            :rules="[v => !!v || 'Обязательное поле']"
+                                            required
                                         ></v-text-field>
                                     </template>
                                     <v-date-picker
@@ -124,7 +129,10 @@
                                     ></v-date-picker>
                                 </v-menu>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col
+                                cols="12"
+                                sm="6"
+                            >
                                 <v-menu
                                     ref="timeMenu"
                                     v-model="timeMenu"
@@ -146,6 +154,8 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             name="startTime"
+                                            :rules="[v => !!v || 'Обязательное поле']"
+                                            required
                                         ></v-text-field>
                                     </template>
                                     <v-time-picker
@@ -157,7 +167,10 @@
                                     ></v-time-picker>
                                 </v-menu>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col
+                                cols="12"
+                                sm="6"
+                            >
                                 <v-menu
                                     ref="timeMenu2"
                                     v-model="timeMenu2"
@@ -178,6 +191,8 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             name="endTime"
+                                            :rules="[v => !!v || 'Обязательное поле']"
+                                            required
                                         ></v-text-field>
                                     </template>
                                     <v-time-picker
@@ -193,7 +208,6 @@
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
-                    <span>{{fields}}</span>
                     <v-spacer></v-spacer>
                     <v-btn
                         color="blue darken-1"
@@ -257,6 +271,7 @@
             time2: null,
 
             errors: null,
+            valid: false,
         }),
         created() {
             this.init();
@@ -264,12 +279,9 @@
         methods: {
             init(){
                 axios.get(`/api/departments`).then(response => {
-                    // console.log(response.data);
                     this.departments = response.data;
                 });
                 axios.post(`/api/meetings-users`).then(response => {
-                    // console.log(response.data);
-                    // console.log(response.data);
                     this.users = response.data;
                 });
                 this.getMeetingNumber(null);
@@ -281,9 +293,7 @@
                 }
             },
             getMeetingNumber(event) {
-                console.log(event);
                 axios.post(`/api/calendar/meetings/max-number/${event}`).then(response => {
-                    // console.log(response);
                     if (response.data) {
                         this.fields.number = response.data + 1;
                     } else {
@@ -292,35 +302,33 @@
                 });
             },
             submit(){
-                if (!this.updateId){
-                    this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
-                    this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
-                    axios.post('/api/calendar/meetings/create', this.fields).then(response => {
-                        // console.log(response.data);
-                        window.location.reload();
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                            // console.log(this.errors);
-                        }
-                    });
-                } else {
-                    this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
-                    this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
-                    axios.post(`/api/calendar/meetings/update/${this.updateId}`, this.fields).then(response => {
-                        // console.log(response.data);
-                        window.location.reload();
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                            // console.log(this.errors);
-                        }
-                    });
+
+                if(this.$refs.form.validate()){
+                    if (!this.updateId){
+                        this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
+                        this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
+                        axios.post('/api/calendar/meetings/create', this.fields).then(response => {
+                            window.location.reload();
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    } else {
+                        this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
+                        this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
+                        axios.post(`/api/calendar/meetings/update/${this.updateId}`, this.fields).then(response => {
+                            window.location.reload();
+                        }).catch(error => {
+                            if (error.response.status === 422) {
+                                this.errors = error.response.data.errors || {};
+                            }
+                        });
+                    }
                 }
             },
             getById(id){
                 axios.post(`/api/meetings/get-by-id-for-update/${id}`).then(response => {
-                    // console.log(response.data);
                     this.fields = response.data;
                     let date1 = this.fields.start.split(" ");
                     let date2 = this.fields.end.split(" ");

@@ -12,7 +12,6 @@ class MeetingsController extends Controller
 {
     public function submitMeeting(Request $request){
         $user = Auth::user();
-//        $meeting = new Meetings();
 
         Meetings::create([
             'number' => $request->number,

@@ -1,7 +1,8 @@
-@extends('layouts.app')
+@include('templates.head')
+<body>
+<div id="app">
+    <index></index>
+</div>
+</body>
 
-@section('content')
-    <main class="col py-4">
-        <h1>home</h1>
-    </main>
-@endsection
+</html>

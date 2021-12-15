@@ -1,12 +1,11 @@
 <template>
-    <main class="col py-4" v-if="loaded">
-        <h1>Роли</h1>
-        <router-link :to="{name: 'create-role'}" class="nav-link">
-            <v-btn
-                color="primary"
-                elevation="2"
-            >Создать роль</v-btn>
-        </router-link>
+    <div v-if="loaded">
+        <v-btn
+            color="primary"
+            elevation="2"
+            :to="{name: 'create-role'}"
+            class="mb-4"
+        >Создать роль</v-btn>
         <v-card>
             <v-card-title>
                 <v-text-field
@@ -54,20 +53,30 @@
                     </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <router-link :to="{path: `/settings/roles/update-role/${item.id}`}" class="nav-link">
-                        <v-icon
-                            small
-                            class="mr-2"
+                    <v-btn-toggle>
+                        <v-btn
+                            x-small
+                            :to="{path: `/settings/roles/update-role/${item.id}`}"
                         >
-                            mdi-pencil
-                        </v-icon>
-                    </router-link>
-                    <v-icon
-                        small
-                        @click="deleteId = item.id"
-                    >
-                        mdi-delete
-                    </v-icon>
+                            <v-icon
+                                small
+                            >
+                                mdi-pencil
+                            </v-icon>
+                        </v-btn>
+                        <v-btn
+                            x-small
+                            @click="deleteId = item.id"
+                        >
+                            <v-icon
+                                small
+                            >
+                                mdi-delete
+                            </v-icon>
+                        </v-btn>
+
+                    </v-btn-toggle>
+
                 </template>
             </v-data-table>
         </v-card>
@@ -101,7 +110,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </main>
+    </div>
 </template>
 
 <script>
@@ -163,6 +172,7 @@
                 axios.post(`/api/settings/role/delete/${this.deleteId}`).then(response => {
                     this.deleteId = null;
                     this.init();
+                    this.$store.dispatch('user/getAppParameters');
                 });
             },
             removeUser(user, role){
@@ -172,6 +182,7 @@
                 };
                 axios.post(`/api/settings/removeRoleFromUser`, fields).then(response => {
                     this.init();
+                    this.$store.dispatch('user/getAppParameters');
                 });
             },
             removePermission(role, permission){
@@ -181,6 +192,7 @@
                 };
                 axios.post(`/api/settings/removePermissionFromRole`, fields).then(response => {
                     this.init();
+                    this.$store.dispatch('user/getAppParameters');
                 });
             }
         }

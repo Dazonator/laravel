@@ -35,20 +35,21 @@ class Controller extends BaseController
 
     public function mainAppParameters()
     {
-        return [
-            'authUser' => User::
-            where('id', Auth::user()->id)->
+        $user = User::where('id', Auth::user()->id)->
             with([
                 'department',
-//                'roles' => function($q){
-//                    $q->with('permissions');
-//                }
-            ])->first(),
+                'permissions'
+            ])->first();
+
+
+        return [
+            'authUser' => $user,
 //            'statuses' => Status::all(),
 //            'departments' => Departments::all(),
 //            'priorities' => Priority::all(),
 //            'users' => User::with(['department'])->get(),
             'notifications' => MessagesUser::where('user_id', Auth::user()->id)->count(),
+            'permissions'=> app(UserController::class)->getPermissions(),
         ];
     }
 

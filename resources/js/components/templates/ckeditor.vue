@@ -51,6 +51,9 @@
             defaultText: function (q) {
                 if(this.defaultText){
                     this.editorData = this.defaultText;
+                } else {
+
+                    this.editorData = '';
                 }
             }
         },

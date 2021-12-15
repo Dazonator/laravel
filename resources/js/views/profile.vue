@@ -1,129 +1,151 @@
 <template>
-    <main class="col py-4" v-if="loaded">
-        <div class="row">
-            <div class="col">
-                <h2 class="mb-4">{{user.name}} {{user.lastname}}</h2>
-                <div class="bg pa-4">
-                    <div class="row profile">
-                        <form class="col-3 text-center profile__img">
-                            <label>
-                                <v-img
-                                    :src=user.img
-                                    alt=""
-                                    :aspect-ratio="1/1"
-                                >
-                                </v-img>
-                                <span href="" v-if="isUser">Изменить фото</span>
-                                <input type="file" id="file" ref="file" v-on:change="changePhoto">
-                            </label>
-                        </form>
-                        <div class="col-9 profile__information">
-                            <div class="row mb-6">
-                                <div class="col-12">
-                                    <div class="text-sm-body-2 font-weight-bold">
-                                        Имя
-                                    </div>
-                                    <div class="value py-2 px-4">
-                                        {{user.name}} {{user.lastname}}
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-sm-body-2 font-weight-bold">
-                                        Должность
-                                    </div>
-                                    <div class="value py-2 px-4">
-                                        {{user.position}}
-                                    </div>
-
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-sm-body-2 font-weight-bold">
-                                        Отдел
-                                    </div>
-                                    <div class="value py-2 px-4">
-
-                                        {{user.department.department}}
-                                    </div>
-
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-sm-body-2 font-weight-bold">
-                                        Телефон
-                                    </div>
-                                    <div class="value py-2 px-4">
-                                        {{user.phone}}
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-sm-body-2 font-weight-bold">
-                                        E-mail
-                                    </div>
-                                    <div class="value py-2 px-4">
-                                        {{user.email}}
-                                    </div>
-
-                                </div>
+    <div v-if="loaded">
+        <h2 class="mb-4">{{user.name}} {{user.lastname}}</h2>
+        <div class="bg pa-4">
+            <div class="row profile">
+                <v-col
+                    cols="12"
+                    sm="3"
+                    class="text-center profile__img"
+                >
+                    <label>
+                        <v-img
+                            :src=user.img
+                            alt=""
+                            :aspect-ratio="1/1"
+                        >
+                        </v-img>
+                        <span href="" v-if="isUser">Изменить фото</span>
+                        <input type="file" id="file" ref="file" v-on:change="changePhoto">
+                    </label>
+                </v-col>
+                <v-col
+                    cols="12"
+                    sm="9"
+                    class="profile__information"
+                >
+                    <div class="row mb-6">
+                        <v-col
+                            cols="12"
+                        >
+                            <div class="text-sm-body-2 font-weight-bold">
+                                Имя
+                            </div>
+                            <div class="value py-2 px-4">
+                                {{user.name}} {{user.lastname}}
+                            </div>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="6"
+                        >
+                            <div class="text-sm-body-2 font-weight-bold">
+                                Должность
+                            </div>
+                            <div class="value py-2 px-4">
+                                {{user.position}}
                             </div>
 
-                            <div class="change-password" v-if="isUser">
-
-                                <div class="change-password__title mb-4 ">
-                                    <span v-on:click="changePasswordShow=!changePasswordShow">Сменить пароль</span>
-                                </div>
-
-                                <v-form
-                                    v-show="changePasswordShow"
-                                    @submit.prevent="changePassword"
-                                >
-                                    {{errors}}
-                                    <v-row>
-                                        <v-col
-                                            cols="12"
-                                            sm="6"
-                                        >
-                                            <v-text-field
-                                                v-model="changePasswordFields.old_password"
-                                                label="Старый пароль"
-                                                required
-                                                type="password"
-                                            ></v-text-field>
-                                        </v-col>
-
-                                        <v-col
-                                            cols="12"
-                                            sm="6"
-                                        >
-                                            <v-text-field
-                                                v-model="changePasswordFields.new_password"
-                                                label="Новый пароль"
-                                                required
-                                                type="password"
-                                            ></v-text-field>
-                                        </v-col>
-
-                                        <v-col
-                                            cols="12"
-                                            sm="6"
-                                        >
-
-                                            <v-btn
-                                                type="submit"
-                                                color="primary"
-                                                block
-                                            >
-                                                Изменить пароль
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-form>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="6"
+                        >
+                            <div class="text-sm-body-2 font-weight-bold">
+                                Отдел
                             </div>
-                        </div>
+                            <div class="value py-2 px-4">
+
+                                {{user.department.department}}
+                            </div>
+
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="6"
+                        >
+                            <div class="text-sm-body-2 font-weight-bold">
+                                Телефон
+                            </div>
+                            <div class="value py-2 px-4">
+                                {{user.phone}}
+                            </div>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="6"
+                        >
+                            <div class="text-sm-body-2 font-weight-bold">
+                                E-mail
+                            </div>
+                            <div class="value py-2 px-4">
+                                {{user.email}}
+                            </div>
+
+                        </v-col>
                     </div>
-                </div>
+
+                    <div class="change-password" v-if="isUser">
+
+                        <div class="change-password__title mb-4 ">
+                            <span v-on:click="changePasswordShow=!changePasswordShow">Сменить пароль</span>
+                        </div>
+
+                        <v-form
+                            v-show="changePasswordShow"
+                            @submit.prevent="changePassword"
+                            v-model="valid"
+                            ref="form"
+                            lazy-validation
+                        >
+                            {{errors}}
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    sm="6"
+                                >
+                                    <v-text-field
+                                        v-model="changePasswordFields.old_password"
+                                        label="Старый пароль"
+                                        type="password"
+                                        :rules="[v => !!v || 'Обязательное поле']"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+
+                                <v-col
+                                    cols="12"
+                                    sm="6"
+                                >
+                                    <v-text-field
+                                        v-model="changePasswordFields.new_password"
+                                        label="Новый пароль"
+                                        type="password"
+                                        :rules="[v => !!v || 'Обязательное поле']"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+
+                                <v-col
+                                    cols="12"
+                                    sm="6"
+                                >
+
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        block
+                                    >
+                                        Изменить пароль
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </div>
+                </v-col>
             </div>
-<!--            <add-task></add-task>-->
         </div>
-    </main>
+    </div>
 </template>
 <script>
 export default {
@@ -137,6 +159,8 @@ export default {
             changePasswordFields: {},
             loaded: false,
             id: Number(this.$route.params.id),
+
+            valid: false,
         }
     },
     watch: {
@@ -175,24 +199,25 @@ export default {
             }
         },
         changePassword(){
-            axios.post('/api/profile/change-password', this.changePasswordFields).then(response => {
-                alert('Пароль изменен!!!');
-                this.changePasswordFields = {};
-                this.changePasswordShow = false;
-                console.log(response);
-            }).catch(error => {
-                if (error.response.status === 422) {
-                    this.errors = error.response.data.errors || {};
-                    console.log(this.errors);
-                }
-            });
+            if(this.$refs.form.validate()){
+                axios.post('/api/profile/change-password', this.changePasswordFields).then(response => {
+                    alert('Пароль изменен!!!');
+                    this.changePasswordFields = {};
+                    this.changePasswordShow = false;
+                    console.log(response);
+                }).catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors || {};
+                        console.log(this.errors);
+                    }
+                });
+            }
         },
         changePhoto(e){
 
             this.file = e.target.files[0];
             let formData = new FormData();
             formData.append('file', this.file);
-            // console.log(formData);
             axios.post('/api/profile/change-photo', formData).then(response => {
                 this.init();
                 this.$store.dispatch('user/getAppParameters');

@@ -16,8 +16,7 @@ class SettingsController extends Controller
 {
 
     public function addUser(AddUserRequest $request){
-        $user = new User();
-        $user::create([
+        $user = User::create([
             'login' => $request->login,
             'name' => $request->name,
             'lastname' => $request->lastname,
@@ -26,8 +25,15 @@ class SettingsController extends Controller
             'phone' => $request->phone,
             'department_id' => $request->department_id,
             'position' => $request->position,
-            'img' => $request->img,
-        ])->roles()->sync($request->roles);
+        ]);
+        if($request->img){
+            $user->update([
+                'img' => $request->img
+            ]);
+        }
+        $user->roles()->sync($request->roles);
+        $this->updatePermissionsFromUser();
+
     }
     public function updateUser(Request $request){
         $id = $request->id;
@@ -40,24 +46,30 @@ class SettingsController extends Controller
             'phone' => $request->phone,
             'department_id' => $request->department_id,
             'position' => $request->position,
-            'img' => $request->img,
         ]);
+        if($request->img){
+            $user->update([
+                'img' => $request->img
+            ]);
+        }
         $user->roles()->sync($request->roles);
+
+
+
+        $this->updatePermissionsFromUser();
     }
-//    public function updateUserRole(Request $request){
-//        $id = $request->id;
-//        $user = User::find($id);
-//        $user->roles()->sync($request->roles);
-//    }
 
     public function removeRoleFromUser(Request $request)
     {
-        $user = User::where('id', $request->user)->with('roles')->first();
+        $user = User::where('id', $request->user)->with(['roles', 'permissions'])->first();
         $roles = array_column(json_decode($user->roles, true), 'id');
 
         unset($roles[array_search($request->role, $roles)]);
         $roles = array_values($roles);
         $user->roles()->sync($roles);
+
+
+        $this->updatePermissionsFromUser();
     }
 
     public function removePermissionFromRole(Request $request){
@@ -67,6 +79,24 @@ class SettingsController extends Controller
         unset($permissions[array_search($request->permission, $permissions)]);
         $permissions = array_values($permissions);
         $role->permissions()->sync($permissions);
+
+        $this->updatePermissionsFromUser();
+    }
+
+    public function updatePermissionsFromUser(){
+        $user = User::where('id', Auth::user()->id)->with(['roles', 'permissions'])->first();
+        $roles = array_column(json_decode($user->roles, true), 'id');
+
+        $permissions = array();
+        foreach ($roles as $role){
+            $per = Role::where('id', $role)->with('permissions')->first();
+            foreach ($per->permissions as $pers){
+                if(!array_search($pers->id, $permissions)){
+                    array_push($permissions, $pers->id);
+                }
+            }
+        }
+        $user->permissions()->sync($permissions);
     }
 
     public function deleteUser($id){
@@ -118,10 +148,12 @@ class SettingsController extends Controller
             'name' => $request->name,
         ]);
         $role->permissions()->sync($request->permissions);
+        $this->updatePermissionsFromUser();
     }
     public function deleteRole($id){
         $role = Role::find($id);
         $role->delete();
+        $this->updatePermissionsFromUser();
     }
 
 //    public function getUserForUpdate(Request $request){

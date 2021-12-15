@@ -5,17 +5,14 @@
             lg="4"
             class="team-nav"
         >
-            <div class="bg py-6 px-2 mb-2">
+            <div class="bg pa-2 mb-2">
                 <div
                     class="d-flex"
                 >
-<!--                    <h5-->
-<!--                        class="pl-4"-->
-<!--                    >-->
-<!--                        Структура-->
-<!--                    </h5>-->
                     <v-spacer></v-spacer>
                     <v-btn
+
+                        v-if="isPermission('update-structure')"
                         icon
                         color="grey lighten-1"
                         x-small
@@ -27,6 +24,7 @@
                     </v-btn>
                 </div>
                 <v-treeview
+                    open
                     :items="structure"
                     selected-color="indigo"
                     return-object
@@ -35,17 +33,18 @@
                         <div
                             class="d-flex align-center"
                         >
-                            <router-link
-
+                            <v-list-item
                                 :to="'/structure/'+props.item.id"
-                                style="white-space: normal;"
+                                class="structure-link"
                             >
                                 {{ props.item.name }}
-                            </router-link>
+                            </v-list-item>
 
                             <v-spacer></v-spacer>
 
-                            <v-btn-toggle>
+                            <v-btn-toggle
+                                v-if="isPermission('update-structure')"
+                            >
                                 <v-btn
                                     icon
                                     x-small
@@ -198,7 +197,22 @@
                 }
             }
         },
+        computed:{
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
+        },
+        created() {
+            this.init();
+        },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             init(){
                 axios.post(`/api/structure/getStructure`).then(response => {
                     this.structure = response.data;
@@ -234,12 +248,14 @@
                 this.dialogRename = true;
             }
         },
-        created() {
-            this.init();
-        }
 
     }
 </script>
 
 <style scoped>
+    .structure-link{
+        white-space: normal;
+        color: black;
+        text-decoration: none;
+    }
 </style>

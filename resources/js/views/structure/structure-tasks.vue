@@ -99,11 +99,6 @@
                         sortable: true,
                     },
                     {
-                        text: 'Дедлайн',
-                        value: 'deadline',
-                        sortable: true,
-                    },
-                    {
                         text: 'Приоритет',
                         value: 'priority.priority',
                         sortable: true,

@@ -20,7 +20,7 @@ class TeamController extends Controller
     public function getUserTasks($user_id){
         $user = User::where('id', $user_id)->first();
         $status = Status::with(['statusTasks' => function($query) use ($user_id){
-            $query->whereHas('responsibles', function($q) use ($user_id){
+            $query->with('initiator', 'status')->whereHas('responsibles', function($q) use ($user_id){
                 $q->where('id', $user_id);
             });
         }])->get();
