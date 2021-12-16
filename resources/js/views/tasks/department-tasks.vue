@@ -103,7 +103,7 @@ export default {
     },
     methods: {
         init(){
-            axios.get(`/api/tasks/department/${this.id}`).then(response => {
+            axios.post(`/api/tasks/department/${this.id}`).then(response => {
                 console.log(response.data);
                 console.log(this.id);
                 this.tasks = response.data;

@@ -24,7 +24,6 @@
                     </v-btn>
                 </div>
                 <v-treeview
-                    open
                     :items="structure"
                     selected-color="indigo"
                     return-object

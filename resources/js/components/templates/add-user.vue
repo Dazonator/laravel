@@ -189,7 +189,7 @@ export default {
 
     },
     created() {
-        axios.get('/api/add-user-parameters').then(response => {
+        axios.post('/api/add-user-parameters').then(response => {
             this.departments = response.data.departments;
             this.roles = response.data.roles;
             console.log(response.data);

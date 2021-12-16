@@ -111,7 +111,7 @@ export default {
         }
     },
     created(){
-        axios.get('/api/tasks/statuses-departments').then(response => {
+        axios.post('/api/tasks/statuses-departments').then(response => {
             this.statuses = response.data.statuses;
             this.department = response.data.department;
             this.init();

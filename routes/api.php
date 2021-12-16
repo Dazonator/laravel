@@ -35,14 +35,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/ckeditor/upload', [UserController::class, 'editorUpload']);
 
-Route::get('/profile/{id?}', [UserController::class, 'profile']);
+Route::post('/profile/{id?}', [UserController::class, 'profile']);
 Route::post('/profile/change-password', [UserController::class, 'changePassword']);
 Route::post('/profile/change-photo', [UserController::class, 'changePhoto']);
 
-Route::get('/employees', [UserController::class, 'employees']);
-Route::get('/priorities', [UserController::class, 'priorities']);
-Route::get('/departments', [AddUserController::class, 'getDepartments']);
-Route::get('/add-user-parameters', [UserController::class, 'addUserParameters']);
+Route::post('/employees', [UserController::class, 'employees']);
+Route::post('/priorities', [UserController::class, 'priorities']);
+Route::post('/departments', [AddUserController::class, 'getDepartments']);
+Route::post('/add-user-parameters', [UserController::class, 'addUserParameters']);
 Route::post('/permissions', [UserController::class, 'getPermissions']);
 
 
@@ -72,16 +72,16 @@ Route::post('/meetings/get-by-id-for-update/{id}', [MeetingsController::class, '
 Route::post('/meetings/{id}', [MeetingsController::class, 'getById']);
 
 
-Route::get('/tasks', [TasksController::class, 'userTasks']);
-Route::get('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
+Route::post('/tasks', [TasksController::class, 'userTasks']);
+Route::post('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
 
-Route::get('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
-Route::get('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
-Route::get('/tasks/structure/{id}', [TasksController::class, 'tasksByStructure']);
+Route::post('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
+Route::post('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
+Route::post('/tasks/structure/{id}', [TasksController::class, 'tasksByStructure']);
 
 Route::post('/tasks/uploadFiles', [TasksController::class, 'uploadFiles']);
 
-Route::get('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
+Route::post('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);
 Route::post('/tasks/task/messages/{id}', [MessagesController::class, 'getChatMessages']);
 Route::post('/tasks/task/create-new-step', [StepsController::class, 'createNewStep']);
@@ -91,13 +91,13 @@ Route::post('/tasks/task/delete-step', [StepsController::class, 'deleteStep']);
 Route::post('/tasks/task/delete-step/{id}', [StepsController::class, 'deleteStep']);
 Route::post('/tasks/task/delete-file/{id}', [TasksController::class, 'deleteFile']);
 Route::post('/tasks/task/update-step/{id}', [StepsController::class, 'updateStep']);
-Route::get('/tasks/task/{id}', [TasksController::class, 'getTask']);
-Route::get('/tasks/edit/{id}', [TasksController::class, 'editTask']);
+Route::post('/tasks/task/{id}', [TasksController::class, 'getTask']);
+Route::post('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 
 
-Route::get('/team/departments', [TeamController::class, 'getDepartments']);
-Route::get('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers']);
-Route::get('/team/users/{id}', [TeamController::class, 'getUserTasks']);
+Route::post('/team/departments', [TeamController::class, 'getDepartments']);
+Route::post('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers']);
+Route::post('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
@@ -109,8 +109,8 @@ Route::post('/tasks/pause/{id}', [TasksController::class, 'pauseTask']);
 Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
 
 
-Route::get('/messages', [MessagesController::class, 'messagesNotifications']);
-Route::get('/notifications', [MessagesController::class, 'getNotifications']);
+Route::post('/messages', [MessagesController::class, 'messagesNotifications']);
+Route::post('/notifications', [MessagesController::class, 'getNotifications']);
 
 
 

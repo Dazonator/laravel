@@ -95,7 +95,7 @@ export default {
         }
     },
     created() {
-        axios.get(`/api/team/users/${this.id}`).then(response => {
+        axios.post(`/api/team/users/${this.id}`).then(response => {
             // console.log(response.data.user);
 
             this.data = response.data;

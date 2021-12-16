@@ -52,7 +52,6 @@
                     <div>
                         <v-btn-toggle
                             v-if="isPermission('distributed-tasks')"
-                            v-model="toggle_exclusive"
                             small
                         >
                             <v-btn
@@ -373,7 +372,7 @@
                 return false;
             },
             init(){
-                axios.get(`/api/departments`).then(response => {
+                axios.post(`/api/departments`).then(response => {
                     this.departments = response.data;
                 });
 

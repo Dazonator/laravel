@@ -112,7 +112,7 @@ export default {
             return false;
         },
         init: function (){
-            axios.get(`/api/team/departments/${this.id}`).then(response => {
+            axios.post(`/api/team/departments/${this.id}`).then(response => {
                 this.users = response.data;
                 this.loaded = true;
                 this.tableLoading = false;

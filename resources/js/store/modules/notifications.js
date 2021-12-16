@@ -15,7 +15,7 @@ export default {
     },
     actions: {
         getNotifications(context){
-            axios.get(`/api/notifications`).then(response => {
+            axios.post(`/api/notifications`).then(response => {
                 context.commit('setNotifications', response.data);
             });
         }

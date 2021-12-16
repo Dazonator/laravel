@@ -175,7 +175,7 @@ export default {
     methods:{
         init(){
             if(!this.id){
-                axios.get(`/api/profile`).then(response => {
+                axios.post(`/api/profile`).then(response => {
                     // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = response.data.is_user;
@@ -188,7 +188,7 @@ export default {
                 // this.isUser = true;
                 // this.loaded = true;
             } else {
-                axios.get(`/api/profile/${this.id}`).then(response => {
+                axios.post(`/api/profile/${this.id}`).then(response => {
                     // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = false;

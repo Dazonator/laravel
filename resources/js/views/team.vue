@@ -55,7 +55,7 @@ export default {
         },
     },
     created(){
-        axios.get('/api/team/departments').then(response => {
+        axios.post('/api/team/departments').then(response => {
             this.departments = response.data;
         });
         this.init();

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('users')->delete();
         $user = new User();
         $user::create([
             'img' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUrabYnhmhW-R0ruChIf03eExU4ETJhJYRA&usqp=CAU',

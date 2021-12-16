@@ -278,7 +278,7 @@
         },
         methods: {
             init(){
-                axios.get(`/api/departments`).then(response => {
+                axios.post(`/api/departments`).then(response => {
                     this.departments = response.data;
                 });
                 axios.post(`/api/meetings-users`).then(response => {

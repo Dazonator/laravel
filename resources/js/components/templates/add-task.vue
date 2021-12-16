@@ -274,7 +274,7 @@ export default {
         },
         isEdit: function (q){
             if (this.isEdit){
-                axios.get('/api/tasks/edit/'+this.parent_id).then(response => {
+                axios.post('/api/tasks/edit/'+this.parent_id).then(response => {
                     console.log(response.data);
                     this.fields = response.data;
                     this.steps = this.fields.parent.steps;
@@ -283,7 +283,7 @@ export default {
         },
         isSubtask: function (q) {
             if (this.isSubtask){
-                axios.get('/api/tasks/parent-steps/'+this.parent_id).then(response => {
+                axios.post('/api/tasks/parent-steps/'+this.parent_id).then(response => {
                     this.steps = response.data;
                 });
                 this.fields = {};

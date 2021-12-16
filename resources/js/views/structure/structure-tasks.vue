@@ -130,7 +130,7 @@
         methods: {
             init(){
                 if (this.categoryId){
-                    axios.get(`/api/tasks/structure/${this.categoryId}`).then(response => {
+                    axios.post(`/api/tasks/structure/${this.categoryId}`).then(response => {
                         console.log(response.data);
                         this.tasks = response.data.tasks;
                         this.structure = response.data.structure;

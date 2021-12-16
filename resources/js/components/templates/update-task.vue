@@ -352,7 +352,7 @@
             },
             isDistribution: function (q){
                 if (this.isDistribution){
-                    axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
+                    axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
                         // console.log(response.data);
                         this.fields = response.data;
                         this.structureValue = this.fields.structure.name;
@@ -362,7 +362,7 @@
 
             isUpdate: function (q){
                 if (this.isUpdate){
-                    axios.get(`/api/tasks/task/${this.updateId}`).then(response => {
+                    axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
                         this.fields = response.data;
                         this.fields.files = [];
                     });
@@ -370,7 +370,7 @@
             },
             isSubtask: function (q) {
                 if (this.isSubtask){
-                    axios.get(`/api/tasks/parent-steps/${this.parent_id}`).then(response => {
+                    axios.post(`/api/tasks/parent-steps/${this.parent_id}`).then(response => {
                         this.steps = response.data;
                     });
                     this.fields = {};

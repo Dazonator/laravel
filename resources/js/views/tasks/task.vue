@@ -498,7 +498,7 @@ export default {
             if(this.taskId){
                 this.id = this.taskId;
             }
-            axios.get(`/api/tasks/task/${this.id}`).then(response => {
+            axios.post(`/api/tasks/task/${this.id}`).then(response => {
                 console.log(response.data);
                 this.task = response.data;
                 this.loaded = true;

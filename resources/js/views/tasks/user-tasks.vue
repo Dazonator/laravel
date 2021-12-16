@@ -249,7 +249,7 @@ export default {
     },
     methods: {
         init(){
-            axios.get(`/api/tasks/statuses/${this.id}`).then(response => {
+            axios.post(`/api/tasks/statuses/${this.id}`).then(response => {
                 console.log(response.data);
                 this.tasks = response.data;
                 this.tableloading = false;

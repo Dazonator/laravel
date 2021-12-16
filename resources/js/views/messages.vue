@@ -64,7 +64,7 @@ export default {
     },
     methods: {
         init(){
-            axios.get('/api/messages').then(response => {
+            axios.post('/api/messages').then(response => {
                 console.log(response.data);
                 this.messages = response.data;
                 this.loaded = true;
