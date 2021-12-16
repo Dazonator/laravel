@@ -22,7 +22,6 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function editorUpload(Request $request){
-//        print_r($request);
         $file = $request->upload;
         $path   = 'images/users';
 
@@ -35,22 +34,25 @@ class Controller extends BaseController
 
     public function mainAppParameters()
     {
-        $user = User::where('id', Auth::user()->id)->
+        if(Auth::check()){
+            $user = User::where('id', Auth::user()->id)->
             with([
                 'department',
                 'permissions'
             ])->first();
 
 
-        return [
-            'authUser' => $user,
+            return [
+                'authUser' => $user,
 //            'statuses' => Status::all(),
 //            'departments' => Departments::all(),
 //            'priorities' => Priority::all(),
 //            'users' => User::with(['department'])->get(),
-            'notifications' => MessagesUser::where('user_id', Auth::user()->id)->count(),
-            'permissions'=> app(UserController::class)->getPermissions(),
-        ];
+                'notifications' => MessagesUser::where('user_id', Auth::user()->id)->count(),
+                'permissions'=> app(UserController::class)->getPermissions(),
+            ];
+
+        }
     }
 
 }
