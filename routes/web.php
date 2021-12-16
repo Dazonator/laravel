@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddTaskController;
 use \App\Http\Controllers\HomeController;
@@ -25,12 +26,7 @@ Route::get('/{any}', function () {
     return view('auth.login');
 })->where('any', '.*');
 
-
-
 //Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
-
-
-
 
 Auth::routes();
 
