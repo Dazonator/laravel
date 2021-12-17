@@ -6,6 +6,7 @@
             class="mb-4"
         >
             <v-btn
+                v-if="isPermission('create-notification')"
                 @click="openDialog = !openDialog"
                 color="primary"
             >
@@ -31,6 +32,7 @@
                     shaped
                 >
                     <v-btn
+                        v-if="isPermission('update-notification')"
                         x-small
                         @click="updateNotification(notification.id)"
                     >
@@ -39,6 +41,7 @@
                         >mdi-pencil</v-icon>
                     </v-btn>
                     <v-btn
+                        v-if="isPermission('delete-notification')"
                         x-small
                         @click="deleteId = notification.id"
                     >
@@ -109,13 +112,22 @@
                 }
             }
         },
-        computed: {
-
+        computed:{
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
         },
         created() {
             this.init();
         },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             init(){
                 axios.post(`/api/notifications/getAllNotifications`).then(response => {
                     this.notifications = response.data;

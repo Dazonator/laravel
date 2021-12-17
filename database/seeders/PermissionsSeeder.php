@@ -58,6 +58,18 @@ class PermissionsSeeder extends Seeder
                 'name' => 'Настройки',
                 'slug' => 'settings'
             ],
+            [
+                'name' => 'Создавать уведомления',
+                'slug' => 'create-notification'
+            ],
+            [
+                'name' => 'Изменять уведомления',
+                'slug' => 'update-notification'
+            ],
+            [
+                'name' => 'Удалять уведомления',
+                'slug' => 'delete-notification'
+            ],
         ];
 
         Permission::insert($permissions);
