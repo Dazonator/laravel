@@ -165,12 +165,12 @@ class SettingsController extends Controller
             'name' => $request->name,
         ]);
         $role->permissions()->sync($request->permissions);
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromAllUsers();
     }
     public function deleteRole($id){
         $role = Role::find($id);
         $role->delete();
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromAllUsers();
     }
 
 //    public function getUserForUpdate(Request $request){
