@@ -32,7 +32,7 @@ class SettingsController extends Controller
             ]);
         }
         $user->roles()->sync($request->roles);
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromUser($user->id);
 
     }
     public function updateUser(Request $request){
@@ -56,7 +56,7 @@ class SettingsController extends Controller
 
 
 
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromUser($id);
     }
 
     public function removeRoleFromUser(Request $request)
@@ -69,7 +69,7 @@ class SettingsController extends Controller
         $user->roles()->sync($roles);
 
 
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromUser($user->id);
     }
 
     public function removePermissionFromRole(Request $request){
@@ -80,11 +80,11 @@ class SettingsController extends Controller
         $permissions = array_values($permissions);
         $role->permissions()->sync($permissions);
 
-        $this->updatePermissionsFromUser();
+        $this->updatePermissionsFromAllUsers();
     }
 
-    public function updatePermissionsFromUser(){
-        $user = User::where('id', Auth::user()->id)->with(['roles', 'permissions'])->first();
+    public function updatePermissionsFromUser($id){
+        $user = User::where('id', $id)->with(['roles', 'permissions'])->first();
         $roles = array_column(json_decode($user->roles, true), 'id');
 
         $permissions = array();
@@ -97,6 +97,23 @@ class SettingsController extends Controller
             }
         }
         $user->permissions()->sync($permissions);
+    }
+    public function updatePermissionsFromAllUsers(){
+        $users = User::with(['roles', 'permissions'])->get();
+        foreach ($users as $user){
+            $roles = array_column(json_decode($user->roles, true), 'id');
+
+            $permissions = array();
+            foreach ($roles as $role){
+                $per = Role::where('id', $role)->with('permissions')->first();
+                foreach ($per->permissions as $pers){
+                    if(!array_search($pers->id, $permissions)){
+                        array_push($permissions, $pers->id);
+                    }
+                }
+            }
+            $user->permissions()->sync($permissions);
+        }
     }
 
     public function deleteUser($id){
