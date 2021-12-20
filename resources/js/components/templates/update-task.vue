@@ -345,7 +345,6 @@
             isDistribution: function (q){
                 if (this.isDistribution){
                     axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
-                        // console.log(response.data);
                         this.fields = response.data;
                         this.structureValue = this.fields.structure.name;
                     });
@@ -373,7 +372,6 @@
         methods: {
             init(){
                 axios.post('/api/add-task-params').then(response => {
-                    // console.log(response.data);
                     this.employees = response.data.employees;
                     this.priorities = response.data.priorities;
                     this.departments = response.data.departments;
@@ -445,7 +443,6 @@
             fileUpload(files){
                 if(files.length > 0){
                     this.fileLoading = true;
-                    console.log(files);
                     let formData = new FormData();
                     for (const file of files) {
 
@@ -453,7 +450,6 @@
                     }
 
                     axios.post('/api/tasks/uploadFiles', formData).then(response => {
-                        console.log(response.data);
                         this.$set(this.fields, 'files', response.data);
                         this.fileLoading = false;
                     }).catch(error => {

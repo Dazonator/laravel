@@ -60,7 +60,6 @@
         },
         watch: {
             $route: function (val){
-                // console.log(this.$route);
             }
         }
     }

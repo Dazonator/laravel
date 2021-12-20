@@ -89,7 +89,6 @@
             },
             init(){
                 axios.post(`/api/meetings`).then(response => {
-                    console.log(response.data);
                     this.meetings = response.data;
                     this.loaded = true;
                 });

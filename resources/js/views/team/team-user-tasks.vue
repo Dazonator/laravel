@@ -96,14 +96,11 @@ export default {
     },
     created() {
         axios.post(`/api/team/users/${this.id}`).then(response => {
-            // console.log(response.data.user);
-
             this.data = response.data;
             this.user = this.data.user;
             this.statuses = this.data.status;
             this.loaded = true;
             this.tableLoading = false;
-            console.log(this.data.status);
         });
     },
     methods:{

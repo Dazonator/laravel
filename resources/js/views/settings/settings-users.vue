@@ -148,7 +148,6 @@
         methods: {
             init(){
                 axios.post(`/api/settings/getUsers`).then(response => {
-                    console.log(response.data);
                     this.users = response.data;
                     this.loaded = true;
                 });

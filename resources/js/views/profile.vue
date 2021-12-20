@@ -177,20 +177,12 @@ export default {
         init(){
             if(!this.id){
                 axios.post(`/api/profile`).then(response => {
-                    // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = response.data.is_user;
                     this.loaded = true;
                 });
-                // console.log(
-                // this.$store.getters['user/authUser']);
-                // this.user = this.$store.getters['user/authUser'];
-                // console.log(this.user);
-                // this.isUser = true;
-                // this.loaded = true;
             } else {
                 axios.post(`/api/profile/${this.id}`).then(response => {
-                    // console.log(response.data);
                     this.user = response.data.user;
                     this.isUser = false;
                     this.loaded = true;

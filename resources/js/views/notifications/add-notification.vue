@@ -116,7 +116,6 @@
             updateId: function (q){
                 if(this.updateId){
                     axios.post(`/api/notifications/getById/${this.updateId}`).then(response => {
-                        console.log(response.data);
                         this.fields = response.data;
                     });
                 }

@@ -340,8 +340,6 @@ export default {
             axios.post(`/api/calendar/meetings`, {start: start.date, end: end.date}).then(response => {
                 // this.tasks = response.data;
                 let meetings = response.data;
-                console.log(response.data);
-                console.log(meetings);
                 for (let meeting in meetings) {
                     events.push({
                         isMeeting: true,
@@ -357,20 +355,17 @@ export default {
             });
 
             this.events = events;
-            // console.log(this.events);
         },
         rnd (a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
         },
         deleteEvent(){
             axios.post(`/api/calendar/delete/${this.deleteId}`).then(response => {
-                // console.log(response.data);
                 window.location.reload();
             });
         },
         deleteMeeting(){
             axios.post(`/api/calendar/meetings/delete/${this.deleteMeetingId}`).then(response => {
-                // console.log(response.data);
                 window.location.reload();
             });
         },

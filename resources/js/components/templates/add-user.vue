@@ -203,7 +203,6 @@ export default {
         axios.post('/api/add-user-parameters').then(response => {
             this.departments = response.data.departments;
             this.roles = response.data.roles;
-            console.log(response.data);
         });
     },
     watch:{
@@ -216,7 +215,6 @@ export default {
         updateId: function (q) {
             if (this.updateId){
                 axios.post(`/api/settings/users/getUser/${this.updateId}`).then(response => {
-                    console.log(response.data);
                     this.dialog = true;
                     this.fields = response.data;
 
@@ -227,7 +225,6 @@ export default {
                     this.fields.roles = [];
                     this.fields.roles = roles;
                     delete this.fields.img;
-                    console.log(response.data);
                 });
             }
         }
@@ -235,7 +232,6 @@ export default {
     methods: {
         imgUpload(file){
             if(file){
-                console.log(file);
                 let formData = new FormData();
                 formData.append('img', file);
                 axios.post('/api/settings/users/addUser/uploadPhoto', formData).then(response => {

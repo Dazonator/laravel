@@ -382,12 +382,10 @@
                     this.initialTasks = response.data.tasksInitial;
                     this.distributionTasks = response.data.tasksDistribution;
                     this.distributionTasksTrue = response.data.distributionTasksTrue;
-                    // console.log(this.meeting);
 
                     if (this.meeting.completed_at){
                         this.is_completed = true;
                     }
-                    // console.log(this.is_completed);
 
 
                     this.loaded = true;

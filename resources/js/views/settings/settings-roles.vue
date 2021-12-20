@@ -163,7 +163,6 @@
         methods: {
             init(){
                 axios.post(`/api/settings/getRoles`).then(response => {
-                    console.log(response.data);
                     this.roles = response.data;
                     this.loaded = true;
                 });

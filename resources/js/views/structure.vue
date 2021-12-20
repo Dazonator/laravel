@@ -215,7 +215,6 @@
             init(){
                 axios.post(`/api/structure/getStructure`).then(response => {
                     this.structure = response.data;
-                    console.log(response.data);
                     this.loaded = true;
                 });
             },

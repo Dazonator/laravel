@@ -65,7 +65,6 @@ export default {
     methods: {
         init(){
             axios.post('/api/messages').then(response => {
-                console.log(response.data);
                 this.messages = response.data;
                 this.loaded = true;
             });

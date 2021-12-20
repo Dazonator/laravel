@@ -72,15 +72,12 @@
             init(){
 
                 axios.post(`/api/settings/getPermissions`).then(response => {
-                    console.log(response.data);
                     this.permissions = response.data;
                     this.loaded = true;
                 });
 
                 if (this.id){
                     axios.post(`/api/settings/getRoleForUpdate/${this.id}`).then(response => {
-                        // this.fields = response.data;
-                        console.log(response.data);
                         this.fields.name = '';
                         this.fields.id = response.data.id;
                         this.fields.name = response.data.name;

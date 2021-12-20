@@ -104,8 +104,6 @@ export default {
     methods: {
         init(){
             axios.post(`/api/tasks/department/${this.id}`).then(response => {
-                console.log(response.data);
-                console.log(this.id);
                 this.tasks = response.data;
                 this.tableloading = false;
             });

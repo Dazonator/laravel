@@ -59,7 +59,6 @@ export default {
     actions: {
         getAppParameters(context){
             axios.post(`/api/main-app-parameters`).then(response => {
-                console.log(response.data);
                 context.commit('setAuthUser', response.data.authUser);
                 // context.commit('setStatuses', response.data.statuses);
                 // context.commit('setDepartments', response.data.departments);

@@ -25,7 +25,6 @@
                         data.append( 'upload', uploadedFile );
 
                         axios.post('/api/ckeditor/upload', data).then(response => {
-                            // console.log(response.data);
                             if ( response.data.result === 'success' ) {
                                 resolve( {
                                     default: response.data.url

@@ -131,7 +131,6 @@
             init(){
                 if (this.categoryId){
                     axios.post(`/api/tasks/structure/${this.categoryId}`).then(response => {
-                        console.log(response.data);
                         this.tasks = response.data.tasks;
                         this.structure = response.data.structure;
                         this.tableloading = false;

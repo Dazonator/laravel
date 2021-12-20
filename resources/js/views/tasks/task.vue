@@ -499,7 +499,6 @@ export default {
                 this.id = this.taskId;
             }
             axios.post(`/api/tasks/task/${this.id}`).then(response => {
-                console.log(response.data);
                 this.task = response.data;
                 this.loaded = true;
                 if(this.task.status_id === 3){
@@ -533,9 +532,7 @@ export default {
             }
             if(this.task.steps.length > 0){
                 for (let step in this.task.steps) {
-                    console.log(step);
                     for (let task in this.task.steps[step].tasks) {
-                        console.log(task);
                         if (this.task.steps[step].tasks[task].status_id !== 3){
                             return this.dialogCannotBeCompleted = true;
                         }
@@ -601,7 +598,6 @@ export default {
         },
         initMessages() {
             axios.post(`/api/tasks/task/messages/${this.id}`).then(response => {
-                // console.log(response.data);
                 this.chat = response.data;
                 this.scrollToEnd();
 
@@ -661,7 +657,6 @@ export default {
             });
         },
         deleteTaskStep(task){
-            console.log(task);
             task.in_step = null;
             this.updateTaskStep(task);
         },
