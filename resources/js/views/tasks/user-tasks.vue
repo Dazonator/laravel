@@ -49,7 +49,7 @@
                             <v-avatar left>
                                 <v-img :src="i.img"> </v-img>
                             </v-avatar>
-                            {{item.initiator.lastname}}
+                            {{i.lastname}}
                         </v-chip>
                     </router-link>
                 </template>
