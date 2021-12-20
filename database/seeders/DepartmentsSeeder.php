@@ -30,6 +30,8 @@ class DepartmentsSeeder extends Seeder
             ['id' => 9, 'department' => 'Водители'],
             ['id' => 10, 'department' => 'Склад основной'],
             ['id' => 11, 'department' => 'Склад рекламаций'],
+            ['id' => 12, 'department' => 'Контенты'],
+            ['id' => 13, 'department' => 'Роководство'],
         ];
 
         Departments::insert($departments);
