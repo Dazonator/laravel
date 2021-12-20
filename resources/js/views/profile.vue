@@ -16,7 +16,13 @@
                         >
                         </v-img>
                         <span href="" v-if="isUser">Изменить фото</span>
-                        <input type="file" id="file" ref="file" v-on:change="changePhoto">
+                        <input
+                            v-if="isUser"
+                            type="file"
+                            id="file"
+                            ref="file"
+                            v-on:change="changePhoto"
+                        >
                     </label>
                 </v-col>
                 <v-col
@@ -124,9 +130,6 @@
                                         required
                                     ></v-text-field>
                                 </v-col>
-
-                                {{changePasswordFields}}
-
                                 <v-col
                                     cols="12"
                                     sm="6"
