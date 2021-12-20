@@ -37,7 +37,6 @@
                         >
                             {{id ? 'Изменить роль' : 'Создать роль'}}
                         </v-btn>
-                        {{fields}}
                     </v-form>
                 </div>
             </div>
@@ -96,6 +95,7 @@
             submit(){
                 if(this.id){
                     axios.post(`/api/settings/role/update`, this.fields).then(response => {
+                        this.$store.dispatch('user/getAppParameters');
                         this.$router.push('./../');
                     });
                 } else {

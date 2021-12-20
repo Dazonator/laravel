@@ -288,14 +288,6 @@
                                 {{newTask ? 'Создать' : ''}}
                             </v-btn>
                         </v-col>
-
-                        <v-col
-                            cols="12"
-                        >
-                            <pre>
-                                {{fields}}
-                            </pre>
-                        </v-col>
                     </v-row>
                 </v-form>
             </v-card-text>
@@ -419,7 +411,7 @@
                         });
                     } else if(this.isDistribution){
                         this.fields.meeting_id = this.meetingId;
-                        axios.post(`/api/tasks/update/${this.fields.id}`, this.fields).then(response => {
+                        axios.post(`/api/tasks/update`, this.fields).then(response => {
                             this.$emit('close', false);
                         }).catch(error => {
                             if (error.response.status === 422) {

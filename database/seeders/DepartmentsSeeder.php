@@ -19,15 +19,17 @@ class DepartmentsSeeder extends Seeder
         DB::table('departments')->delete();
 
         $departments = [
-            ['id' => 1, 'department' => 'Программисты'],
-            ['id' => 2, 'department' => 'Реклама'],
-            ['id' => 3, 'department' => 'Водители'],
-            ['id' => 4, 'department' => 'Склад'],
-            ['id' => 5, 'department' => 'Менеджеры'],
-            ['id' => 6, 'department' => 'Колл-центр'],
-            ['id' => 7, 'department' => 'Бухгалтерия'],
-            ['id' => 8, 'department' => 'Контенты'],
-            ['id' => 9, 'department' => 'Склад'],
+            ['id' => 1, 'department' => 'Реклама Monro24'],
+            ['id' => 2, 'department' => 'Реклама МЛ'],
+            ['id' => 3, 'department' => 'Программисты'],
+            ['id' => 4, 'department' => 'Менеджеры Monro24'],
+            ['id' => 5, 'department' => 'Менеджеры МЛ'],
+            ['id' => 6, 'department' => 'Менеджеры соц. сети'],
+            ['id' => 7, 'department' => 'Колл-центр'],
+            ['id' => 8, 'department' => 'Бухгалтерия'],
+            ['id' => 9, 'department' => 'Водители'],
+            ['id' => 10, 'department' => 'Склад основной'],
+            ['id' => 11, 'department' => 'Склад рекламаций'],
         ];
 
         Departments::insert($departments);

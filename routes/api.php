@@ -35,9 +35,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/ckeditor/upload', [UserController::class, 'editorUpload']);
 
-Route::post('/profile/{id?}', [UserController::class, 'profile']);
 Route::post('/profile/change-password', [UserController::class, 'changePassword']);
 Route::post('/profile/change-photo', [UserController::class, 'changePhoto']);
+Route::post('/profile/{id?}', [UserController::class, 'profile']);
 
 Route::post('/employees', [UserController::class, 'employees']);
 Route::post('/priorities', [UserController::class, 'priorities']);

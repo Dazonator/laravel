@@ -142,31 +142,42 @@
                                         v-model="fields.phone"
                                     ></v-text-field>
                                 </v-col>
-                                <v-col
-                                    cols="12"
-                                >
-                                    {{fields}}
-                                </v-col>
                             </v-row>
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            color="yellow darken-3"
-                            dark
-                            @click="dialog = false"
-                            min-width="200px"
-                        >
-                            Отмена
-                        </v-btn>
-                        <v-btn
-                            type="submit"
-                            color="primary"
-                            min-width="200px"
-                        >
-                            {{updateId ? 'Изменить' : 'Добавить'}}
-                        </v-btn>
+                        <v-container>
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                >
+                                    <v-btn
+                                        color="yellow darken-3"
+                                        dark
+                                        @click="dialog = false"
+                                        min-width="200px"
+                                        block
+                                    >
+                                        Отмена
+                                    </v-btn>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                >
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        min-width="200px"
+                                        block
+                                    >
+                                        {{updateId ? 'Изменить' : 'Добавить'}}
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+
+                        </v-container>
                     </v-card-actions>
 
                 </form>

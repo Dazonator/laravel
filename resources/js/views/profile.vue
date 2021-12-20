@@ -98,7 +98,6 @@
                             ref="form"
                             lazy-validation
                         >
-                            {{errors}}
                             <v-row>
                                 <v-col
                                     cols="12"
@@ -125,6 +124,8 @@
                                         required
                                     ></v-text-field>
                                 </v-col>
+
+                                {{changePasswordFields}}
 
                                 <v-col
                                     cols="12"
@@ -204,11 +205,9 @@ export default {
                     alert('Пароль изменен!!!');
                     this.changePasswordFields = {};
                     this.changePasswordShow = false;
-                    console.log(response);
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
-                        console.log(this.errors);
                     }
                 });
             }

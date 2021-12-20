@@ -48,7 +48,7 @@ Vue.component('example-component', require('./components/ExampleComponent').defa
 Vue.component('calendar-component', require('./components/CalendarComponent').default);
 Vue.component('add-event', require('./views/calendar/add-event').default);
 Vue.component('add-meeting', require('./views/calendar/add-meeting').default);
-Vue.component('add-task', require('./components/templates/add-task').default);
+// Vue.component('add-task', require('./components/templates/add-task').default);
 Vue.component('add-user', require('./components/templates/add-user').default);
 Vue.component('update-task', require('./components/templates/update-task').default);
 

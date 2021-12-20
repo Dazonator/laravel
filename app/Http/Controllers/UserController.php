@@ -22,7 +22,6 @@ class UserController extends Controller
     public function profile($id=null)
     {
         if ($id){
-
             $isUser = false;
             $authUser = Auth::id();
             if($id & ($id == $authUser)){

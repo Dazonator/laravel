@@ -51,6 +51,10 @@ class PermissionsSeeder extends Seeder
                 'slug' => 'view-tasks-other-users'
             ],
             [
+                'name' => 'Просматривать страницу структуры',
+                'slug' => 'view-structure-page'
+            ],
+            [
                 'name' => 'Редактирование структуры',
                 'slug' => 'update-structure'
             ],

@@ -8,7 +8,7 @@
         >
             <h3>Распределить</h3>
             <v-data-table
-                class="mb-6"
+                class="mb-6 bg"
                 :headers="headers"
                 :items="initialTasks"
                 :single-expand="singleExpand"
@@ -107,7 +107,7 @@
         >
             <h3>Внедрить</h3>
             <v-data-table
-                class="mb-6"
+                class="mb-6 bg"
                 :headers="headers"
                 :items="distributionTasks"
                 :single-expand="singleExpand2"
@@ -204,7 +204,9 @@
 
 
         <h3>Распределённое на этом собрании</h3>
-        <v-simple-table>
+        <v-simple-table
+            class="mb-6 bg"
+        >
             <template v-slot:default>
                 <thead>
                 <tr>
@@ -246,7 +248,6 @@
 
         <v-btn
             v-if="!is_completed && isPermission('distributed-tasks')"
-            class="mt-6"
             color="error"
             block
             @click="completedMeeting()"
