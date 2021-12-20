@@ -43,23 +43,25 @@ class CalendarController extends Controller
         $request->start = Carbon::parse($request->start)->startOfDay();
         $request->end = Carbon::parse($request->end)->endOfDay();
         $tasks = Events::
-            where('user_id', Auth::user()->id)
-            ->where([
-                ['start', '>=', $request->start],
-                ['start', '<=', $request->end],
-            ])
-            ->orWhere([
-                ['end', '>=', $request->start],
-                ['end', '<=', $request->end],
-            ])
-            ->orWhere([
-                ['start', '<=', $request->start],
-                ['end', '>=', $request->end],
-            ])
-            ->orWhere([
-                ['start', '<=', $request->start],
-                ['end', '>=', $request->end],
-            ])
+            where('user_id', Auth::user()->id)->
+            where(function ($q) use ($request) {
+                $q->where([
+                    ['start', '>=', $request->start],
+                    ['start', '<=', $request->end],
+                ])
+                ->orWhere([
+                    ['end', '>=', $request->start],
+                    ['end', '<=', $request->end],
+                ])
+                ->orWhere([
+                    ['start', '<=', $request->start],
+                    ['end', '>=', $request->end],
+                ])
+                ->orWhere([
+                    ['start', '<=', $request->start],
+                    ['end', '>=', $request->end],
+                ]);
+            })
             ->get();
         foreach ($tasks as $task){
             $task->start = Carbon::parse($task->start)->format('Y-m-d H:i');

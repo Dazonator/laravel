@@ -35,12 +35,18 @@
                 </v-list-item-group>
             </div>
         </v-col>
+        <v-col
+            cols="12"
+            md="9"
+        >
 
-        <task
-            v-if="taskId"
-            :taskId="taskId"
-            @updateNotifications="init()"
-        ></task>
+            <task
+                v-if="taskId"
+                :taskId="taskId"
+                @updateNotifications="init()"
+            ></task>
+        </v-col>
+
 
     </v-row>
 </template>
