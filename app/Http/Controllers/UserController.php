@@ -24,7 +24,7 @@ class UserController extends Controller
         if ($id){
             $isUser = false;
             $authUser = Auth::id();
-            if($id & ($id == $authUser)){
+            if($id && ($id === $authUser)){
                 $isUser = true;
             }
 

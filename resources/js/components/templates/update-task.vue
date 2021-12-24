@@ -277,11 +277,6 @@
                         <v-col
                             cols="12"
                         >
-                            {{fields}}
-                        </v-col>
-                        <v-col
-                            cols="12"
-                        >
                             <v-btn
                                 type="submit"
                                 color="primary"
