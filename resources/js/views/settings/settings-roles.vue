@@ -21,6 +21,7 @@
                 :headers="headers"
                 :items="roles"
                 :search="search"
+                :items-per-page="30"
             >
                 <template #item.users="{ item }">
                     <v-chip

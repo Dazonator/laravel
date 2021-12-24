@@ -16,6 +16,7 @@ class MeetingsController extends Controller
         Meetings::create([
             'number' => $request->number,
             'initiator_id' => $user->id,
+            'color' => $request->color,
             'department_id' => $request->department_id,
             'additional_staff' => $request->additional_staff,
             'start' => $request->start,
@@ -52,30 +53,6 @@ class MeetingsController extends Controller
     }
 
     public function getMeetingsCalendar(Request $request){
-//        $meetings = Meetings::
-//            where([
-//                ['start', '>=', $request->start],
-//                ['start', '<=', $request->end],
-//            ])
-//            ->orWhere([
-//                ['end', '>=', $request->start],
-//                ['end', '<=', $request->end],
-//            ])
-//            ->orWhere([
-//                ['start', '<=', $request->start],
-//                ['end', '>=', $request->end],
-//            ])
-//            ->orWhere([
-//                ['start', '<=', $request->start],
-//                ['end', '>=', $request->end],
-//            ])
-//            ->with('department')->get();
-//        foreach ($meetings as $meeting){
-//            $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');
-//            $meeting->end = Carbon::parse($meeting->end)->format('Y-m-d H:i');
-//        }
-//        return $meetings;
-
         $request->start = Carbon::parse($request->start)->startOfDay();
         $request->end = Carbon::parse($request->end)->endOfDay();
         $meetings = Meetings::with(['department', 'users'])->where(function ($query) use ($request) {
@@ -95,7 +72,7 @@ class MeetingsController extends Controller
         })->where(function ($query){
             $query->where('department_id', Auth::user()->department_id)->orWhereHas('users', function ($q){
                 $q->where('user_id', Auth::user()->id);
-            });
+            })->orWhere('initiator_id', Auth::user()->id);
         })->get();
         foreach ($meetings as $meeting){
             $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');

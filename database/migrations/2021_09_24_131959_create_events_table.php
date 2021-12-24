@@ -17,6 +17,7 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('text')->nullable();
+            $table->string('color');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->integer('user_id');

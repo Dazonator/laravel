@@ -347,7 +347,7 @@
                             text: this.tasks[task].text,
                             start: this.tasks[task].start,
                             end: this.tasks[task].end,
-                            color: this.colors[this.rnd(0, this.colors.length - 1)],
+                            color: this.tasks[task].color,
                         })
                     }
                 });
@@ -363,7 +363,7 @@
                             department: meetings[meeting].department ? meetings[meeting].department.department : '',
                             start: meetings[meeting].start,
                             end: meetings[meeting].end,
-                            color: this.colors[this.rnd(0, this.colors.length - 1)],
+                            color: meetings[meeting].color,
                         })
                     }
                 });

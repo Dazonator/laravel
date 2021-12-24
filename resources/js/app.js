@@ -45,7 +45,6 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 Vue.component('index', require('./views/index').default);
 
 Vue.component('example-component', require('./components/ExampleComponent').default);
-Vue.component('calendar-component', require('./components/CalendarComponent').default);
 Vue.component('add-event', require('./views/calendar/add-event').default);
 Vue.component('add-meeting', require('./views/calendar/add-meeting').default);
 // Vue.component('add-task', require('./components/templates/add-task').default);

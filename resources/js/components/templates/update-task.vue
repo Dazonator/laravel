@@ -277,6 +277,11 @@
                         <v-col
                             cols="12"
                         >
+                            {{fields}}
+                        </v-col>
+                        <v-col
+                            cols="12"
+                        >
                             <v-btn
                                 type="submit"
                                 color="primary"
@@ -302,12 +307,11 @@
     };
     export default {
         name: "update-task",
-        props: ['open', 'updateId', 'isDistribution', 'meetingId', 'isUpdate', 'isSubtask', 'parent_id', 'forDistribution'],
+        props: ['open', 'updateId', 'isDistribution', 'meetingId', 'isUpdate', 'isSubtask', 'parent_id', 'forDistribution', 'newTask'],
         data () {
             return{
                 fileLoading: false,
                 isOpen: this.open,
-                newTask: false,
                 employees: [],
                 priorities: [],
                 departments: [],
@@ -338,12 +342,9 @@
         watch: {
             open: function(q){
               this.isOpen = q;
-              if(!this.isDistribution && !this.isUpdate){
-                  this.newTask = true;
-              }
             },
             isDistribution: function (q){
-                if (this.isDistribution){
+                if (this.isDistribution && this.updateId){
                     axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
                         this.fields = response.data;
                         this.structureValue = this.fields.structure.name;
@@ -381,6 +382,7 @@
             },
             close(){
                 this.fields = clearFields;
+                // this.newTask = false;
                 this.isOpen = false;
                 this.$emit('close', false)
             },
@@ -401,16 +403,16 @@
                     this.errors = {};
                     if(this.isUpdate){
                         axios.post(`/api/tasks/update`, this.fields).then(response => {
-                            this.$emit('close', false);
+                            this.close();
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};
                             }
                         });
-                    } else if(this.isDistribution){
+                    } else if(this.isDistribution && this.updateId){
                         this.fields.meeting_id = this.meetingId;
                         axios.post(`/api/tasks/update`, this.fields).then(response => {
-                            this.$emit('close', false);
+                            this.close();
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};
@@ -418,15 +420,16 @@
                         });
                     } else if(this.forDistribution){
                         axios.post('/api/tasks/create-department-task', this.fields).then(response => {
-                            this.$emit('close', false);
+                            this.close();
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};
                             }
                         });
                     } else {
+                        this.fields.meeting_id = this.meetingId;
                         axios.post('/api/tasks/create', this.fields).then(response => {
-                            this.$emit('close', false);
+                            this.close();
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};
@@ -437,7 +440,6 @@
             },
             structureValueChenge(val){
                 this.structureValue = this.fields.structure.name;
-                this.fields.structure_id = null;
                 this.fields.structure_id = this.fields.structure.id;
             },
             fileUpload(files){

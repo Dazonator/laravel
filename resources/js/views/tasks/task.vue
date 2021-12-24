@@ -77,7 +77,10 @@
 
             </div>
             <div class="mb-4">
-                <h5 class="" v-if="task.deadline">
+                <h5
+                    :class="{'dedline-end': new Date() > new Date(this.task.deadline)}"
+                    v-if="task.deadline"
+                >
                     Дедлайн  {{ task.deadline | deadLine }}
                 </h5>
                 <h5 class="">
@@ -103,7 +106,11 @@
                         v-for="item in task.files"
                         :key="item.id"
                     >
-                        <a :href=item.path download>
+                        <a
+                            :href=item.path
+                            :download="item.name"
+
+                        >
                             {{item.name}}
                         </a>
                         <v-btn
@@ -165,39 +172,56 @@
 
                 </div>
                 <div class="subtasks-table px-4 mb-6">
-                    <v-simple-table>
+                    <v-simple-table v-if="task.children.length > 0">
                         <template v-slot:default>
                             <tbody>
-                            <tr
-                                v-for="item in task.children"
-                            >
-                                <td>
-                                    <router-link
-                                        :to="'/tasks/task/' + item.id"
+                                <tr>
+                                    <td>
+                                        Название
+                                    </td>
+                                    <td>
+                                        Дедлайн
+                                    </td>
+                                    <td>
+                                        Статус
+                                    </td>
+                                    <td
+                                        class="text-right"
                                     >
-                                        {{item.title}}
-                                    </router-link>
-                                </td>
-                                <td>
-                                    {{ item.text }}
-                                </td>
+                                        Этап
+                                    </td>
+                                </tr>
+                                <tr
+                                    v-for="item in task.children"
+                                >
+                                    <td>
+                                        <router-link
+                                            :to="'/tasks/task/' + item.id"
+                                        >
+                                            {{item.title}}
+                                        </router-link>
+                                    </td>
+                                    <td>
+                                        {{ item.deadline }}
+                                    </td>
+                                    <td>
+                                        {{item.status.status}}
+                                    </td>
+                                    <td class="text-right">
+                                        <v-select
+                                            class="subtasks-input d-inline-block"
+                                            :items=task.steps
 
-                                <td class="text-right">
-
-                                    <v-select
-                                        class="subtasks-input d-inline-block"
-                                        :items=task.steps
-
-                                        single-line
-                                        label="Этап"
-                                        item-text="title"
-                                        item-selection="title"
-                                        item-value="id"
-                                        v-model="item.in_step"
-                                        @change="updateTaskStep(item)"
-                                    ></v-select>
-                                </td>
-                            </tr>
+                                            single-line
+                                            label="Этап"
+                                            item-text="title"
+                                            item-selection="title"
+                                            item-value="id"
+                                            v-model="item.in_step"
+                                            @change="updateTaskStep(item)"
+                                        ></v-select>
+                                    </td>
+                                </tr>
                             </tbody>
                         </template>
                     </v-simple-table>
@@ -227,43 +251,63 @@
                             </v-icon>
                         </div>
                         <div class="subtasks-table px-4 mb-2">
-                            <v-simple-table>
+                            <v-simple-table
+                                v-if="step.tasks.length > 0"
+                            >
                                 <template v-slot:default>
                                     <tbody>
-                                    <tr
-                                        v-for="(item, taskId) in step.tasks"
-                                    >
-                                        <td>
-                                            <router-link
-                                                :to="'/tasks/task/' + item.id"
+                                        <tr>
+                                            <td>
+                                                Название
+                                            </td>
+                                            <td>
+                                                Дедлайн
+                                            </td>
+                                            <td>
+                                                Статус
+                                            </td>
+                                            <td
+                                                class="text-right"
                                             >
-                                                {{item.title}}
-                                            </router-link>
-                                        </td>
-                                        <td>
-                                            {{ item.text }}
-                                        </td>
-
-                                        <td
-                                            class="text-right"
+                                                Этап
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            v-for="(item, taskId) in step.tasks"
                                         >
-                                            <!--                                                {{ item.status_id }}-->
-                                            <v-select
-                                                class="subtasks-input d-inline-block"
-                                                :items=task.steps
+                                            <td>
+                                                <router-link
+                                                    :to="'/tasks/task/' + item.id"
+                                                >
+                                                    {{item.title}}
+                                                </router-link>
+                                            </td>
+                                            <td>
+                                                {{ item.deadline }}
+                                            </td>
+                                            <td>
+                                                {{ item.status.status }}
+                                            </td>
 
-                                                single-line
-                                                label="Этап"
-                                                item-text="title"
-                                                item-selection="title"
-                                                item-value="id"
-                                                append-icon="mdi-close"
-                                                v-model="item.in_step"
-                                                @change="updateTaskStep(item)"
-                                                @click:append="deleteTaskStep(item)"
-                                            ></v-select>
-                                        </td>
-                                    </tr>
+                                            <td
+                                                class="text-right"
+                                            >
+                                                <v-select
+                                                    class="subtasks-input d-inline-block"
+                                                    :items=task.steps
+
+                                                    single-line
+                                                    label="Этап"
+                                                    item-text="title"
+                                                    item-selection="title"
+                                                    item-value="id"
+                                                    append-icon="mdi-close"
+                                                    v-model="item.in_step"
+                                                    @change="updateTaskStep(item)"
+                                                    @click:append="deleteTaskStep(item)"
+                                                ></v-select>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </template>
                             </v-simple-table>
@@ -297,6 +341,17 @@
                             <tbody>
                             <tr>
                                 <td>
+                                    Название
+                                </td>
+                                <td>
+                                    Дедлайн
+                                </td>
+                                <td>
+                                    Статус
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <router-link
                                         :to="'/tasks/task/' + task.parent.id"
                                     >
@@ -304,10 +359,10 @@
                                     </router-link>
                                 </td>
                                 <td>
-                                    {{ task.parent.text }}
+                                    {{ task.parent.deadline }}
                                 </td>
                                 <td>
-                                    {{ task.parent.status_id }}
+                                    {{ task.parent.status.status }}
                                 </td>
                             </tr>
                             </tbody>
@@ -506,6 +561,7 @@ export default {
                 } else {
                     this.statusActive = true;
                 }
+
             });
 
             this.initMessages();
@@ -670,6 +726,7 @@ export default {
         },
         closeDialog(data){
             if(!data){
+                this.isSubtask = false;
                 this.dialogUpdate = false;
                 this.updateId = null;
                 this.isUpdate = false;
@@ -692,6 +749,10 @@ export default {
 </script>
 
 <style>
+    .dedline-end{
+        color: red;
+    }
+
     .step-title input[type="text"]{
         outline: none;
         box-shadow: none;

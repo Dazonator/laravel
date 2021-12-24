@@ -4,8 +4,9 @@
             <v-data-table
                 :headers="headers"
                 :items="users"
-                :search="search"
+                :search.sync="search"
                 :loading="tableLoading"
+                :items-per-page="30"
                 loading-text="Загрузка задач..."
                 :hide-default-footer="true"
             >

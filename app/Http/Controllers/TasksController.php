@@ -23,6 +23,12 @@ class TasksController extends Controller
     public function submitTask(Request $request){
         $user = Auth::user()->id;
         $performers = $request->performers_id;
+
+        $isDistributed = false;
+        if ($request->meeting_id) {
+            $isDistributed = true;
+        }
+
         $task = Tasks::create([
             'title' => $request->title,
             'text' => $request->text,
@@ -34,6 +40,8 @@ class TasksController extends Controller
             'parent_id' => $request->parent_id,
             'in_step' => $request->in_step,
             'structure_id' => $request->structure_id,
+            'meeting_id' => $request->meeting_id,
+            'is_distributed' => $isDistributed,
             'creator_id' => $user,
         ]);
         $task->responsibles()->sync($performers);
@@ -130,12 +138,12 @@ class TasksController extends Controller
     public function uploadFiles(Request $request){
         if ($request->items && count($request->items) > 0){
             $files = $request->items;
-            $path   = 'images/users';
             $results = [];
             foreach ($files as $key => $file) {
+                $path = $file->store('test-files');
                 array_push($results,  [
                     'name' => $file->getClientOriginalName(),
-                    'path' => Storage::disk('public')->putFile($path, $file)
+                    'path' => Storage::url($path)
                 ]);
             }
             return $results;
@@ -157,12 +165,6 @@ class TasksController extends Controller
         return Tasks::where('initial_department', $id)->with('initiator')->get();
     }
 
-    public function tasksByStructure($id){
-        return [
-            'tasks' => Tasks::where('structure_id', $id)->get(),
-            'structure' => Structure::where('id', $id)->first(),
-        ];
-    }
 
     public function statusTasks($id){
         return Tasks::where('status_id', $id) -> with(['children', 'parent', 'initiator', 'responsibles', 'priority', 'status']) -> where(function ($query){
@@ -187,13 +189,17 @@ class TasksController extends Controller
             'priority',
             'status',
             'initiator',
-            'parent',
+            'parent' => function($q){
+                $q->with(['status', 'priority']);
+            },
             'files',
             'children' => function ($q){
-                $q->where('in_step', null);
+                $q->where('in_step', null)->with('status');
             },
             'steps' => function ($q){
-                $q->with('tasks');
+                $q->with(['tasks' => function($q){
+                    $q->with(['status', 'priority']);
+                }]);
             },
             'structure',
         ])->first();

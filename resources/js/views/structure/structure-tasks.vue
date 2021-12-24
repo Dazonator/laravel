@@ -5,8 +5,8 @@
             :items="tasks"
             :single-expand="singleExpand"
             :expanded.sync="expanded"
-            show-expand
             :search="search"
+            :items-per-page="30"
             :loading="tableloading"
             loading-text="Загрузка задач..."
         >
@@ -57,12 +57,6 @@
                     {{item.initiator.lastname}}
 
                 </v-chip>
-            </template>
-
-            <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                    {{ item.text }}
-                </td>
             </template>
         </v-data-table>
     </div>
@@ -131,8 +125,7 @@
             init(){
                 if (this.categoryId){
                     axios.post(`/api/tasks/structure/${this.categoryId}`).then(response => {
-                        this.tasks = response.data.tasks;
-                        this.structure = response.data.structure;
+                        this.tasks = response.data;
                         this.tableloading = false;
                     });
                 }

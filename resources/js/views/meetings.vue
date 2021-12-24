@@ -19,6 +19,7 @@
                 :headers="headers"
                 :items="meetings"
                 :search="search"
+                :items-per-page="30"
                 item-key="id"
                 sort-by="number"
                 class="elevation-1"

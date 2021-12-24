@@ -77,9 +77,10 @@ Route::post('/tasks/statuses-departments', [TasksController::class, 'getStatuses
 
 Route::post('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::post('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
-Route::post('/tasks/structure/{id}', [TasksController::class, 'tasksByStructure']);
+Route::post('/tasks/structure/{id}', [StructureController::class, 'tasksByStructure']);
 
 Route::post('/tasks/uploadFiles', [TasksController::class, 'uploadFiles']);
+Route::post('/tasks/downloadFile/{id}', [TasksController::class, 'downloadFile']);
 
 Route::post('/tasks/parent-steps/{id}', [StepsController::class, 'getParentSteps']);
 Route::post('/tasks/task/messages/send', [MessagesController::class, 'sendMessage']);

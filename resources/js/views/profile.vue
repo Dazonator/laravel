@@ -176,6 +176,8 @@ export default {
     created(){
         this.init();
     },
+    computed:{
+    },
     methods:{
         init(){
             if(!this.id){
@@ -187,7 +189,7 @@ export default {
             } else {
                 axios.post(`/api/profile/${this.id}`).then(response => {
                     this.user = response.data.user;
-                    this.isUser = false;
+                    this.isUser = response.data.is_user;
                     this.loaded = true;
                 });
 

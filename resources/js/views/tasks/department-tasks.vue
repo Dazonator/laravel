@@ -8,8 +8,8 @@
                     :headers="headers"
                     :items="tasks"
                     :single-expand="singleExpand"
-                    :expanded.sync="expanded"
-                    show-expand
+                    :expanded="expanded"
+                    :items-per-page="30"
                     :search="search"
                     :loading="tableloading"
                     loading-text="Загрузка задач..."
@@ -34,7 +34,6 @@
                             {{ item.title }}
                         </router-link>
                     </template>
-
                     <template #item.initiator="{ item }">
                         <v-chip
                             v-if="item.initiator"
@@ -44,14 +43,7 @@
                             </v-avatar>
                             {{item.initiator.name}}
                             {{item.initiator.lastname}}
-
                         </v-chip>
-                    </template>
-
-                    <template v-slot:expanded-item="{ headers, item }">
-                        <td :colspan="headers.length">
-                            {{ item.text }}
-                        </td>
                     </template>
                 </v-data-table>
             </template>

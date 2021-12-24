@@ -3,6 +3,13 @@
     <div v-if="loaded">
         <h1 class="mb-6">Собрание №{{meeting.number}}</h1>
 
+        <v-btn
+            class="mb-4"
+            color="primary"
+            @click="newTask()"
+        >
+            Создать задачу
+        </v-btn>
         <div
             v-if="!is_completed"
         >
@@ -262,7 +269,7 @@
         >
             <v-card>
                 <v-card-title class="text-h5">
-                    Вы действительно хотите удалить событие?
+                    Вы действительно хотите удалить задание?
                 </v-card-title>
 
                 <v-card-actions>
@@ -408,6 +415,11 @@
             },
             distributionTask(id){
                 this.updateId = id;
+                this.isDistribution = true;
+                this.dialog = true;
+            },
+            newTask(){
+                this.updateId = null;
                 this.isDistribution = true;
                 this.dialog = true;
             },

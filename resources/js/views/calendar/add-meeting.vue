@@ -272,6 +272,39 @@
 
             errors: null,
             valid: false,
+            colors: [
+                'blue',
+                'indigo',
+                'deep-purple',
+                'cyan',
+                'pink',
+                'brown',
+                'green',
+                'orange',
+                'grey darken-1',
+                'pink darken-3',
+                'red darken-4',
+                'deep-purple darken-3',
+                'indigo darken-2',
+                'blue darken-3',
+                'blue darken-4',
+                'light-blue darken-3',
+                'light-blue darken-4',
+                'cyan darken-4',
+                'teal darken-3',
+                'teal darken-4',
+                'brown darken-4',
+                'brown darken-3',
+                'brown darken-2',
+                'brown darken-1',
+                'blue-grey darken-2',
+                'blue-grey darken-3',
+                'blue-grey darken-4',
+                'grey darken-2',
+                'grey darken-3',
+                'grey darken-4',
+                'blue-grey',
+            ],
         }),
         created() {
             this.init();
@@ -302,9 +335,9 @@
                 });
             },
             submit(){
-
                 if(this.$refs.form.validate()){
                     if (!this.updateId){
+                        this.fields.color = this.colors[Math.floor(Math.random()*this.colors.length)];
                         this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
                         this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
                         axios.post('/api/calendar/meetings/create', this.fields).then(response => {

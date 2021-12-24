@@ -18,6 +18,7 @@ class CalendarController extends Controller
         $event::create([
             'title' => $request->title,
             'text' => $request->text,
+            'color' => $request->color,
             'start' => $request->start,
             'end' => $request->end,
             'user_id' => $user->id,

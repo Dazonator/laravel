@@ -18,6 +18,7 @@ class CreateMeetingsTable extends Migration
             $table->integer('number');
             $table->integer('initiator_id');
             $table->integer('department_id');
+            $table->string('color');
             $table->json('additional_staff')->nullable();
             $table->dateTime('start');
             $table->dateTime('end');

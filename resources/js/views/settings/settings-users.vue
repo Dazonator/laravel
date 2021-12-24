@@ -20,6 +20,7 @@
                 :headers="headers"
                 :items="users"
                 :search="search"
+                :items-per-page="30"
             >
 
                 <template #item.name="{ item }">

@@ -11,6 +11,7 @@ class Meetings extends Model
         'number',
         'initiator_id',
         'department_id',
+        'color',
         'additional_staff',
         'start',
         'end',

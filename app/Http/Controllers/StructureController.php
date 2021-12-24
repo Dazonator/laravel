@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Structure;
+use App\Models\Tasks;
 use Illuminate\Http\Request;
 
 class StructureController extends Controller
@@ -28,5 +29,26 @@ class StructureController extends Controller
     }
     public function deleteCategory($id){
         Structure::where('id', $id)->delete();
+    }
+
+
+    public function tasksByStructure($id){
+        $structure = Structure::where('id', $id)->with('children')->first();
+
+        $ids = $this->getIds($structure->children);
+        array_push($ids, $structure->id);
+
+        return Tasks::whereIn('structure_id', $ids)->get();
+    }
+
+    public function getIds($items){
+        $ids = array();
+        foreach ($items as $item){
+            array_push($ids, $item->id);
+            if(count($item->children) > 0){
+                $ids = array_merge($ids, $this->getIds($item->children));
+            }
+        }
+        return $ids;
     }
 }

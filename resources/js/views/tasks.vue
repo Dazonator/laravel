@@ -42,7 +42,7 @@
                             @click="newDepartmentTask()"
                             block
                         >
-                            Задача для отдела
+                            Задача в собрание
                         </v-btn>
                     </v-col>
                     <v-col
@@ -75,6 +75,7 @@
             :open="dialog"
             @close="closeDialog()"
             :forDistribution="forDistribution"
+            :newTask="isNewTask"
         ></update-task>
     </div>
 </template>
@@ -96,6 +97,7 @@ export default {
             childrenTitle: '',
             test: [],
             forDistribution: false,
+            isNewTask: false,
         }
     },
     watch:{
@@ -138,6 +140,7 @@ export default {
             if(!data){
                 this.dialog = false;
                 this.forDistribution = false;
+                this.isNewTask = false;
                 this.init();
             }
         },
@@ -183,6 +186,7 @@ export default {
         newTask(){
             this.forDistribution = false;
             this.dialog = true;
+            this.isNewTask = true;
         }
 
     },

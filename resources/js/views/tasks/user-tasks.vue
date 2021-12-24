@@ -8,9 +8,9 @@
                 :items="tasks"
                 :single-expand="singleExpand"
                 :expanded.sync="expanded"
-                show-expand
                 :search="search"
                 :loading="tableloading"
+                :items-per-page="30"
                 loading-text="Загрузка задач..."
             >
                 <template v-slot:top>
@@ -66,15 +66,6 @@
 
                     </v-chip>
                 </template>
-
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td
-                        :colspan="headers.length"
-                        v-html="item.text"
-                    >
-
-                    </td>
-                </template>
                 <template v-slot:item.actions="{ item }">
                     <div>
                         <v-btn-toggle
@@ -87,7 +78,7 @@
                                 <v-icon x-small>mdi-pencil</v-icon>
                             </v-btn>
 
-                            <v-btn x-small @click="taskDelete(item)" v-if="item.status_id !== 3">
+                            <v-btn x-small @click="deleteTask=item" v-if="item.status_id !== 3">
                                 <v-icon x-small>mdi-delete</v-icon>
                             </v-btn>
 
@@ -168,6 +159,37 @@
                 </v-card>
             </v-dialog>
 
+            <v-dialog
+                v-model="dialogDelete"
+                max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="text-h5">
+                        Вы действительно хотите удалить задачу?
+                    </v-card-title>
+
+                    <v-card-actions>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="dialogDelete = false"
+                        >
+                            Нет
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="taskDelete(deleteTask)"
+                        >
+                            Да
+                        </v-btn>
+
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
             <update-task
                 :open="dialogUpdate"
                 @close="closeDialog()"
@@ -188,13 +210,25 @@ export default {
     watch: {
         id: function (val){
             this.init();
+        },
+        deleteTask: function (q){
+            if (this.deleteTask){
+                this.dialogDelete = true;
+            }
+        },
+        dialogDelete: function (q) {
+            if(!this.dialogDelete){
+                this.deleteTask = null;
+            }
         }
     },
     data() {
         return {
             isUpdate: false,
             updateId: null,
+            deleteTask: null,
             dialogUpdate: false,
+            dialogDelete: false,
 
             toggle_exclusive: null,
 
@@ -237,10 +271,6 @@ export default {
                     sortable: true,
                 },
                 { text: '', value: 'actions', sortable: false },
-                {
-                    text: '',
-                    value: 'data-table-expand'
-                },
             ],
         }
     },
@@ -295,7 +325,8 @@ export default {
                 return this.dialogCannotBeDeleted = true;
             }
             axios.post(`/api/tasks/delete/${task.id}`).then(response => {
-                alert('Задача завершена!!!');
+                this.deleteTask = null;
+                this.dialogDelete = false;
                 this.init();
             }).catch(error => {
                 if (error.response.status === 422) {
