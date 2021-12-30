@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departments;
 use App\Models\Meetings;
 use App\Models\Tasks;
 use Carbon\Carbon;
@@ -50,6 +51,10 @@ class MeetingsController extends Controller
 
     public function getMeetings(){
         return Meetings::with('department', 'initiator')->get();
+//        return [
+//            'meetings' => Meetings::with('department', 'initiator')->get(),
+//            'departments' => Departments::all()
+//        ];
     }
 
     public function getMeetingsCalendar(Request $request){
@@ -85,7 +90,7 @@ class MeetingsController extends Controller
         $meeting = Meetings::where('id', $id)->with('department')->first();
         $tasksInitial = Tasks::where('initial_department', $meeting->department_id)->where('distribution_department', null)->where('is_distributed', false)->with('initiator')->get();
         $tasksDistribution = Tasks::where('distribution_department', $meeting->department_id)->where('is_distributed', false)->with('initiator')->get();
-        $distributionTasksTrue = Tasks::where('meeting_id', $id)->where('is_distributed', true)-> get();
+        $distributionTasksTrue = Tasks::where('meeting_id', $id)->where('is_distributed', true)->with('initiator')->get();
         return [
             'meeting' => $meeting,
             'tasksInitial' => $tasksInitial,

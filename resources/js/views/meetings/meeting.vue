@@ -221,7 +221,7 @@
                         Заголовок
                     </th>
                     <th class="text-left">
-                        текст
+                        Постановщик
                     </th>
                 </tr>
                 </thead>
@@ -238,7 +238,16 @@
                             {{ item.title }}
                         </router-link>
                     </td>
-                    <td>{{ item.text }}</td>
+                    <td>
+                        <v-chip
+                            v-if="item.initiator"
+                        >
+                            <v-avatar left>
+                                <v-img :src="item.initiator.img"></v-img>
+                            </v-avatar>
+                            {{item.initiator.lastname}}
+                        </v-chip>
+                    </td>
                 </tr>
                 </tbody>
             </template>
@@ -389,6 +398,8 @@
                     this.initialTasks = response.data.tasksInitial;
                     this.distributionTasks = response.data.tasksDistribution;
                     this.distributionTasksTrue = response.data.distributionTasksTrue;
+
+                    console.log(this.distributionTasksTrue);
 
                     if (this.meeting.completed_at){
                         this.is_completed = true;

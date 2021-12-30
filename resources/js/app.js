@@ -91,3 +91,14 @@ window.qapp = new Vue({
 // $("#d1").on("shown.bs.modal", function() {
 //     tinyMCE.get("editor").focus();
 // });
+
+// window.axios.interceptors.response.use(
+//     response => response.data,
+//     error => {
+//         if (error.response && 419 === error.response.status) {
+//             window.location.reload()
+//         }
+//
+//         return Promise.reject(error)
+//     }
+// )

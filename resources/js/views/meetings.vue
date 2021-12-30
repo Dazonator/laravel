@@ -10,7 +10,7 @@
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
-                    label="Search"
+                    label="Поиск"
                     single-line
                     hide-details
                 ></v-text-field>

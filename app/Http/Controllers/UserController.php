@@ -24,11 +24,9 @@ class UserController extends Controller
         if ($id){
             $isUser = false;
             $authUser = Auth::id();
-//            dd($authUser);
             if($id == $authUser){
                 $isUser = true;
             }
-
             return [
                 'is_user' => $isUser,
                 'user' => User::where('id', $id)->with(['department'])->first()
