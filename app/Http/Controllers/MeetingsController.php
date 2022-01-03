@@ -51,10 +51,6 @@ class MeetingsController extends Controller
 
     public function getMeetings(){
         return Meetings::with('department', 'initiator')->get();
-//        return [
-//            'meetings' => Meetings::with('department', 'initiator')->get(),
-//            'departments' => Departments::all()
-//        ];
     }
 
     public function getMeetingsCalendar(Request $request){
