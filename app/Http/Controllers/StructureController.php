@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Status;
 use App\Models\Structure;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
@@ -38,7 +39,12 @@ class StructureController extends Controller
         $ids = $this->getIds($structure->children);
         array_push($ids, $structure->id);
 
-        return Tasks::whereIn('structure_id', $ids)->get();
+        $status = Status::with(['statusTasks' => function($query) use ($ids) {
+            $query->with('initiator', 'status')->whereIn('structure_id', $ids);
+        }])->get();
+
+//        return Tasks::whereIn('structure_id', $ids)->get();
+        return $status;
     }
 
     public function getIds($items){

@@ -42,7 +42,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-left">
-                                            title
+                                            Название
                                         </th>
                                         <th class="text-center">
                                             Постановщик
