@@ -40,7 +40,7 @@ class StructureController extends Controller
         array_push($ids, $structure->id);
 
         $status = Status::with(['statusTasks' => function($query) use ($ids) {
-            $query->with('initiator', 'status')->whereIn('structure_id', $ids);
+            $query->with('initiator', 'status', 'responsibles', 'priority')->whereIn('structure_id', $ids);
         }])->get();
 
 //        return Tasks::whereIn('structure_id', $ids)->get();
