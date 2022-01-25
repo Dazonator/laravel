@@ -7,6 +7,7 @@
             class="mb-4"
             color="primary"
             @click="newTask()"
+            v-if="!is_completed && isPermission('distributed-tasks')"
         >
             Создать задачу
         </v-btn>
@@ -397,10 +398,7 @@
                     this.meeting = response.data.meeting;
                     this.initialTasks = response.data.tasksInitial;
                     this.distributionTasks = response.data.tasksDistribution;
-                    this.distributionTasksTrue = response.data.distributionTasksTrue;
-
-                    console.log(this.distributionTasksTrue);
-
+                    this.distributionTasksTrue = response.data.distributionTasksTrue
                     if (this.meeting.completed_at){
                         this.is_completed = true;
                     }
@@ -443,7 +441,7 @@
                 if((item.initial_department === item.distribution_department) && (item.initial_department > 0) && (item.distribution_department > 0)){
                     item.distribution_department = null;
                 }
-                axios.post(`/api/tasks/update/${item.id}`, item).then(response => {
+                axios.post(`/api/tasks/distribution-department`, item).then(response => {
                     this.init();
                 });
             }

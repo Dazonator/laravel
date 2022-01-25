@@ -29,6 +29,7 @@
                     {{isUpdate ? 'Изменить задачу' : ''}}
                     {{isDistribution ? 'Распределить задачу' : ''}}
                     {{newTask ? 'Создать задачу' : ''}}
+                    {{forDistribution ? 'Задача в собрание' : ''}}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
             </v-toolbar>
@@ -286,6 +287,7 @@
                                 {{isUpdate ? 'Изменить' : ''}}
                                 {{isDistribution ? 'Распределить' : ''}}
                                 {{newTask ? 'Создать' : ''}}
+                                {{forDistribution ? 'Создать' : ''}}
                             </v-btn>
                         </v-col>
                     </v-row>

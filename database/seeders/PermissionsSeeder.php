@@ -31,15 +31,19 @@ class PermissionsSeeder extends Seeder
                 'slug' => 'delete-meeting'
             ],
             [
+                'name' => 'Звершать собрания',
+                'slug' => 'completed-meeting'
+            ],
+            [
                 'name' => 'Просматривать страницу собраний',
                 'slug' => 'view-meeting-page'
             ],
             [
-                'name' => 'Распределение заданий на собраниях',
+                'name' => 'Распределение заданий на собраниях !!!!!!!!!!!!!!!!!',
                 'slug' => 'distributed-tasks'
             ],
             [
-                'name' => 'Создание задач',
+                'name' => 'Создание задач !!!!!!!!!!!!!!!',
                 'slug' => 'create-tasks'
             ],
             [
@@ -63,16 +67,8 @@ class PermissionsSeeder extends Seeder
                 'slug' => 'settings'
             ],
             [
-                'name' => 'Создавать уведомления',
-                'slug' => 'create-notification'
-            ],
-            [
-                'name' => 'Изменять уведомления',
-                'slug' => 'update-notification'
-            ],
-            [
-                'name' => 'Удалять уведомления',
-                'slug' => 'delete-notification'
+                'name' => 'Создавать и редактировать уведомления',
+                'slug' => 'notifications'
             ],
         ];
 

@@ -13,45 +13,60 @@ class MeetingsController extends Controller
 {
     public function submitMeeting(Request $request){
         $user = Auth::user();
-
-        Meetings::create([
-            'number' => $request->number,
-            'initiator_id' => $user->id,
-            'color' => $request->color,
-            'department_id' => $request->department_id,
-            'additional_staff' => $request->additional_staff,
-            'start' => $request->start,
-            'end' => $request->end,
-        ])->users()->sync($request->additional_staff);
+        if($user->hasPermission('create-meeting')){
+            Meetings::create([
+                'number' => $request->number,
+                'initiator_id' => $user->id,
+                'color' => $request->color,
+                'department_id' => $request->department_id,
+                'additional_staff' => $request->additional_staff,
+                'start' => $request->start,
+                'end' => $request->end,
+            ])->users()->sync($request->additional_staff);
+        }
     }
 
     public function updateMeeting(Request $request){
-        $id = $request->id;
-        $meeting = Meetings::find($id);
-        $meeting->update([
-            'numder' => $request->numder,
-            'department_id' => $request->department_id,
-            'additional_staff' => $request->additional_staff,
-            'start' => $request->start,
-            'end' => $request->end,
-        ]);
-        $meeting->users()->sync($request->additional_staff);
+        $user = Auth::user();
+        if($user->hasPermission('update-meeting')){
+            $id = $request->id;
+            $meeting = Meetings::find($id);
+            $meeting->update([
+                'numder' => $request->numder,
+                'department_id' => $request->department_id,
+                'additional_staff' => $request->additional_staff,
+                'start' => $request->start,
+                'end' => $request->end,
+            ]);
+            $meeting->users()->sync($request->additional_staff);
+        }
     }
 
     public function deleteMeeting($id){
-        Meetings::where('id', $id)->delete();
+        $user = Auth::user();
+        if($user->hasPermission('delete-meeting')){
+            Meetings::where('id', $id)->delete();
+        }
     }
 
     public function completedMeeting($id){
-        $meeting = Meetings::find($id);
-        $meeting->update([
-            'completed_at' => Carbon::now(),
-        ]);
+        $user = Auth::user();
+        if($user->hasPermission('completed-meeting')){
+            $meeting = Meetings::find($id);
+            $meeting->update([
+                'completed_at' => Carbon::now(),
+            ]);
+        }
     }
 
     public function getMeetings(){
-        return Meetings::with('department', 'initiator')->get();
+        $user = Auth::user();
+        if($user->hasPermission('view-meeting-page')){
+            return Meetings::with('department', 'initiator')->get();
+        }
+
     }
+
 
     public function getMeetingsCalendar(Request $request){
         $request->start = Carbon::parse($request->start)->startOfDay();

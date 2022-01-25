@@ -104,15 +104,11 @@ class Tasks extends Model
         return $this->hasMany(Tasks::class, 'parent_id');
     }
 
+    /* Связь для получения этапов задачи */
     public function steps()
     {
         return $this->hasMany(Steps::class, 'task_id');
     }
-
-//    /* Связь для получения сообщений задач */
-//    public function taskMessages(){
-//        return $this->hasMany(Messages::class, 'task_id', 'id');
-//    }
 
     /* Связь для доступа к связующей таблице через сообщения */
     public function taskNotifications(){
@@ -124,11 +120,15 @@ class Tasks extends Model
         return $this->hasOne(Structure::class, 'id', 'structure_id');
     }
 
-
-
     /* Файлы по задаче */
     public function files(){
         return $this->hasMany(TasksFiles::class, 'task_id');
+    }
+
+    /* Связь для получения задач на тесте */
+    public function tests()
+    {
+        return $this->hasOne(TasksTests::class, 'task_id');
     }
 
 }

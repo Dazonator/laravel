@@ -6,7 +6,7 @@
             class="mb-4"
         >
             <v-btn
-                v-if="isPermission('create-notification')"
+                v-if="isPermission('notifications')"
                 @click="openDialog = !openDialog"
                 color="primary"
             >
@@ -32,7 +32,7 @@
                     shaped
                 >
                     <v-btn
-                        v-if="isPermission('update-notification')"
+                        v-if="isPermission('notifications')"
                         x-small
                         @click="updateNotification(notification.id)"
                     >
@@ -41,7 +41,7 @@
                         >mdi-pencil</v-icon>
                     </v-btn>
                     <v-btn
-                        v-if="isPermission('delete-notification')"
+                        v-if="isPermission('notifications')"
                         x-small
                         @click="deleteId = notification.id"
                     >

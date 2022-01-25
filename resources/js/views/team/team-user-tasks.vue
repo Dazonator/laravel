@@ -37,41 +37,61 @@
                     :key="status.id"
                 >
                     <v-card flat>
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <thead>
-                                    <tr>
-                                        <th class="text-left">
-                                            Название
-                                        </th>
-                                        <th class="text-center">
-                                            Постановщик
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="item in status.status_tasks"
-                                        :key="item.name"
-                                    >
-                                        <td>
-                                            <router-link :to="'/tasks/task/' + item.id">{{ item.title }}</router-link>
-                                        </td>
-                                        <td class="text-center">
-                                            <v-chip
-                                                pill
-                                            >
-                                                <v-avatar left>
-                                                    <v-img :src="item.initiator.img"></v-img>
-                                                </v-avatar>
-                                                {{item.initiator.lastname}}
+                        <v-data-table
+                            :headers="headers"
+                            :items="status.status_tasks"
+                            :single-expand="singleExpand"
+                            :expanded.sync="expanded"
+                            :search="search"
+                            :items-per-page="30"
+                            :loading="tableloading"
+                            loading-text="Загрузка задач..."
+                        >
+                            <template #item.title="{ item }">
+                                <router-link
 
-                                            </v-chip>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                    :to="'/tasks/task/' + item.id"
+                                >
+                                    {{ item.title }}
+                                </router-link>
                             </template>
-                        </v-simple-table>
+
+                            <template #item.responsibles="{ item }">
+                                <router-link
+                                    v-for="i in item.responsibles"
+                                    :key="i.id"
+                                    :to="'/profile/' + i.id"
+                                >
+                                    <v-chip
+                                        pill
+                                    >
+                                        <v-avatar left>
+                                            <v-img :src="i.img"> </v-img>
+                                        </v-avatar>
+                                        {{i.lastname}}
+                                    </v-chip>
+                                </router-link>
+                            </template>
+
+                            <template #item.initiator="{ item }">
+                                <v-chip
+                                    v-if="item.initiator"
+                                >
+                                    <v-avatar left>
+                                        <v-img :src="item.initiator.img"></v-img>
+                                    </v-avatar>
+                                    {{item.initiator.name}}
+                                    {{item.initiator.lastname}}
+
+                                </v-chip>
+                            </template>
+
+                            <template #item.deadline="{ item }">
+                                <span
+                                    :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                                >{{item.deadline}}</span>
+                            </template>
+                        </v-data-table>
                     </v-card>
                 </v-tab-item>
             </v-tabs-items>
@@ -91,7 +111,43 @@ export default {
             user: [],
             data: [],
             statuses: [],
-
+            tableloading: false,
+            search: '',
+            headers: [
+                {
+                    text: 'Название',
+                    align: 'start',
+                    sortable: true,
+                    value: 'title',
+                },
+                {
+                    text: 'Ответственные',
+                    value: 'responsibles',
+                    sortable: true,
+                },
+                {
+                    text: 'Постановщик',
+                    value: 'initiator',
+                    sortable: true,
+                },
+                {
+                    text: 'Приоритет',
+                    value: 'priority.priority',
+                    sortable: true,
+                },
+                {
+                    text: 'Дата старта',
+                    value: 'startdate',
+                    sortable: true,
+                },
+                {
+                    text: 'Дедлайн',
+                    value: 'deadline',
+                    sortable: true,
+                },
+            ],
+            expanded: [],
+            singleExpand: true,
         }
     },
     created() {
@@ -110,5 +166,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .dedline-end{
+        color: red;
+    }
 </style>

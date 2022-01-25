@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Notifications;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller
 {
     public function createNotification(Request $request){
+
+        $userAuth = Auth::user();
+        if($userAuth->hasPermission('settings')) {
+
+        }
         $notification = new Notifications();
         $notification::create([
             'title' => $request->title,

@@ -12,7 +12,9 @@ use App\Models\Structure;
 use App\Models\Tasks;
 use App\Models\TasksFiles;
 use App\Models\TasksHistory;
+use App\Models\TasksTests;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,14 +65,16 @@ class TasksController extends Controller
 
     public function submitTaskDepartment(Request $request){
         $user = Auth::user();
-        Tasks::create([
-            'title' => $request->title,
-            'text' => $request->text,
-            'initiator_id' => $user->id,
-            'initial_department' => $user->department_id,
-            'is_distributed' => false,
-            'creator_id' => $user->id,
-        ]);
+        if($user->hasPermission('create-tasks-for-department')) {
+            Tasks::create([
+                'title' => $request->title,
+                'text' => $request->text,
+                'initiator_id' => $user->id,
+                'initial_department' => $user->department_id,
+                'is_distributed' => false,
+                'creator_id' => $user->id,
+            ]);
+        }
     }
 
     public function updateTask(Request $request){
@@ -110,6 +114,13 @@ class TasksController extends Controller
                 ]);
             }
         }
+    }
+    public function distributionDepartment(Request $request){
+        $id = $request->id;
+        $task = Tasks::find($id);
+        $task->update([
+            'distribution_department' => $request->distribution_department,
+        ]);
     }
 
     public function completedTask($id){
@@ -174,6 +185,26 @@ class TasksController extends Controller
         })->get();
     }
 
+    public function tasksTests(){
+        return Tasks::with(['initiator', 'responsibles', 'priority', 'status', 'tests'])->whereHas('tests', function ($q){
+            $q->where('user_id', Auth::user()->id)->whereNull('is_tested');
+        })->get();
+    }
+
+    public function completeTest($id){
+        $test = TasksTests::where('task_id', $id)->first();
+        $test->update([
+            'is_tested' => true,
+            'tested_time' => Carbon::now()
+        ]);
+    }
+    public function sendForTest(Request $request){
+        $test = TasksTests::create([
+            'user_id' => $request->user_id,
+            'task_id' => $request->task_id,
+        ]);
+    }
+
     public function editTask($id){
         return Tasks::where('id', $id)->with([
             'steps',
@@ -184,7 +215,7 @@ class TasksController extends Controller
     }
 
     public function getTask($id){
-        return Tasks::where('id', $id)->with([
+        $tasks = Tasks::where('id', $id)->with([
             'responsibles',
             'priority',
             'status',
@@ -194,15 +225,23 @@ class TasksController extends Controller
             },
             'files',
             'children' => function ($q){
-                $q->where('in_step', null)->with('status');
+                $q->where('in_step', null)->with(['status', 'priority', 'responsibles', 'initiator']);
             },
             'steps' => function ($q){
                 $q->with(['tasks' => function($q){
-                    $q->with(['status', 'priority']);
+                    $q->with(['status', 'priority', 'responsibles', 'initiator']);
                 }]);
             },
             'structure',
+            'tests'
         ])->first();
+
+        $users = User::all();
+
+        return [
+            'task' => $tasks,
+            'users' => $users
+        ];
     }
 
 }

@@ -66,7 +66,13 @@
 
                     </v-chip>
                 </template>
-                <template v-slot:item.actions="{ item }">
+
+                <template #item.deadline="{ item }">
+                    <span
+                        :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                    >{{item.deadline}}</span>
+                </template>
+                <template #item.actions="{ item }">
                     <div>
                         <v-btn-toggle
                             v-model="toggle_exclusive"
@@ -348,4 +354,7 @@ export default {
 
 <style scoped>
 
+    .dedline-end{
+        color: red;
+    }
 </style>

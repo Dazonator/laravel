@@ -78,6 +78,9 @@ Route::post('/tasks/statuses-departments', [TasksController::class, 'getStatuses
 Route::post('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::post('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
 Route::post('/tasks/structure/{id}', [StructureController::class, 'tasksByStructure']);
+Route::post('/tasks/tests', [TasksController::class, 'tasksTests']);
+Route::post('/tasks/task/completeTest/{id}', [TasksController::class, 'completeTest']);
+Route::post('/tasks/task/sendForTest', [TasksController::class, 'sendForTest']);
 
 Route::post('/tasks/uploadFiles', [TasksController::class, 'uploadFiles']);
 Route::post('/tasks/downloadFile/{id}', [TasksController::class, 'downloadFile']);
@@ -104,6 +107,7 @@ Route::post('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 Route::post('/tasks/create', [TasksController::class, 'submitTask']);
 Route::post('/tasks/create-department-task', [TasksController::class, 'submitTaskDepartment']);
 Route::post('/tasks/update', [TasksController::class, 'updateTask']);
+Route::post('/tasks/distribution-department', [TasksController::class, 'distributionDepartment']);
 Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
 Route::post('/tasks/start/{id}', [TasksController::class, 'startTask']);
 Route::post('/tasks/pause/{id}', [TasksController::class, 'pauseTask']);

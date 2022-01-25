@@ -84,28 +84,35 @@ const routes = [
         path: "/tasks",
         name: 'tasks',
         component: tasks,
-        meta: {title: 'Задания'}
+        meta: {title: 'Задачи'}
     },
     {
         path: "/tasks/status/:statusId",
         name: 'tasks_id',
         component: tasks,
         props: true,
-        meta: {title: 'Задания'}
+        meta: {title: 'Задачи'}
+    },
+    {
+        path: "/tasks/tests",
+        name: 'tasks-tests',
+        component: tasks,
+        props: true,
+        meta: {title: 'Задачи'}
     },
     {
         path: "/tasks/department/:departmentId",
         name: 'department_id',
         component: tasks,
         props: true,
-        meta: {title: 'Задания'}
+        meta: {title: 'Задачи'}
     },
     {
         path: "/tasks/task/:id",
         name: 'task',
         component: task,
         props: true,
-        meta: {title: 'Задания'}
+        meta: {title: 'Задачи'}
     },
     {
         path: "/team",

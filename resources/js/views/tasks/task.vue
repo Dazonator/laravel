@@ -86,15 +86,90 @@
                 <h5 class="">
                     Создано {{ task.created_at | createDate }}
                 </h5>
-                <div class="" v-if="task.priority">
+                <div class="mb-4" v-if="task.priority">
                     <span>Приоритет: {{task.priority.priority}}</span>
                 </div>
+                <div v-if="task.tests">
+                    <v-btn
+                        @click="completeTest()"
+                        v-if="$store.state.user.authUser.id === task.tests.user_id && !task.tests.is_tested"
+                    >
+                        Завершить тестирование
+                    </v-btn>
+                    <span
+                        v-if="task.tests.is_tested"
+                        class="green--text"
+                    >Тестирование завершено</span>
+                </div>
+                <v-form
+                    v-if="!task.tests"
+                    ref="form"
+                    @submit.prevent="sendForTest"
+                    v-model="valid"
+                    lazy-validation
+                    class="d-flex"
+                >
+                    <v-autocomplete
+                        :items="users"
+                        label="Кто тестирует"
+                        item-text="name"
+                        item-value="id"
+                        name="performers_id"
+                        v-model=userForTest
+                        :rules="[v => !!userForTest || 'Обязательное поле']"
+                        required
+                        style="max-width: 300px"
+                    >
+                        <template v-slot:selection="data">
+                            <v-chip
+                                v-bind="data.attrs"
+                                :input-value="data.selected"
+                                close
+                                @click="data.select"
+                                @click:close="removePerformers(data.item)"
+                            >
+                                <v-avatar left>
+                                    <v-img :src="data.item.img"></v-img>
+                                </v-avatar>
+                                {{ data.item.lastname }}
+                            </v-chip>
+                        </template>
+                        <template v-slot:item="data">
+                            <template v-if="typeof data.item !== 'object'">
+                                <v-list-item-content v-text="data.item"></v-list-item-content>
+                            </template>
+                            <template v-else>
+                                <v-list-item-avatar>
+                                    <v-img
+                                        :src="data.item.img"
+                                        :aspect-ratio="1/1"
+                                    >
+                                    </v-img>
+                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                    <v-list-item-title v-html="data.item.name + ' ' + data.item.lastname"></v-list-item-title>
+                                    <v-list-item-subtitle v-html="data.item.position"></v-list-item-subtitle>
+                                </v-list-item-content>
+                            </template>
+                        </template>
+                    </v-autocomplete>
+
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        large
+                    >
+                        Отправить на тест
+                    </v-btn>
+                </v-form>
             </div>
 
             <div class="bg pa-4 mb-4">
                 <h5>Текст задания</h5>
                 <div class="task-page__text" v-if="task.text" v-html="task.text"></div>
             </div>
+
+
 
             <div
                 class="bg pa-4 mb-4"
@@ -172,59 +247,79 @@
 
                 </div>
                 <div class="subtasks-table px-4 mb-6">
-                    <v-simple-table v-if="task.children.length > 0">
-                        <template v-slot:default>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        Название
-                                    </td>
-                                    <td>
-                                        Дедлайн
-                                    </td>
-                                    <td>
-                                        Статус
-                                    </td>
-                                    <td
-                                        class="text-right"
-                                    >
-                                        Этап
-                                    </td>
-                                </tr>
-                                <tr
-                                    v-for="item in task.children"
-                                >
-                                    <td>
-                                        <router-link
-                                            :to="'/tasks/task/' + item.id"
-                                        >
-                                            {{item.title}}
-                                        </router-link>
-                                    </td>
-                                    <td>
-                                        {{ item.deadline }}
-                                    </td>
-                                    <td>
-                                        {{item.status.status}}
-                                    </td>
-                                    <td class="text-right">
-                                        <v-select
-                                            class="subtasks-input d-inline-block"
-                                            :items=task.steps
+                    <v-data-table
+                        v-if="task.children.length > 0"
+                        :headers="headers"
+                        :items="task.children"
+                        loading-text="Загрузка задач..."
+                    >
+                        <template #item.title="{ item }">
+                            <router-link
 
-                                            single-line
-                                            label="Этап"
-                                            item-text="title"
-                                            item-selection="title"
-                                            item-value="id"
-                                            v-model="item.in_step"
-                                            @change="updateTaskStep(item)"
-                                        ></v-select>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                :to="'/tasks/task/' + item.id"
+                            >
+                                {{ item.title }}
+                            </router-link>
                         </template>
-                    </v-simple-table>
+
+                        <template #item.responsibles="{ item }">
+                            <router-link
+                                v-for="i in item.responsibles"
+                                :key="i.id"
+                                :to="'/profile/' + i.id"
+                            >
+                                <v-chip
+                                    pill
+                                >
+                                    <v-avatar left>
+                                        <v-img :src="i.img"> </v-img>
+                                    </v-avatar>
+                                    {{i.lastname}}
+                                </v-chip>
+                            </router-link>
+                        </template>
+
+                        <template #item.initiator="{ item }">
+                            <v-chip
+                                pill
+                                v-if="item.initiator"
+                            >
+                                <v-avatar left>
+                                    <v-img :src="item.initiator.img"></v-img>
+                                </v-avatar>
+                                {{item.initiator.lastname}}
+
+                            </v-chip>
+                        </template>
+
+                        <template #item.deadline="{ item }">
+                                    <span
+                                        :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                                    >{{item.deadline}}</span>
+                        </template>
+                        <template #item.actions="{ item }">
+                            <div
+                                class="text-right"
+                            >
+                                <div>
+                                    <span>Этап: </span>
+                                    <v-select
+                                        class="subtasks-input d-inline-block"
+                                        :items=task.steps
+                                        single-line
+                                        label="Этап"
+                                        item-text="title"
+                                        item-selection="title"
+                                        item-value="id"
+                                        append-icon="mdi-close"
+                                        v-model="item.in_step"
+                                        @change="updateTaskStep(item)"
+                                        @click:append="deleteTaskStep(item)"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </template>
+                    </v-data-table>
                 </div>
 
                 <div
@@ -251,66 +346,79 @@
                             </v-icon>
                         </div>
                         <div class="subtasks-table px-4 mb-2">
-                            <v-simple-table
+                            <v-data-table
                                 v-if="step.tasks.length > 0"
+                                :headers="headers"
+                                :items="step.tasks"
+                                loading-text="Загрузка задач..."
                             >
-                                <template v-slot:default>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                Название
-                                            </td>
-                                            <td>
-                                                Дедлайн
-                                            </td>
-                                            <td>
-                                                Статус
-                                            </td>
-                                            <td
-                                                class="text-right"
-                                            >
-                                                Этап
-                                            </td>
-                                        </tr>
-                                        <tr
-                                            v-for="(item, taskId) in step.tasks"
-                                        >
-                                            <td>
-                                                <router-link
-                                                    :to="'/tasks/task/' + item.id"
-                                                >
-                                                    {{item.title}}
-                                                </router-link>
-                                            </td>
-                                            <td>
-                                                {{ item.deadline }}
-                                            </td>
-                                            <td>
-                                                {{ item.status.status }}
-                                            </td>
+                                <template #item.title="{ item }">
+                                    <router-link
 
-                                            <td
-                                                class="text-right"
-                                            >
-                                                <v-select
-                                                    class="subtasks-input d-inline-block"
-                                                    :items=task.steps
-
-                                                    single-line
-                                                    label="Этап"
-                                                    item-text="title"
-                                                    item-selection="title"
-                                                    item-value="id"
-                                                    append-icon="mdi-close"
-                                                    v-model="item.in_step"
-                                                    @change="updateTaskStep(item)"
-                                                    @click:append="deleteTaskStep(item)"
-                                                ></v-select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                        :to="'/tasks/task/' + item.id"
+                                    >
+                                        {{ item.title }}
+                                    </router-link>
                                 </template>
-                            </v-simple-table>
+
+                                <template #item.responsibles="{ item }">
+                                    <router-link
+                                        v-for="i in item.responsibles"
+                                        :key="i.id"
+                                        :to="'/profile/' + i.id"
+                                    >
+                                        <v-chip
+                                            pill
+                                        >
+                                            <v-avatar left>
+                                                <v-img :src="i.img"> </v-img>
+                                            </v-avatar>
+                                            {{i.lastname}}
+                                        </v-chip>
+                                    </router-link>
+                                </template>
+
+                                <template #item.initiator="{ item }">
+                                    <v-chip
+                                        pill
+                                        v-if="item.initiator"
+                                    >
+                                        <v-avatar left>
+                                            <v-img :src="item.initiator.img"></v-img>
+                                        </v-avatar>
+                                        {{item.initiator.lastname}}
+
+                                    </v-chip>
+                                </template>
+
+                                <template #item.deadline="{ item }">
+                                    <span
+                                        :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                                    >{{item.deadline}}</span>
+                                </template>
+                                <template #item.actions="{ item }">
+                                    <div
+                                        class="text-right"
+                                    >
+                                        <div>
+                                            <span>Этап: </span>
+                                            <v-select
+                                                class="subtasks-input d-inline-block"
+                                                :items=task.steps
+                                                single-line
+                                                label="Этап"
+                                                item-text="title"
+                                                item-selection="title"
+                                                item-value="id"
+                                                append-icon="mdi-close"
+                                                v-model="item.in_step"
+                                                @change="updateTaskStep(item)"
+                                                @click:append="deleteTaskStep(item)"
+                                            ></v-select>
+                                        </div>
+                                    </div>
+                                </template>
+                            </v-data-table>
                         </div>
                     </div>
 
@@ -533,6 +641,39 @@ export default {
             // showform: false,
             id: null,
             task: [],
+            users: [],
+            userForTest: null,
+            valid: false,
+
+            headers: [
+                {
+                    text: 'Название',
+                    align: 'start',
+                    sortable: true,
+                    value: 'title',
+                },
+                {
+                    text: 'Ответственные',
+                    value: 'responsibles',
+                    sortable: true,
+                },
+                {
+                    text: 'Постановщик',
+                    value: 'initiator',
+                    sortable: true,
+                },
+                {
+                    text: 'Дедлайн',
+                    value: 'deadline',
+                    sortable: true,
+                },
+                {
+                    text: 'Приоритет',
+                    value: 'priority.priority',
+                    sortable: true,
+                },
+                { text: '', value: 'actions', sortable: false },
+            ],
         }
     },
     created(){
@@ -554,7 +695,8 @@ export default {
                 this.id = this.taskId;
             }
             axios.post(`/api/tasks/task/${this.id}`).then(response => {
-                this.task = response.data;
+                this.task = response.data.task;
+                this.users = response.data.users;
                 this.loaded = true;
                 if(this.task.status_id === 3){
                     this.statusActive = false;
@@ -733,6 +875,26 @@ export default {
                 this.init();
             }
         },
+        completeTest(){
+            axios.post(`/api/tasks/task/completeTest/${this.id}`).then(response => {
+                this.init();
+            });
+        },
+        removePerformers (item) {
+            this.userForTest = null;
+            this.valid = null;
+        },
+        sendForTest(){
+            if(this.$refs.form.validate()){
+                let fields = {
+                    user_id: this.userForTest,
+                    task_id: this.task.id
+                }
+                axios.post(`/api/tasks/task/sendForTest`, fields).then(response => {
+                    this.init();
+                });
+            }
+        }
     },
     filters: {
         deadLine: function (date) {
