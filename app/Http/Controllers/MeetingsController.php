@@ -98,7 +98,7 @@ class MeetingsController extends Controller
     }
 
     public function getById($id){
-        $meeting = Meetings::where('id', $id)->with('department')->first();
+        $meeting = Meetings::where('id', $id)->with('department', 'users')->first();
         $tasksInitial = Tasks::where('initial_department', $meeting->department_id)->where('distribution_department', null)->where('is_distributed', false)->with('initiator')->get();
         $tasksDistribution = Tasks::where('distribution_department', $meeting->department_id)->where('is_distributed', false)->with('initiator')->get();
         $distributionTasksTrue = Tasks::where('meeting_id', $id)->where('is_distributed', true)->with('initiator')->get();

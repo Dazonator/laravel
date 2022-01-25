@@ -211,6 +211,145 @@
         </div>
 
 
+        <h3>Задачи участников</h3>
+        <div
+            v-if="meeting.users"
+            class="mb-4"
+        >
+
+            <v-chip
+                v-for="user in meeting.users"
+                key="user.id"
+                @click="showUserTasks(user.id)"
+            >
+                <v-avatar left>
+                    <v-img :src="user.img"></v-img>
+                </v-avatar>
+                {{user.lastname}}
+            </v-chip>
+        </div>
+        <template>
+            <v-tabs
+                v-model="tab"
+            >
+                <v-tab
+                    v-for="status in statuses"
+                    :key="status.id"
+                >
+                    {{ status.status }}
+                </v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="tab">
+                <v-tab-item
+                    v-for="status in statuses"
+                    :key="status.id"
+                >
+                    <v-card flat>
+                        <v-data-table
+                            :headers="headersUser"
+                            :items="status.status_tasks"
+                            :single-expand="singleExpandUser"
+                            :expanded.sync="expandedUser"
+                            :search="searchUser"
+                            :items-per-page="30"
+                            loading-text="Загрузка задач..."
+                        >
+                            <template #item.title="{ item }">
+                                <router-link
+
+                                    :to="'/tasks/task/' + item.id"
+                                >
+                                    {{ item.title }}
+                                </router-link>
+                            </template>
+
+                            <template #item.responsibles="{ item }">
+                                <router-link
+                                    v-for="i in item.responsibles"
+                                    :key="i.id"
+                                    :to="'/profile/' + i.id"
+                                >
+                                    <v-chip
+                                        pill
+                                    >
+                                        <v-avatar left>
+                                            <v-img :src="i.img"> </v-img>
+                                        </v-avatar>
+                                        {{i.lastname}}
+                                    </v-chip>
+                                </router-link>
+                            </template>
+
+                            <template #item.initiator="{ item }">
+                                <v-chip
+                                    v-if="item.initiator"
+                                >
+                                    <v-avatar left>
+                                        <v-img :src="item.initiator.img"></v-img>
+                                    </v-avatar>
+                                    {{item.initiator.name}}
+                                    {{item.initiator.lastname}}
+
+                                </v-chip>
+                            </template>
+
+                            <template #item.deadline="{ item }">
+                                <span
+                                    :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                                >{{item.deadline}}</span>
+                            </template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-btn
+                                    x-small
+                                    @click="openTaskDialog(item.id)"
+                                >
+                                    <v-icon
+                                        x-small
+                                    >
+                                        mdi-eye
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                        </v-data-table>
+                    </v-card>
+                </v-tab-item>
+            </v-tabs-items>
+        </template>
+        <v-dialog
+            v-model="dialogTask"
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
+            scrollable
+        >
+            <v-card tile>
+                <v-toolbar
+                    class="toolbar-header"
+                    extension-height="48"
+                    flat
+                    dark
+                    color="primary"
+                >
+                    <v-btn
+                        icon
+                        dark
+                        @click="closeTaskDialog()"
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </v-toolbar>
+                <task
+                    v-if="taskId"
+                    :taskId="taskId"
+                    class="pa-4"
+                ></task>
+                <div style="flex: 1 1 auto;"></div>
+            </v-card>
+        </v-dialog>
+
+
         <h3>Распределённое на этом собрании</h3>
         <v-simple-table
             class="mb-6 bg"
@@ -311,13 +450,20 @@
         name: "meeting",
         data(){
             return{
+                data: [],
+                user: [],
+                statuses: [],
+                tab: null,
+                tableLoading: false,
                 updateId: null,
                 isDistribution: false,
+                taskId: null,
 
                 deleteId: null,
                 departments: {},
                 dialogDelete: false,
                 dialog: false,
+                dialogTask: false,
                 loaded: false,
                 getComponent: 'update-task',
                 meeting: {},
@@ -360,6 +506,48 @@
                         value: 'data-table-expand'
                     },
                 ],
+
+                searchUser: '',
+                headersUser: [
+                    {
+                        text: 'Название',
+                        align: 'start',
+                        sortable: true,
+                        value: 'title',
+                    },
+                    {
+                        text: 'Ответственные',
+                        value: 'responsibles',
+                        sortable: true,
+                    },
+                    {
+                        text: 'Постановщик',
+                        value: 'initiator',
+                        sortable: true,
+                    },
+                    {
+                        text: 'Приоритет',
+                        value: 'priority.priority',
+                        sortable: true,
+                    },
+                    {
+                        text: 'Дата старта',
+                        value: 'startdate',
+                        sortable: true,
+                    },
+                    {
+                        text: 'Дедлайн',
+                        value: 'deadline',
+                        sortable: true,
+                    },
+                    {
+                        text: 'Действия',
+                        value: 'actions',
+                        sortable: false
+                    },
+                ],
+                expandedUser: [],
+                singleExpandUser: true,
             }
         },
         watch:{
@@ -398,12 +586,10 @@
                     this.meeting = response.data.meeting;
                     this.initialTasks = response.data.tasksInitial;
                     this.distributionTasks = response.data.tasksDistribution;
-                    this.distributionTasksTrue = response.data.distributionTasksTrue
+                    this.distributionTasksTrue = response.data.distributionTasksTrue;
                     if (this.meeting.completed_at){
                         this.is_completed = true;
                     }
-
-
                     this.loaded = true;
                 });
             },
@@ -444,12 +630,28 @@
                 axios.post(`/api/tasks/distribution-department`, item).then(response => {
                     this.init();
                 });
+            },
+            showUserTasks(id){
+                axios.post(`/api/team/users/${id}`).then(response => {
+                    this.data = response.data;
+                    this.user = this.data.user;
+                    this.statuses = this.data.status;
+                });
+            },
+            openTaskDialog(id){
+                this.taskId = id;
+                this.dialogTask = true;
+            },
+            closeTaskDialog(id){
+                this.taskId = null;
+                this.dialogTask = false;
             }
-
         }
     }
 </script>
 
 <style scoped>
-
+    .toolbar-header{
+        flex: 0;
+    }
 </style>
