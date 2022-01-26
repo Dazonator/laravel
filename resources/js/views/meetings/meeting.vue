@@ -219,7 +219,7 @@
 
             <v-chip
                 v-for="user in meeting.users"
-                key="user.id"
+                :key="user.id"
                 @click="showUserTasks(user.id)"
             >
                 <v-avatar left>
@@ -650,7 +650,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .toolbar-header{
         flex: 0;
     }

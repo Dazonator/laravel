@@ -343,7 +343,7 @@
             isDistribution: function (q){
                 if (this.isDistribution && this.updateId){
                     axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
-                        this.fields = response.data;
+                        this.fields = response.data.task;
                         this.structureValue = this.fields.structure.name;
                     });
                 }
@@ -352,7 +352,7 @@
             isUpdate: function (q){
                 if (this.isUpdate){
                     axios.post(`/api/tasks/task/${this.updateId}`).then(response => {
-                        this.fields = response.data;
+                        this.fields = response.data.task;
                         this.fields.files = [];
                     });
                 }
