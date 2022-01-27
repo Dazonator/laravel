@@ -38,12 +38,7 @@
                     </v-toolbar>
                 </template>
                 <template #item.title="{ item }">
-                    <router-link
-
-                        :to="'/tasks/task/' + item.id"
-                    >
-                        {{ item.title }}
-                    </router-link>
+                    {{ item.title }}
                 </template>
                 <template #item.initiator="{ item }">
                     <v-chip
@@ -137,12 +132,7 @@
                     </v-toolbar>
                 </template>
                 <template #item.title="{ item }">
-                    <router-link
-
-                        :to="'/tasks/task/' + item.id"
-                    >
-                        {{ item.title }}
-                    </router-link>
+                    {{ item.title }}
                 </template>
                 <template #item.initiator="{ item }">
                     <v-chip
@@ -256,12 +246,7 @@
                             loading-text="Загрузка задач..."
                         >
                             <template #item.title="{ item }">
-                                <router-link
-
-                                    :to="'/tasks/task/' + item.id"
-                                >
-                                    {{ item.title }}
-                                </router-link>
+                                {{ item.title }}
                             </template>
 
                             <template #item.responsibles="{ item }">

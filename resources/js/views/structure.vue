@@ -132,7 +132,7 @@
                                 label="Новое название"
                                 name="title"
                                 v-model="newCategory.name"
-                                v-on:keyup.enter="createCategory()"
+                                v-on:keyup.enter="renameCategory()"
                             ></v-text-field>
                         </v-card-text>
                         <v-card-actions>

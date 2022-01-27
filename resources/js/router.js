@@ -23,6 +23,10 @@ import createRole from "./views/settings/roles/create-role";
 
 const routes = [
     {
+        path: "/",
+        redirect: "/calendar",
+    },
+    {
         path: "/calendar",
         name: 'calendar',
         component: calendar,
