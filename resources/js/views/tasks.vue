@@ -18,14 +18,27 @@
                             >
                                 {{status.status}}
                             </v-list-item>
+
                             <v-divider></v-divider>
+
+                            <h5 class="team-nav__title">Созданные задачи</h5>
+                            <v-list-item
+                                :to="'/tasks/initiator'"
+                            >
+                                Созданные задачи
+                            </v-list-item>
+
+                            <v-divider></v-divider>
+
                             <h5 class="team-nav__title">Тестирование</h5>
                             <v-list-item
                                 :to="'/tasks/tests'"
                             >
                                 Задачи на тест
                             </v-list-item>
+
                             <v-divider></v-divider>
+
                             <h5 class="team-nav__title">Задачи отдела</h5>
                             <v-list-item
                                 :to="'/tasks/department/' + department.id"
@@ -142,6 +155,9 @@ export default {
             if(this.departmentId){
                 this.departmentTasks(this.departmentId);
             }
+            if(this.$route.name === 'tasks-initiator'){
+                this.tasksInitiator();
+            }
             if(this.$route.name === 'tasks-tests'){
                 this.tasksTests();
             }
@@ -159,6 +175,10 @@ export default {
             // this.childrenTitle = 'Мои текущие задачи';
             this.childrenTitle = this.statuses[i-1].status;
             this.getComponent = 'user-tasks';
+        },
+        tasksInitiator(){
+            this.getComponent = 'tasks-initiator';
+            this.childrenTitle = 'Созданные задачи';
         },
         tasksTests(){
             this.getComponent = 'tasks-tests';

@@ -25,12 +25,16 @@
                 class="elevation-1"
                 show-group-by
             >
-                <template #item.number="{ item }">
-                    <router-link
+
+                <template #item.actions="{ item }">
+                    <v-btn
+                        elevation="2"
+                        small
+                        color="primary"
                         :to="'/meetings/' + item.id"
                     >
-                        {{ item.number }}
-                    </router-link>
+                        В собрание
+                    </v-btn>
                 </template>
             </v-data-table>
         </v-card>
@@ -46,6 +50,7 @@
                 meetings: {},
                 search: '',
                 headers: [
+                    { text: '', value: 'actions', sortable: false },
                     {
                         text: '№',
                         align: 'start',

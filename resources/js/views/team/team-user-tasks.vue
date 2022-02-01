@@ -111,7 +111,6 @@ export default {
             user: [],
             data: [],
             statuses: [],
-            tableloading: false,
             search: '',
             headers: [
                 {

@@ -3,14 +3,24 @@
     <div v-if="loaded">
         <h1 class="mb-6">Собрание №{{meeting.number}}</h1>
 
-        <v-btn
-            class="mb-4"
-            color="primary"
-            @click="newTask()"
+        <div
             v-if="!is_completed && isPermission('distributed-tasks')"
+            class="mb-4"
         >
-            Создать задачу
-        </v-btn>
+            <v-btn
+                color="primary"
+                @click="newTask()"
+            >
+                Создать задачу
+            </v-btn>
+            <v-btn
+                color="primary"
+                @click="newDepartmentTask()"
+            >
+                Задача в собрание
+            </v-btn>
+        </div>
+
         <div
             v-if="!is_completed"
         >
@@ -383,9 +393,9 @@
             @close="closeDialog()"
             :updateId = updateId
             :isDistribution = isDistribution
+            :forDistribution="forDistribution"
             :meetingId = meetingId
         ></update-task>
-
 
         <v-btn
             v-if="!is_completed && isPermission('distributed-tasks')"
@@ -442,6 +452,7 @@
                 tableLoading: false,
                 updateId: null,
                 isDistribution: false,
+                forDistribution: false,
                 taskId: null,
 
                 deleteId: null,
@@ -601,6 +612,10 @@
             newTask(){
                 this.updateId = null;
                 this.isDistribution = true;
+                this.dialog = true;
+            },
+            newDepartmentTask(){
+                this.forDistribution = true;
                 this.dialog = true;
             },
             completedMeeting(){

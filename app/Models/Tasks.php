@@ -130,5 +130,4 @@ class Tasks extends Model
     {
         return $this->hasOne(TasksTests::class, 'task_id');
     }
-
 }

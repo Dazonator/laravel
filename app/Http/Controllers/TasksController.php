@@ -179,10 +179,16 @@ class TasksController extends Controller
 
     public function statusTasks($id){
         return Tasks::where('status_id', $id) -> with(['children', 'parent', 'initiator', 'responsibles', 'priority', 'status']) -> where(function ($query){
-            $query->where('initiator_id', Auth::user()->id)->orWhereHas('responsibles', function ($q){
+            $query->whereHas('responsibles', function ($q){
                 $q->where('id', Auth::user()->id);
             });
         })->get();
+    }
+
+    public function tasksInitiator(){
+        return Status::with(['statusTasks' => function($query){
+            $query->with('children', 'parent', 'initiator', 'status', 'priority', 'responsibles')->where('initiator_id', Auth::user()->id);
+        }])->get();
     }
 
     public function tasksTests(){
@@ -233,7 +239,9 @@ class TasksController extends Controller
                 }]);
             },
             'structure',
-            'tests'
+            'tests' => function ($q){
+                $q->with('user');
+            },
         ])->first();
 
         $users = User::all();

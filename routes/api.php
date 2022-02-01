@@ -74,13 +74,23 @@ Route::post('/meetings/{id}', [MeetingsController::class, 'getById']);
 
 Route::post('/tasks', [TasksController::class, 'userTasks']);
 Route::post('/tasks/statuses-departments', [TasksController::class, 'getStatusesAndDepartments']);
-
 Route::post('/tasks/statuses/{id}', [TasksController::class, 'statusTasks']);
 Route::post('/tasks/department/{id}', [TasksController::class, 'tasksByDepartment']);
 Route::post('/tasks/structure/{id}', [StructureController::class, 'tasksByStructure']);
 Route::post('/tasks/tests', [TasksController::class, 'tasksTests']);
+Route::post('/tasks/initiator', [TasksController::class, 'tasksInitiator']);
 Route::post('/tasks/task/completeTest/{id}', [TasksController::class, 'completeTest']);
 Route::post('/tasks/task/sendForTest', [TasksController::class, 'sendForTest']);
+
+
+Route::post('/tasks/create', [TasksController::class, 'submitTask']);
+Route::post('/tasks/create-department-task', [TasksController::class, 'submitTaskDepartment']);
+Route::post('/tasks/update', [TasksController::class, 'updateTask']);
+Route::post('/tasks/distribution-department', [TasksController::class, 'distributionDepartment']);
+Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
+Route::post('/tasks/start/{id}', [TasksController::class, 'startTask']);
+Route::post('/tasks/pause/{id}', [TasksController::class, 'pauseTask']);
+Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
 
 Route::post('/tasks/uploadFiles', [TasksController::class, 'uploadFiles']);
 Route::post('/tasks/downloadFile/{id}', [TasksController::class, 'downloadFile']);
@@ -99,19 +109,13 @@ Route::post('/tasks/task/{id}', [TasksController::class, 'getTask']);
 Route::post('/tasks/edit/{id}', [TasksController::class, 'editTask']);
 
 
+
+
 Route::post('/team/departments', [TeamController::class, 'getDepartments']);
 Route::post('/team/departments/{id}', [TeamController::class, 'getDepartmentUsers']);
 Route::post('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
-Route::post('/tasks/create', [TasksController::class, 'submitTask']);
-Route::post('/tasks/create-department-task', [TasksController::class, 'submitTaskDepartment']);
-Route::post('/tasks/update', [TasksController::class, 'updateTask']);
-Route::post('/tasks/distribution-department', [TasksController::class, 'distributionDepartment']);
-Route::post('/tasks/completed/{id}', [TasksController::class, 'completedTask']);
-Route::post('/tasks/start/{id}', [TasksController::class, 'startTask']);
-Route::post('/tasks/pause/{id}', [TasksController::class, 'pauseTask']);
-Route::post('/tasks/delete/{id}', [TasksController::class, 'deleteTask']);
 
 
 Route::post('/messages', [MessagesController::class, 'messagesNotifications']);

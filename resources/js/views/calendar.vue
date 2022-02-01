@@ -242,7 +242,7 @@
             updateMeetingId: null,
             tasks: [],
             focus: '',
-            type: '4day',
+            type: 'week',
             typeToLabel: {
                 month: 'Месяц',
                 week: 'Неделя',

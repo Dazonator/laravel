@@ -105,6 +105,13 @@ const routes = [
         meta: {title: 'Задачи'}
     },
     {
+        path: "/tasks/initiator",
+        name: 'tasks-initiator',
+        component: tasks,
+        props: true,
+        meta: {title: 'Задачи'}
+    },
+    {
         path: "/tasks/department/:departmentId",
         name: 'department_id',
         component: tasks,

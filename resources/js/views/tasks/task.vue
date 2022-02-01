@@ -100,6 +100,35 @@
                         v-if="task.tests.is_tested"
                         class="green--text"
                     >Тестирование завершено</span>
+                    <div
+                        v-if="task.tests.user && $store.state.user.authUser.id !== task.tests.user_id"
+                        class="d-flex align-items-center"
+                    >
+                        <span
+                            class="orange--text"
+                        >
+                            Задачу тестирует
+                        </span>
+                        <v-chip
+                            class="ml-2"
+                        >
+                            <router-link
+                                :to="'/profile/' + task.tests.user.id"
+                            >
+                                <v-avatar
+                                    left
+                                    size="28"
+                                >
+                                    <v-img
+                                        :src='task.tests.user.img'
+                                        alt=item.name
+                                    ></v-img>
+                                </v-avatar>
+
+                                {{task.tests.user.name}} {{task.tests.user.lastname}}
+                            </router-link>
+                        </v-chip>
+                    </div>
                 </div>
                 <v-form
                     v-if="!task.tests"
@@ -695,6 +724,7 @@ export default {
                 this.id = this.taskId;
             }
             axios.post(`/api/tasks/task/${this.id}`).then(response => {
+                console.log(response.data);
                 this.task = response.data.task;
                 this.users = response.data.users;
                 this.loaded = true;
