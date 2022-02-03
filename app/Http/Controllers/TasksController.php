@@ -75,6 +75,16 @@ class TasksController extends Controller
                 'creator_id' => $user->id,
             ]);
         }
+        if($request->department_id && $user->hasPermission('create-tasks-for-all-department')) {
+            Tasks::create([
+                'title' => $request->title,
+                'text' => $request->text,
+                'initiator_id' => $user->id,
+                'initial_department' => $request->department_id,
+                'is_distributed' => false,
+                'creator_id' => $user->id,
+            ]);
+        }
     }
 
     public function updateTask(Request $request){

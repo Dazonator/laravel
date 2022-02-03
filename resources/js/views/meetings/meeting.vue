@@ -601,7 +601,10 @@
                     this.dialog = false;
                     this.updateId = null;
                     this.isDistribution = false;
+                    this.forDistribution = false;
+                    this.isNewTask = false;
                     this.init();
+
                 }
             },
             distributionTask(id){

@@ -190,7 +190,6 @@
                                 v-model="fields.loadingFiles"
                                 show-size
                                 multiple
-
                                 :loading="fileLoading"
                                 label="Добавить файлы"
                                 @click:clear="fields.files = null"
@@ -277,6 +276,24 @@
                         </v-col>
                         <v-col
                             cols="12"
+                            sm="6"
+                            md="4"
+                            v-if="forDistribution && isPermission('create-tasks-for-all-department')"
+                        >
+                            <v-select
+                                :items=departments
+                                item-text="department"
+                                item-selection="department"
+                                item-value="id"
+                                label="Отдел"
+                                name="department_id"
+                                v-model="fields.department_id"
+                                :rules="[v => !!v || 'Обязательное поле']"
+                                required
+                            ></v-select>
+                        </v-col>
+                        <v-col
+                            cols="12"
                         >
                             <v-btn
                                 type="submit"
@@ -289,6 +306,12 @@
                                 {{newTask ? 'Создать' : ''}}
                                 {{forDistribution ? 'Создать' : ''}}
                             </v-btn>
+                        </v-col>
+
+                        <v-col
+                            cols="12"
+                        >
+                            {{fields}}
                         </v-col>
                     </v-row>
                 </v-form>
@@ -367,7 +390,19 @@
                 }
             }
         },
+        computed: {
+            permissions: function (){
+                return this.$store.getters['user/permissions'];
+            }
+        },
         methods: {
+            isPermission(per){
+                let permissions = this.permissions;
+                if(String(permissions).indexOf(per) >= 0){
+                    return true;
+                }
+                return false;
+            },
             init(){
                 axios.post('/api/add-task-params').then(response => {
                     this.employees = response.data.employees;

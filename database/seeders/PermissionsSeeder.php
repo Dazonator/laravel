@@ -51,6 +51,10 @@ class PermissionsSeeder extends Seeder
                 'slug' => 'create-tasks-for-department'
             ],
             [
+                'name' => 'Содание задач для любого отдела',
+                'slug' => 'create-tasks-for-all-department'
+            ],
+            [
                 'name' => 'Обзор заданий других пользователей',
                 'slug' => 'view-tasks-other-users'
             ],
