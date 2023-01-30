@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StepsController;
 use App\Http\Controllers\StructureController;
+use App\Models\NotificationsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -119,7 +120,9 @@ Route::post('/team/users/{id}', [TeamController::class, 'getUserTasks']);
 
 
 Route::post('/messages', [MessagesController::class, 'messagesNotifications']);
-Route::post('/notifications', [MessagesController::class, 'getNotifications']);
+//Route::post('/notifications', [MessagesController::class, 'getNotifications']);
+Route::post('/notifications-count', [NotificationsController::class, 'getNotificationsCount']);
+
 
 
 
@@ -152,5 +155,4 @@ Route::post('/notifications/getById/{id}', [NotificationsController::class, 'get
 Route::post('/notifications/create', [NotificationsController::class, 'createNotification']);
 Route::post('/notifications/updateNotification', [NotificationsController::class, 'updateNotification']);
 Route::post('/notifications/deleteNotification/{id}', [NotificationsController::class, 'deleteNotification']);
-
 

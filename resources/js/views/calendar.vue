@@ -55,6 +55,7 @@
                     {{ $refs.calendar.title }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
+                {{$store.getters['user/calendarIndex']}}
                 <v-menu
                     bottom
                     right
@@ -101,6 +102,7 @@
                 @click:more="viewDay"
                 @click:date="viewDay"
                 @change="updateRange"
+                :key="componentKey"
             ></v-calendar>
             <v-menu
                 v-model="selectedOpen"
@@ -217,23 +219,6 @@
 </template>
 <script>
     export default {
-        watch:{
-            deleteId: function (q){
-                if (this.deleteId){
-                    this.dialogDelete = true;
-                }
-            },
-            dialogDelete: function (q){
-                if (!this.dialogDelete){
-                    this.deleteId = null;
-                }
-            },
-            deleteMeetingId: function (q) {
-                if (this.deleteMeetingId){
-                    this.dialogDelete = true;
-                }
-            }
-        },
         data: () => ({
             dialogDelete: false,
             deleteId: null,
@@ -249,6 +234,8 @@
                 day: 'День',
                 '4day': '4 Дня',
             },
+            start: null,
+            end: null,
             selectedEvent: {},
             selectedElement: null,
             selectedOpen: false,
@@ -286,13 +273,37 @@
                 'grey darken-4',
                 'blue-grey',
             ],
+            componentKey: 0,
         }),
+        watch:{
+            deleteId: function (q){
+                if (this.deleteId){
+                    this.dialogDelete = true;
+                }
+            },
+            dialogDelete: function (q){
+                if (!this.dialogDelete){
+                    this.deleteId = null;
+                }
+            },
+            deleteMeetingId: function (q) {
+                if (this.deleteMeetingId){
+                    this.dialogDelete = true;
+                }
+            },
+            calendarIndex: function (q) {
+                this.clearId();
+            },
+        },
         mounted () {
             this.$refs.calendar.checkChange()
         },
         computed:{
             permissions: function (){
                 return this.$store.getters['user/permissions'];
+            },
+            calendarIndex: function(){
+                return this.$store.getters['user/calendarIndex']
             }
         },
         methods: {
@@ -337,6 +348,8 @@
             },
             updateRange ({ start, end }) {
                 const events = [];
+                this.start = start;
+                this.end = end;
                 axios.post(`/api/calendar/events`, {start: start.date, end: end.date}).then(response => {
                     this.tasks = response.data;
                     for (let task in this.tasks) {
@@ -386,6 +399,7 @@
             clearId(){
                 this.updateId = null;
                 this.updateMeetingId = null;
+                this.componentKey += 1;
             }
 
         },

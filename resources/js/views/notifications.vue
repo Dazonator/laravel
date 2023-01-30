@@ -119,6 +119,10 @@
         },
         created() {
             this.init();
+            window.Echo.channel('channel-notifications-page').listen('.event-notifications', (e) => {
+                // console.log('@!!!!!!!!!!!!!!!!!!!!');
+                this.init();
+            });
         },
         methods: {
             isPermission(per){
@@ -130,6 +134,7 @@
             },
             init(){
                 axios.post(`/api/notifications/getAllNotifications`).then(response => {
+                    this.$store.dispatch('notifications/getNotifications');
                     this.notifications = response.data;
                     this.loaded = true;
                 });
@@ -150,6 +155,9 @@
                 this.updateId = q;
                 this.openDialog = true;
             }
+        },
+        destroyed() {
+            window.Echo.leaveChannel('channel-notifications-page');
         }
 
     }

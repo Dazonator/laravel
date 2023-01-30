@@ -55,7 +55,6 @@
                         v-if="isPermission('create-tasks-for-department')"
                         cols="12"
                         class="pb-0"
-
                     >
                         <v-btn
                             color="primary"

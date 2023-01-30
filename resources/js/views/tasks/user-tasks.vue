@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <h1>{{title}}</h1>
         <div class="bg pa-4">
@@ -203,10 +202,83 @@
                 :isUpdate = isUpdate
             ></update-task>
         </div>
+        <h1>{{title}}</h1>
+        <v-row>
+            <v-col
+                v-for="task in tasks" :key="task.id"
+                cols="4"
+            >
+                <v-card
+                    class="task-card pa-4 pb-10 position-relative"
+                    outlined
+                    elevation="4"
+                    :class="task.priority ? 'task-priority' + task.priority.id : 'task-priority'"
+                    style="height: 100%;"
+                >
+                    <router-link :to="'/tasks/task/' + task.id">
+                        <h5>{{task.title}}</h5>
+                    </router-link>
+                    <div v-if="task.startdate">Дата старта: {{ task.startdate | startDate }}</div>
+                    <div
+                        v-if="task.deadline"
+                        :class="{'dedline-end': new Date() > new Date(task.deadline)}"
+                    >Дедлайн: {{ task.deadline | startDate }}</div>
+
+                    <div v-if="task.initiator">
+                        Инициатор задачи:
+                        <v-avatar size="30">
+                            <router-link
+                                :to="'/profile/' + task.initiator.id"
+                                :title="task.initiator.name + ' ' + task.initiator.lastname"
+                            >
+                                <v-img
+                                    :src="task.initiator.img"
+                                    width="30"
+                                    height="30"
+                                ></v-img>
+                            </router-link>
+                        </v-avatar>
+                    </div>
+                    <div v-if="task.responsibles">
+                        <v-avatar size="30"
+                                  v-for="i in task.responsibles"
+                                  :key="i.id"
+                        >
+                            <router-link
+                                :to="'/profile/' + i.id"
+                                :title="i.name + ' ' + i.lastname"
+                            >
+                                <v-img
+                                    :src="i.img"
+                                    width="30"
+                                    height="30"
+                                ></v-img>
+                            </router-link>
+                        </v-avatar>
+                    </div>
+                    <div
+                        class="text-center task-priority-text"
+                        style="position: absolute; bottom: 0; left: 0; right: 0;"
+                    >
+                        <v-icon
+                            v-if="task.priority && task.priority.id == 4"
+                            color="#fff"
+                        >mdi-fire</v-icon>
+                        {{task.priority ? task.priority.priority : 'Без приоритета' }}
+                    </div>
+
+<!--                    <pre>-->
+<!--                        {{task}}-->
+<!--                    </pre>-->
+                </v-card>
+            </v-col>
+        </v-row>
     </div>
+
 </template>
 
 <script>
+import moment from 'moment';
 export default {
     name: 'user-tasks',
     props: {
@@ -281,6 +353,7 @@ export default {
         }
     },
     created(){
+        moment.locale('ru');
         this.init();
     },
     methods: {
@@ -349,6 +422,14 @@ export default {
             }
         },
     },
+    filters: {
+        deadLine: function (date) {
+            return moment(date).format('LL');
+        },
+        startDate: function (date) {
+            return moment(date).format('ll');
+        }
+    }
 }
 </script>
 
@@ -356,5 +437,60 @@ export default {
 
     .dedline-end{
         color: red;
+    }
+    .task-card{
+        /*-webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.3);*/
+        /*-moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.3);*/
+        /*box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.3);*/
+        transition: all 0.25s;
+        border-radius: 5px;
+    }
+    .task-card:hover{
+        /*-webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.6);*/
+        /*-moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.6);*/
+        /*box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.6);*/
+
+    }
+    .task-priority{
+        outline: 2px solid #eee;
+        outline-offset: -2px;
+    }
+    .task-priority .task-priority-text{
+        color: #000;
+        background-color: #eee;
+    }
+    .task-priority1{
+        outline: 2px solid #ccc;
+        outline-offset: -2px;
+    }
+    .task-priority1 .task-priority-text{
+        color: #000;
+        background-color: #ccc;
+    }
+    .task-priority2{
+        outline: 2px solid orange;
+        outline-offset: -2px;
+    }
+    .task-priority2 .task-priority-text{
+        color: #fff;
+        background-color: orange;
+
+    }
+    .task-priority3{
+        outline: 2px solid #ff0000;
+        outline-offset: -2px;
+    }
+    .task-priority3 .task-priority-text{
+        color: #fff;
+        background-color: #ff0000;
+    }
+    .task-priority4{
+        outline: 5px solid #e80000;
+        outline-offset: -5px;
+    }
+    .task-priority4 .task-priority-text{
+        color: #fff;
+        background-color: #e80000;
+        font-weight: bold;
     }
 </style>

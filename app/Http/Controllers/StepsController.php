@@ -16,11 +16,10 @@ class StepsController extends Controller
     }
 
     public function createNewStep(Request $request){
-        $step = new Steps();
-        $step::create([
+        $step = Steps::create([
             'task_id' => $request->task_id,
             'title' => $request->title,
-        ]);
+        ])->responsibles()->sync([Auth::user()->id]);
     }
 
     public function deleteStep(Request $request){

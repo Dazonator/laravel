@@ -72,23 +72,31 @@ Vue.component('ck-editor', require('./components/templates/ckeditor').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.qapp = new Vue({
-    vuetify: new Vuetify({
-        lang: {
-            locales: { ru },
-            current: 'ru',
-        },
-    }),
-    el: '#app',
-    router,
-    store,
-    methods: {
-        ...mapActions(['user/getAppParameters']),
-    },
-    created () {
-        this.$store.dispatch('user/getAppParameters');
-    }
+store.dispatch('user/getAppParameters').then(response => {
+    initializeVue();
 });
+function initializeVue()
+{
+    window.qapp = new Vue({
+        vuetify: new Vuetify({
+            lang: {
+                locales: { ru },
+                current: 'ru',
+            },
+        }),
+        el: '#app',
+        router,
+        store,
+        methods: {
+            ...mapActions(['user/getAppParameters']),
+            ...mapActions(['notifications/getNotifications']),
+        },
+        created () {
+            this.$store.dispatch('notifications/getNotifications');
+        }
+    });
+}
+
 
 // $("#d1").on("shown.bs.modal", function() {
 //     tinyMCE.get("editor").focus();

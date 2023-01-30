@@ -341,7 +341,9 @@
                         this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
                         this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
                         axios.post('/api/calendar/meetings/create', this.fields).then(response => {
-                            window.location.reload();
+                            // window.location.reload();
+                            this.clearId();
+                            this.dialog = false;
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};
@@ -351,7 +353,9 @@
                         this.fields.start = this.fields.startDate + ' ' + this.fields.startTime;
                         this.fields.end = this.fields.startDate + ' ' + this.fields.endTime;
                         axios.post(`/api/calendar/meetings/update/${this.updateId}`, this.fields).then(response => {
-                            window.location.reload();
+                            // window.location.reload();
+                            this.clearId();
+                            this.dialog = false;
                         }).catch(error => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors || {};

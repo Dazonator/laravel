@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreatedMessageTaskEvent;
 use App\Models\Messages;
 use App\Models\MessagesUser;
 use App\Models\Tasks;
+use App\Models\User;
+use App\Notifications\UsersTaskNotifications;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class MessagesController extends Controller
 {
@@ -20,9 +24,6 @@ class MessagesController extends Controller
 
         if($task->performers_id){
             for($i = 0; $i < count($task->performers_id); ++$i) {
-//                if($task->performers_id[$i] == $userId){
-//                    continue;
-//                }
                 array_push($messageFor, $task->performers_id[$i]);
             }
         }
@@ -31,11 +32,20 @@ class MessagesController extends Controller
             array_push($messageFor, $task->initiator_id);
         }
 
-        Messages::create([
+        $message = Messages::create([
             'user_id' => $userId,
             'message' => $request->message,
             'task_id' => $request->task_id,
-        ])->messagesFor()->sync($messageFor);
+        ]);
+        $message->messagesFor()->sync($messageFor);
+
+
+        $users = User::whereIn('id', $messageFor)->get();
+//        event(new CreatedMessageTaskEvent($message, $users));
+
+
+
+//        Notification::send($users, new UsersTaskNotifications($message->toArray()));
     }
 
     public function getChatMessages($id){

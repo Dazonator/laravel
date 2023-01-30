@@ -13,4 +13,8 @@ class Notifications extends Model
         'title',
         'text'
     ];
+    public function notificationsFor()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

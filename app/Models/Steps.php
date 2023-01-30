@@ -44,4 +44,9 @@ class Steps extends Model
     {
         return $this->hasMany(Tasks::class, 'in_step', 'id');
     }
+
+    public function responsibles()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

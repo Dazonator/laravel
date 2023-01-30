@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\TaskUpdatedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -129,5 +130,20 @@ class Tasks extends Model
     public function tests()
     {
         return $this->hasOne(TasksTests::class, 'task_id');
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($task) {
+//            event(new TaskUpdatedEvent($task->toArray(), Auth::user()->toArray()));
+            event(new TaskUpdatedEvent('create-task', $task->toArray(), Auth::user()->toArray(), $task->getChanges()));
+            //
+        });
+        static::updated(function ($task) {
+            event(new TaskUpdatedEvent('update-task', $task->toArray(), Auth::user()->toArray(), $task->getChanges()));
+        });
+        static::deleted(function ($user) {
+            //
+        });
     }
 }

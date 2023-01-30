@@ -84,4 +84,9 @@ class User extends Authenticatable
     public function getPersonalTasks (){
         return $this->hasManyThrough(Status::class, Tasks::class);
     }
+
+
+    public function steps (){
+        return $this->belongsToMany(Steps::class);
+    }
 }

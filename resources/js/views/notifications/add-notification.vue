@@ -46,7 +46,7 @@
                             cols="12"
                         >
                             <v-text-field
-                                label="Название"
+                                label="Заголовок"
                                 name="title"
                                 v-model="fields.title"
                                 :rules="[v => !!v || 'Обязательное поле']"

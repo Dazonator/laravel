@@ -93,7 +93,6 @@
                 </button>
             </form>
         </div>
-
     </v-flex>
 </template>
 
@@ -101,6 +100,7 @@
 export default {
     data: () => ({
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        // user: this.$store.getters['user/authUser']
     }),
     computed: {
         user: function (){
@@ -113,7 +113,17 @@ export default {
             return this.$store.getters['user/permissions'];
         }
     },
+    watch:{
+    },
     created() {
+
+    },
+    mounted() {
+        window.Echo.channel('channel-notifications').listen('.event-notifications', (e) => {
+            this.$store.dispatch('notifications/getNotifications');
+            // console.log(this.$store.getters['notifications/notifications']);
+        });
+
     },
     methods: {
         isPermission(per){
@@ -123,6 +133,9 @@ export default {
             }
             return false;
         }
+    },
+    destroyed() {
+        window.Echo.leaveChannel('channel-notifications');
     }
 
 }

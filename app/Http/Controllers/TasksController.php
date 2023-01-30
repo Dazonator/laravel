@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreatedMessageTaskEvent;
+use App\Events\TaskUpdatedEvent;
 use App\Http\Requests\AddTaskRequest;
 use App\Models\Departments;
 use App\Models\Messages;
@@ -125,6 +127,7 @@ class TasksController extends Controller
             }
         }
     }
+
     public function distributionDepartment(Request $request){
         $id = $request->id;
         $task = Tasks::find($id);
@@ -136,20 +139,26 @@ class TasksController extends Controller
     public function completedTask($id){
         $task = Tasks::where('id', $id)->first();
         $task->update([
-            'status_id' => '3',
+            'status_id' => 3,
         ]);
+
+//        event(new TaskUpdatedEvent($task->toArray(), Auth::user()->toArray()));
     }
+
     public function startTask($id){
         $task = Tasks::find($id);
         $task->update([
-            'status_id' => '2',
+            'status_id' => 2,
         ]);
+//        event(new TaskUpdatedEvent($task->toArray(), Auth::user()->toArray()));
     }
+
     public function pauseTask($id){
         $task = Tasks::find($id);
         $task->update([
-            'status_id' => '1',
+            'status_id' => 1,
         ]);
+//        event(new TaskUpdatedEvent($task->toArray(), Auth::user()->toArray()));
     }
 
     public function deleteTask($id){
@@ -246,7 +255,7 @@ class TasksController extends Controller
             'steps' => function ($q){
                 $q->with(['tasks' => function($q){
                     $q->with(['status', 'priority', 'responsibles', 'initiator']);
-                }]);
+                }], 'responsibles');
             },
             'structure',
             'tests' => function ($q){
