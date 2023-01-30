@@ -789,7 +789,7 @@ export default {
         this.init();
         window.Echo.private(`tasks.${this.id}`)
             .listen('.event-tasks-messages', (e) => {
-                console.log(e.order);
+                // console.log(e.order);
             });
     },
     watch:{
@@ -807,7 +807,7 @@ export default {
                 this.id = this.taskId;
             }
             axios.post(`/api/tasks/task/${this.id}`).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.task = response.data.task;
                 this.users = response.data.users;
                 this.loaded = true;

@@ -275,7 +275,7 @@
         methods: {
             init(){
                 axios.post(`/api/tasks/initiator`).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     this.statuses = response.data;
                     this.tableloading = false;
                 });

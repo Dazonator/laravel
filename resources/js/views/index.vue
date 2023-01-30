@@ -102,14 +102,14 @@
             }
         },
         created() {
-            console.log(this.$store.getters['notifications/notifications']);
+            // console.log(this.$store.getters['notifications/notifications']);
         },
         mounted() {
             window.Echo.private('App.Models.User.' + this.user.id)
                 .notification((notification) => {
+                    console.log('!!!!!!!!!!!!');
                     switch (notification['template']) {
                         case 'create-meeting':
-                            console.log('!!!!!!!!!!!!');
                             this.$store.dispatch('user/plusCalendarIndex');
                             break;
                         case 'new-task-message':
@@ -123,7 +123,7 @@
                     // if(notification['template'] === 'new-task-message'){
                     //     this.$store.dispatch('user/getAppParameters');
                     // }
-                    console.log(notification);
+                    // console.log(notification);
                     // else {
                     setTimeout(() => this.items.pop(), this.timeout);
                     // }
