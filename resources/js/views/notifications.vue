@@ -120,7 +120,7 @@
         created() {
             this.init();
             window.Echo.channel('channel-notifications-page').listen('.event-notifications', (e) => {
-                // console.log('@!!!!!!!!!!!!!!!!!!!!');
+                console.log('channel-notifications-page!!!!!!!!!!!!!!!!!!!!');
                 this.init();
             });
         },
