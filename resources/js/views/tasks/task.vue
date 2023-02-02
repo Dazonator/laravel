@@ -392,28 +392,28 @@
                                     </template>
 
                                     <template #item.deadline="{ item }">
-                            <span
-                                v-if="item.deadline"
-                                class="deadline"
-                                :class="{'deadline-end': new Date() > new Date(item.deadline)}"
-                                style="white-space: nowrap;"
-                            >
-                                {{ item.deadline | deadLine }}
-                            </span>
+                                        <span
+                                            v-if="item.deadline"
+                                            class="deadline"
+                                            :class="{'deadline-end': new Date() > new Date(item.deadline)}"
+                                            style="white-space: nowrap;"
+                                        >
+                                            {{ item.deadline | deadLine }}
+                                        </span>
                                     </template>
                                     <template #item.priority="{ item }">
-                            <span
-                                v-if="item.priority"
-                                class="priority"
-                                :class="'priority-' + item.priority.id"
-                                style="white-space: nowrap;"
-                            >
-                                {{item.priority.priority}}
-                                <v-icon
-                                    v-if=" item.priority.id == 4"
-                                    color="#fff"
-                                >mdi-fire</v-icon>
-                            </span>
+                                        <span
+                                            v-if="item.priority"
+                                            class="priority"
+                                            :class="'priority-' + item.priority.id"
+                                            style="white-space: nowrap;"
+                                        >
+                                            {{item.priority.priority}}
+                                            <v-icon
+                                                v-if=" item.priority.id == 4"
+                                                color="#fff"
+                                            >mdi-fire</v-icon>
+                                        </span>
                                     </template>
                                     <template #item.actions="{ item }">
                                         <div
@@ -521,28 +521,28 @@
                                 </template>
 
                                 <template #item.deadline="{ item }">
-                            <span
-                                v-if="item.deadline"
-                                class="deadline"
-                                :class="{'deadline-end': new Date() > new Date(item.deadline)}"
-                                style="white-space: nowrap;"
-                            >
-                                {{ item.deadline | deadLine }}
-                            </span>
+                                    <span
+                                        v-if="item.deadline"
+                                        class="deadline"
+                                        :class="{'deadline-end': new Date() > new Date(item.deadline)}"
+                                        style="white-space: nowrap;"
+                                    >
+                                        {{ item.deadline | deadLine }}
+                                    </span>
                                 </template>
                                 <template #item.priority="{ item }">
-                            <span
-                                v-if="item.priority"
-                                class="priority"
-                                :class="'priority-' + item.priority.id"
-                                style="white-space: nowrap;"
-                            >
-                                {{item.priority.priority}}
-                                <v-icon
-                                    v-if=" item.priority.id == 4"
-                                    color="#fff"
-                                >mdi-fire</v-icon>
-                            </span>
+                                    <span
+                                        v-if="item.priority"
+                                        class="priority"
+                                        :class="'priority-' + item.priority.id"
+                                        style="white-space: nowrap;"
+                                    >
+                                        {{item.priority.priority}}
+                                        <v-icon
+                                            v-if=" item.priority.id == 4"
+                                            color="#fff"
+                                        >mdi-fire</v-icon>
+                                    </span>
                                 </template>
                                 <template #item.actions="{ item }">
                                     <div
@@ -1027,25 +1027,6 @@ export default {
 </script>
 
 <style>
-    .deadline, .priority{
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 1px;
-        padding: 3px 6px; margin-right: 10px;
-    }
-    .deadline.deadline-end{
-        background-color: red;
-    }
-
-    .priority.priority-2{
-        background-color: orange;
-    }
-    .priority.priority-3{
-        background-color: red;
-    }
-    .priority.priority-4{
-        background-color: #e80000;
-    }
 
     .step_header .v-text-field>.v-input__control>.v-input__slot:before{
         display: none !important;

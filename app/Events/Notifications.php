@@ -22,7 +22,7 @@ class Notifications implements ShouldBroadcast
      */
     public $newNotification;
 
-    public function __construct($newNotification)
+    public function __construct($newNotification = null)
     {
         $this->newNotification = $newNotification;
     }

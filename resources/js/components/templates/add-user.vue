@@ -255,6 +255,9 @@ export default {
                     }
                 });
             } else {
+                if(!this.fields.img){
+                    this.fields.img = 'images/users/User_Icon.png';
+                }
                 axios.post('/api/settings/users/addUser', this.fields).then(response => {
                     this.dialog = false;
                 }).catch(error => {

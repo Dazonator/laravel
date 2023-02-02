@@ -43,9 +43,10 @@ class MeetingsController extends Controller
     }
 
     public function deleteMeeting($id){
+        $meeting = Meetings::find($id);
         $user = Auth::user();
         if($user->hasPermission('delete-meeting')){
-            Meetings::where('id', $id)->delete();
+            $meeting->delete();
         }
     }
 

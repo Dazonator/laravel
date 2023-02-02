@@ -107,9 +107,10 @@
         mounted() {
             window.Echo.private('App.Models.User.' + this.user.id)
                 .notification((notification) => {
-                    console.log('!!!!!!!!!!!!');
                     switch (notification['template']) {
                         case 'create-meeting':
+                        case 'update-meeting':
+                        case 'delete-meeting':
                             this.$store.dispatch('user/plusCalendarIndex');
                             break;
                         case 'new-task-message':

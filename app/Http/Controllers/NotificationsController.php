@@ -38,11 +38,14 @@ class NotificationsController extends Controller
             'title' => $request->title,
             'text' => $request->text,
         ]);
+
+        event(new \App\Events\Notifications());
     }
 
     public function deleteNotification($id){
         $notification = Notifications::find($id);
         $notification->delete();
+        event(new \App\Events\Notifications());
     }
 
     public function getAllNotifications(){

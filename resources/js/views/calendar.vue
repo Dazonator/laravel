@@ -55,7 +55,6 @@
                     {{ $refs.calendar.title }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
-                {{$store.getters['user/calendarIndex']}}
                 <v-menu
                     bottom
                     right
@@ -289,6 +288,8 @@
             deleteMeetingId: function (q) {
                 if (this.deleteMeetingId){
                     this.dialogDelete = true;
+                } else {
+                    this.dialogDelete = false;
                 }
             },
             calendarIndex: function (q) {
@@ -388,12 +389,16 @@
             },
             deleteEvent(){
                 axios.post(`/api/calendar/delete/${this.deleteId}`).then(response => {
-                    window.location.reload();
+                    // window.location.reload();
+                    this.deleteMeetingId = false;
+                    this.clearId();
                 });
             },
             deleteMeeting(){
                 axios.post(`/api/calendar/meetings/delete/${this.deleteMeetingId}`).then(response => {
-                    window.location.reload();
+                    // window.location.reload();
+                    this.deleteMeetingId = false;
+                    this.clearId();
                 });
             },
             clearId(){

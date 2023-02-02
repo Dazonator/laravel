@@ -57,6 +57,7 @@ Vue.component('team-user-tasks', require('./views/team/team-user-tasks').default
 Vue.component('user-tasks', require('./views/tasks/user-tasks').default);
 Vue.component('department-tasks', require('./views/tasks/department-tasks').default);
 Vue.component('task', require('./views/tasks/task').default);
+Vue.component('task-card', require('./views/tasks/task-card').default);
 Vue.component('tasks-tests', require('./views/tasks/tasks-tests').default);
 Vue.component('tasks-initiator', require('./views/tasks/tasks-initiator').default);
 

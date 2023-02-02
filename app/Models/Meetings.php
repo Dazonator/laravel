@@ -43,15 +43,14 @@ class Meetings extends Model
     protected static function booted()
     {
         static::created(function ($meeting) {
-//            event(new TaskUpdatedEvent($task->toArray(), Auth::user()->toArray()));
             event(new MeetingsEvent('create-meeting', $meeting->toArray(), Auth::user()->toArray(), $meeting->getChanges()));
-            //
         });
         static::updated(function ($meeting) {
             event(new MeetingsEvent('update-meeting', $meeting->toArray(), Auth::user()->toArray(), $meeting->getChanges()));
         });
-        static::deleted(function ($user) {
-            //
+        static::deleted(function ($meeting) {
+//            dd($meeting);
+            event(new MeetingsEvent('delete-meeting', $meeting->toArray(), Auth::user()->toArray(), $meeting->getChanges()));
         });
     }
 }

@@ -9,6 +9,9 @@
 
 @import '~vuetify/dist/vuetify.min.css';
 
+a:hover{
+    text-decoration: none;
+}
 
 .v-card__title{
     word-break: break-word !important;
@@ -79,7 +82,7 @@
             border-radius: 15px;
             margin-bottom: 10px;
             text-decoration: none;
-
+            padding: 0;
             svg{
                 display: block;
                 width: 30px;
@@ -141,28 +144,6 @@
         }
     }
 }
-//
-//.add-task.col{
-    //display: flex;
-    //flex-direction: column;
-    //max-width: 400px;
-
-    //label{
-    //    margin-bottom: 2px;
-    //    font-weight: bold;
-    //    margin-left: 20px;
-    //}
-    //input,
-    //textarea,
-    //select{
-    //    //border-color: #F8FAFB;
-    //    //background-color: #F8FAFB;
-    //}
-    //button{
-    //    flex: none;
-    //}
-//}
-
 .profile{
     &__img{
         .v-image__image{
@@ -219,10 +200,57 @@
     }
 }
 
-//.v-color-picker{
-//    max-width: 100% !important;
-//}
-//
-//.v-color-picker__controls{
-//    display: none !important;
-//}
+.deadline, .priority{
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 1px;
+    padding: 3px 6px; margin-right: 10px;
+}
+.deadline.deadline-end{
+    background-color: red;
+}
+
+.priority.priority-2{
+    background-color: orange;
+}
+.priority.priority-3{
+    background-color: red;
+}
+.priority.priority-4{
+    background-color: #e80000;
+}
+
+@media (max-width: 1200px) {
+    .left-menu{
+        .nav{
+            &-link{
+                margin-bottom: 0;
+                svg{
+                    margin-bottom: 5px;
+                }
+
+                &:hover,
+                &.router-link-active{
+
+                }
+
+            }
+        }
+
+        .user-img{
+            .v-image__image{
+
+            }
+        }
+
+        .logout-btn{
+            svg{
+            }
+
+            &:hover,
+            &.router-link-active{
+
+            }
+        }
+    }
+}

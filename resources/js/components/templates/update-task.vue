@@ -307,12 +307,6 @@
                                 {{forDistribution ? 'Создать' : ''}}
                             </v-btn>
                         </v-col>
-
-                        <v-col
-                            cols="12"
-                        >
-                            {{fields}}
-                        </v-col>
                     </v-row>
                 </v-form>
             </v-card-text>
