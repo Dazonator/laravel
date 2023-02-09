@@ -58,7 +58,7 @@
                                 </v-btn>
                             </div>
 
-                            <v-card-text v-html="item.text"></v-card-text>
+                            <v-card-text v-html="item.text" class="documentation-text"></v-card-text>
                         </v-card>
                     </v-tab-item>
                 </template>
