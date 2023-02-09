@@ -167,5 +167,8 @@
     }
     .documentation-text img{
         max-width: 100%;
+        -webkit-box-shadow: 0px 0px 4px 2px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 0px 4px 2px rgba(34, 60, 80, 0.2);
+        box-shadow: 0px 0px 4px 2px rgba(34, 60, 80, 0.2);
     }
 </style>
