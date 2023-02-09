@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddUserController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationsController;
@@ -155,4 +156,10 @@ Route::post('/notifications/getById/{id}', [NotificationsController::class, 'get
 Route::post('/notifications/create', [NotificationsController::class, 'createNotification']);
 Route::post('/notifications/updateNotification', [NotificationsController::class, 'updateNotification']);
 Route::post('/notifications/deleteNotification/{id}', [NotificationsController::class, 'deleteNotification']);
+
+Route::post('/documentation/getAllDocumentations', [DocumentationController::class, 'getAllDocumentations']);
+Route::post('/documentation/getById/{id}', [DocumentationController::class, 'getByIdDocumentation']);
+Route::post('/documentation/create', [DocumentationController::class, 'createDocumentation']);
+Route::post('/documentation/update', [DocumentationController::class, 'updateDocumentation']);
+Route::post('/documentation/delete/{id}', [DocumentationController::class, 'deleteDocumentation']);
 

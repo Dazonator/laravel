@@ -2,7 +2,7 @@
  <div style="height: 100%">
      <div style="height: 100%">
          <v-card
-             class="task-card px-4 pt-6 pb-10 position-relative d-flex flex-column justify-space-between"
+             class="task-card px-4 pt-4 pb-10 position-relative d-flex flex-column justify-space-between"
              outlined
              elevation="1"
              :class="task.priority ? 'task-priority' + task.priority.id : 'task-priority'"
@@ -68,9 +68,10 @@
                 </div>
              </div>
          </v-card>
-
          <div class="task-card-actionbar d-flex justify-space-around mt-2">
+
              <v-btn
+                 small
                  icon
                  @click="updateTask(task.id)"
              >
@@ -78,6 +79,7 @@
              </v-btn>
 
              <v-btn
+                 small
                  icon
                  @click="deleteTask=task"
                  v-if="task.status_id !== 3"
@@ -86,6 +88,7 @@
              </v-btn>
 
              <v-btn
+                 small
                  icon
                  @click="pauseTask(task.id)"
                  v-if="task.status_id === 2"
@@ -94,6 +97,7 @@
              </v-btn>
 
              <v-btn
+                 small
                  icon
                  @click="startTask(task)"
                  v-if="task.status_id !== 2"
@@ -102,6 +106,7 @@
              </v-btn>
 
              <v-btn
+                 small
                  icon
                  @click="taskCompleted(task)"
                  v-if="task.status_id !== 3"
@@ -241,6 +246,7 @@
 
                 deleteTask: null,
                 dialogDelete: false,
+                fab: false,
             }
         },
         created(){
@@ -248,7 +254,7 @@
         },
         filters: {
             deadLine: function (date) {
-                return moment(date).format('LL');
+                return moment(date).format('L');
             },
             startDate: function (date) {
                 return moment(date).format('ll');

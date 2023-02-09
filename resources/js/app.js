@@ -64,6 +64,7 @@ Vue.component('tasks-initiator', require('./views/tasks/tasks-initiator').defaul
 Vue.component('structure-tasks', require('./views/structure/structure-tasks').default);
 
 Vue.component('add-notification', require('./views/notifications/add-notification').default);
+Vue.component('documentation-dialog', require('./views/documentation/documentation-dialog').default);
 
 Vue.component('ck-editor', require('./components/templates/ckeditor').default);
 

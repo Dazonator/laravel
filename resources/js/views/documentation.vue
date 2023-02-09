@@ -1,6 +1,7 @@
 <template>
     <div
         v-if="loaded"
+        class="documentation"
     >
         <div
             class="mb-4"
@@ -10,51 +11,58 @@
                 @click="openDialog = !openDialog"
                 color="primary"
             >
-                Добавить уведомление
+                Добавить документацию
             </v-btn>
-            <add-notification
+            <documentation-dialog
                 :open="openDialog"
                 @close="closeDialog()"
                 :updateId="updateId"
-            ></add-notification>
+            ></documentation-dialog>
         </div>
-        <div
-            class="bg px-6 py-4 mb-4"
-            v-for="notification in notifications"
-            :key="notification.id"
-        >
-            <div class="d-flex">
-                <h5>
-                    {{notification.title}}
-                </h5>
-                <v-spacer></v-spacer>
-                <v-btn-toggle
-                    shaped
-                >
-                    <v-btn
-                        v-if="isPermission('notifications')"
-                        x-small
-                        @click="updateNotification(notification.id)"
-                    >
-                        <v-icon
-                            x-small
-                        >mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn
-                        v-if="isPermission('notifications')"
-                        x-small
-                        @click="deleteId = notification.id"
-                    >
-                        <v-icon
-                            x-small
-                        >mdi-delete</v-icon>
-                    </v-btn>
-                </v-btn-toggle>
-            </div>
-            <div
-                v-html="notification.text"
-                class="notification-text"
-            ></div>
+        <div>
+            <v-tabs
+                vertical
+                elevation="1"
+            >
+
+                <template v-for="(item, index) in documentations">
+                    <v-tab class="justify-start">
+                        <v-icon left>
+                            {{ item.icon ? item.icon : 'mdi-information'}}
+                        </v-icon>
+                        {{ item.title }}
+                    </v-tab>
+
+                    <v-tab-item>
+                        <v-card flat>
+                            <div
+                                class="d-flex pa-2"
+                                v-if="isPermission('update-documentation')"
+                            >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    icon
+                                    @click="updateDocumentation(item.id)"
+                                >
+                                    <v-icon
+                                        small
+                                    >mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    icon
+                                    @click="deleteId = item.id"
+                                >
+                                    <v-icon
+                                        small
+                                    >mdi-delete</v-icon>
+                                </v-btn>
+                            </div>
+
+                            <v-card-text v-html="item.text"></v-card-text>
+                        </v-card>
+                    </v-tab-item>
+                </template>
+            </v-tabs>
         </div>
 
         <v-dialog
@@ -79,7 +87,7 @@
                     <v-btn
                         color="green darken-1"
                         text
-                        @click="deleteNotification()"
+                        @click="deleteDocumentation()"
                     >
                         Да
                     </v-btn>
@@ -92,11 +100,11 @@
 
 <script>
     export default {
-        name: "notifications",
-        data(){
+        name: "documentation",
+        data() {
             return{
                 loaded: false,
-                notifications: [],
+                documentations: [],
 
                 openDialog: false,
                 dialogDelete: false,
@@ -118,9 +126,6 @@
         },
         created() {
             this.init();
-            window.Echo.channel('channel-notifications-page').listen('.event-notifications', (e) => {
-                this.init();
-            });
         },
         methods: {
             isPermission(per){
@@ -131,9 +136,8 @@
                 return false;
             },
             init(){
-                axios.post(`/api/notifications/getAllNotifications`).then(response => {
-                    this.$store.dispatch('notifications/getNotifications');
-                    this.notifications = response.data;
+                axios.post(`/api/documentation/getAllDocumentations`).then(response => {
+                    this.documentations = response.data;
                     this.loaded = true;
                 });
             },
@@ -142,27 +146,26 @@
                 this.openDialog = false;
                 this.init();
             },
-            deleteNotification(){
-                axios.post(`/api/notifications/deleteNotification/${this.deleteId}`).then(response => {
+            deleteDocumentation(){
+                axios.post(`/api/documentation/delete/${this.deleteId}`).then(response => {
                     this.deleteId = null;
                     this.dialogDelete = false;
                     this.init();
                 });
             },
-            updateNotification(q){
+            updateDocumentation(q){
                 this.updateId = q;
                 this.openDialog = true;
             }
         },
-        destroyed() {
-            window.Echo.leaveChannel('channel-notifications-page');
-        }
-
     }
 </script>
 
 <style>
-    .notification-text img{
+    .documentation .v-tabs--vertical>.v-tabs-bar .v-tabs-bar__content{
+        border-right: 2px solid #aaa;
+    }
+    .documentation-text img{
         max-width: 100%;
     }
 </style>

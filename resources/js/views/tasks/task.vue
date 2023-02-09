@@ -11,100 +11,70 @@
                             class="task-header d-flex justify-space-between mb-4"
                         >
                             <h2>{{task.title}} ({{task.status.status}})</h2>
-                            <v-btn-toggle
-                                shaped
-                            >
-                                <v-btn
-                                    v-if="statusActive"
-                                    @click="update()"
-                                >
-                                    <v-icon color="warning">mdi-pencil</v-icon>
-                                </v-btn>
+<!--                            <v-btn-toggle-->
+<!--                                shaped-->
+<!--                            >-->
+<!--                                <v-btn-->
+<!--                                    v-if="statusActive"-->
+<!--                                    @click="update()"-->
+<!--                                >-->
+<!--                                    <v-icon color="warning">mdi-pencil</v-icon>-->
+<!--                                </v-btn>-->
 
-                                <v-btn
-                                    @click="dialogDelete = true"
-                                >
-                                    <v-icon color="error">mdi-delete</v-icon>
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    @click="dialogDelete = true"-->
+<!--                                >-->
+<!--                                    <v-icon color="error">mdi-delete</v-icon>-->
+<!--                                </v-btn>-->
 
-                                <v-btn
-                                    v-if="!task.distribution_department && statusActive"
-                                    :disabled="!statusActive"
-                                    @click.stop="taskCompleted()"
-                                >
-                                    <v-icon color="success">mdi-check-bold</v-icon>
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    v-if="!task.distribution_department && statusActive"-->
+<!--                                    :disabled="!statusActive"-->
+<!--                                    @click.stop="taskCompleted()"-->
+<!--                                >-->
+<!--                                    <v-icon color="success">mdi-check-bold</v-icon>-->
+<!--                                </v-btn>-->
 
-                                <v-btn
-                                    @click="pauseTask()"
-                                    v-if="task.status.id === 2"
-                                >
-                                    <v-icon color="primary">mdi-pause</v-icon>
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    @click="pauseTask()"-->
+<!--                                    v-if="task.status.id === 2"-->
+<!--                                >-->
+<!--                                    <v-icon color="primary">mdi-pause</v-icon>-->
+<!--                                </v-btn>-->
 
-                                <v-btn
-                                    @click="startTask()"
-                                    v-if="task.status.id !== 2"
-                                >
-                                    <v-icon color="primary">mdi-play</v-icon>
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    @click="startTask()"-->
+<!--                                    v-if="task.status.id !== 2"-->
+<!--                                >-->
+<!--                                    <v-icon color="primary">mdi-play</v-icon>-->
+<!--                                </v-btn>-->
 
-                            </v-btn-toggle>
-                            <v-dialog
-                                v-model="dialogDelete"
-                                max-width="290"
-                            >
-                                <v-card>
-                                    <v-card-title class="text-h5">
-                                        Вы действительно хотите удалить Задачу?
-                                    </v-card-title>
-
-                                    <v-card-actions>
-
-                                        <v-btn
-                                            color="green darken-1"
-                                            text
-                                            @click="dialogDelete = false"
-                                        >
-                                            Нет
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                            color="green darken-1"
-                                            text
-                                            @click="taskDelete()"
-                                        >
-                                            Да
-                                        </v-btn>
-
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
+<!--                            </v-btn-toggle>-->
                         </div>
                         <div class="mb-4">
-                <span
-                    v-if="task.deadline"
-                    class="deadline"
-                    :class="{'deadline-end': new Date() > new Date(this.task.deadline)}"
-                >
-                    Дедлайн  {{ task.deadline | deadLine }}
-                </span>
                             <span
-                                v-if="task.priority"
-                                class="priority"
-                                :class="'priority-' + task.priority.id"
+                                v-if="task.deadline"
+                                class="deadline"
+                                :class="{'deadline-end': new Date() > new Date(this.task.deadline)}"
                             >
-                    Приоритет:
-                    {{task.priority.priority}}
-                    <v-icon
-                        v-if=" task.priority.id == 4"
-                        color="#fff"
-                    >mdi-fire</v-icon>
-                </span>
+                                Дедлайн  {{ task.deadline | deadLine }}
+                            </span>
+                                        <span
+                                            v-if="task.priority"
+                                            class="priority"
+                                            :class="'priority-' + task.priority.id"
+                                        >
+                                Приоритет:
+                                {{task.priority.priority}}
+                                <v-icon
+                                    v-if=" task.priority.id == 4"
+                                    color="#fff"
+                                >mdi-fire</v-icon>
+                            </span>
                             <div class="mt-4">
-                    <span class="">
-                        Создано {{ task.created_at | createDate }}
-                    </span>
+                                <span class="">
+                                    Создано {{ task.created_at | createDate }}
+                                </span>
                             </div>
                         </div>
 
@@ -198,11 +168,11 @@
                                 v-if="task.tests.user && $store.state.user.authUser.id !== task.tests.user_id"
                                 class="d-flex align-items-center"
                             >
-                    <span
-                        class="orange--text"
-                    >
-                        Задачу тестирует
-                    </span>
+                                <span
+                                    class="orange--text"
+                                >
+                                    Задачу тестирует
+                                </span>
                                 <v-chip
                                     class="ml-2"
                                 >
@@ -286,7 +256,59 @@
                             </v-btn>
                         </v-form>
 
+
+                        <v-divider class="my-4"></v-divider>
+
+
+                        <div class="task-card-actionbar d-flex justify-space-around">
+                            <v-btn
+                                icon
+                                v-if="statusActive"
+                                @click="update()"
+                                color="warning"
+                            >
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+
+                            <v-btn
+                                icon
+                                @click="dialogDelete = true"
+                                color="error"
+                            >
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+
+                            <v-btn
+                                icon
+                                v-if="!task.distribution_department && statusActive"
+                                :disabled="!statusActive"
+                                @click.stop="taskCompleted()"
+                                color="success"
+                            >
+                                <v-icon>mdi-check-bold</v-icon>
+                            </v-btn>
+
+                            <v-btn
+                                icon
+                                @click="pauseTask()"
+                                v-if="task.status.id === 2"
+                                color="primary"
+                            >
+                                <v-icon>mdi-pause</v-icon>
+                            </v-btn>
+
+                            <v-btn
+                                icon
+                                @click="startTask()"
+                                v-if="task.status.id !== 2"
+                                color="primary"
+                            >
+                                <v-icon>mdi-play</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
+
+
 
                 </v-col>
                 <v-col class="pa-6" cols="12" lg="7">
@@ -717,6 +739,37 @@
             :updateId = updateId
             :isUpdate = isUpdate
         ></update-task>
+
+        <v-dialog
+            v-model="dialogDelete"
+            max-width="290"
+        >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Вы действительно хотите удалить Задачу?
+                </v-card-title>
+
+                <v-card-actions>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="dialogDelete = false"
+                    >
+                        Нет
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="taskDelete()"
+                    >
+                        Да
+                    </v-btn>
+
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 

@@ -22,6 +22,12 @@
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
+            <v-btn
+                icon
+                :to="{name: 'documentation'}"
+            >
+                <v-icon>mdi-information-variant</v-icon>
+            </v-btn>
             <v-badge
                 bordered
                 bottom

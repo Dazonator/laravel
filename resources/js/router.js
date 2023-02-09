@@ -15,6 +15,7 @@ import team from "./views/team";
 import home from "./views/home";
 import settings from "./views/settings";
 import notifications from "./views/notifications";
+import documentation from "./views/documentation";
 
 import settingsUsers from "./views/settings/settings-users";
 import settingsRoles from "./views/settings/settings-roles";
@@ -37,6 +38,12 @@ const routes = [
         name: 'notifications',
         component: notifications,
         meta: {title: 'Уведомления'}
+    },
+    {
+        path: "/documentation",
+        name: 'documentation',
+        component: documentation,
+        meta: {title: 'Документация'}
     },
     {
         path: "/calendar",
@@ -88,7 +95,8 @@ const routes = [
         path: "/tasks",
         name: 'tasks',
         component: tasks,
-        meta: {title: 'Задачи'}
+        meta: {title: 'Задачи'},
+        redirect: "/tasks/status/2",
     },
     {
         path: "/tasks/status/:statusId",

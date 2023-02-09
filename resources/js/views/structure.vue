@@ -41,7 +41,10 @@
 
                             <v-spacer></v-spacer>
 
-                            <v-btn-toggle
+<!--                            <v-btn-toggle-->
+<!--                                v-if="isPermission('update-structure')"-->
+<!--                            >-->
+                            <div
                                 v-if="isPermission('update-structure')"
                             >
                                 <v-btn
@@ -74,7 +77,8 @@
                                         color="grey"
                                     >mdi-delete</v-icon>
                                 </v-btn>
-                            </v-btn-toggle>
+                            </div>
+<!--                            </v-btn-toggle>-->
                         </div>
                     </template>
                 </v-treeview>
