@@ -168,9 +168,18 @@
                         </router-link>
                     </v-card-text>
                     <v-card-text
-                        v-if="!selectedEvent.isMeeting"
+                        v-if="!selectedEvent.isMeeting && !selectedEvent.isTask"
                     >
                         <p v-html="selectedEvent.text"></p>
+                    </v-card-text>
+                    <v-card-text
+                        v-if="selectedEvent.isTask"
+                    >
+                        <router-link
+                            :to="'/tasks/task/' + selectedEvent.id"
+                        >
+                            Ссылка на задание
+                        </router-link>
                     </v-card-text>
                 </v-card>
             </v-menu>
@@ -356,7 +365,7 @@
                 this.start = start;
                 this.end = end;
                 axios.post(`/api/calendar/events`, {start: start.date, end: end.date}).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     let calendarEvents = response.data.events;
                     for (let calendarEvent in calendarEvents) {
                         events.push({
@@ -391,6 +400,7 @@
                         events.push({
                             isMeeting: false,
                             isCompleted: false,
+                            isTask: true,
                             name: 'Задача: ' + tasks[task].title,
                             text: tasks[task].text,
                             id: tasks[task].id,
@@ -399,7 +409,7 @@
                             color: this.colors[Math.floor(Math.random()*this.colors.length)],
                         })
                     }
-                    console.log(end.date);
+                    // console.log(end.date);
                 });
 
                 this.events = events;
