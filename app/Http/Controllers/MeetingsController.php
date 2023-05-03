@@ -68,36 +68,6 @@ class MeetingsController extends Controller
 
     }
 
-
-    public function getMeetingsCalendar(Request $request){
-        $request->start = Carbon::parse($request->start)->startOfDay();
-        $request->end = Carbon::parse($request->end)->endOfDay();
-        $meetings = Meetings::with(['department', 'users'])->where(function ($query) use ($request) {
-            $query->where([
-                ['start', '>=', $request->start],
-                ['start', '<=', $request->end],
-            ])->orWhere([
-                ['end', '>=', $request->start],
-                ['end', '<=', $request->end],
-            ])->orWhere([
-                ['start', '<=', $request->start],
-                ['end', '>=', $request->end],
-            ])->orWhere([
-                ['start', '<=', $request->start],
-                ['end', '>=', $request->end],
-            ]);
-        })->where(function ($query){
-            $query->where('department_id', Auth::user()->department_id)->orWhereHas('users', function ($q){
-                $q->where('user_id', Auth::user()->id);
-            })->orWhere('initiator_id', Auth::user()->id);
-        })->get();
-        foreach ($meetings as $meeting){
-            $meeting->start = Carbon::parse($meeting->start)->format('Y-m-d H:i');
-            $meeting->end = Carbon::parse($meeting->end)->format('Y-m-d H:i');
-        }
-        return $meetings;
-    }
-
     public function getById($id){
         $meeting = Meetings::where('id', $id)->with('department', 'users')->first();
         $tasksInitial = Tasks::where('initial_department', $meeting->department_id)->where('distribution_department', null)->where('is_distributed', false)->with('initiator')->get();

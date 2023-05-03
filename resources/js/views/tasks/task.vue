@@ -59,11 +59,11 @@
                             >
                                 Дедлайн  {{ task.deadline | deadLine }}
                             </span>
-                                        <span
-                                            v-if="task.priority"
-                                            class="priority"
-                                            :class="'priority-' + task.priority.id"
-                                        >
+                            <span
+                                v-if="task.priority"
+                                class="priority"
+                                :class="'priority-' + task.priority.id"
+                            >
                                 Приоритет:
                                 {{task.priority.priority}}
                                 <v-icon
@@ -71,9 +71,12 @@
                                     color="#fff"
                                 >mdi-fire</v-icon>
                             </span>
-                            <div class="mt-4">
-                                <span class="">
-                                    Создано {{ task.created_at | createDate }}
+                            <div class="mt-4" v-if="task.startdate">
+                                <span class="d-block" v-if="task.created_at">
+                                    Создано: {{ task.created_at | createDate }}
+                                </span>
+                                <span class="d-block">
+                                    Дата старта: {{ task.startdate | createDate }}
                                 </span>
                             </div>
                         </div>
@@ -422,6 +425,18 @@
                                         >
                                             {{ item.deadline | deadLine }}
                                         </span>
+                                    </template>
+
+                                    <template #item.startdate="{ item }">
+                                        <span v-if="item.startdate" style="white-space: nowrap;">{{item.startdate | deadLine}}</span>
+                                    </template>
+
+                                    <template #item.deadline="{ item }">
+                                        <span
+                                            :class="{'dedline-end': new Date() > new Date(item.deadline)}"
+                                            style="white-space: nowrap;"
+                                            v-if="item.deadline"
+                                        >{{item.deadline | deadLine}}</span>
                                     </template>
                                     <template #item.priority="{ item }">
                                         <span
@@ -824,6 +839,11 @@ export default {
                     sortable: true,
                 },
                 {
+                    text: 'Дата стартаы',
+                    value: 'startdate',
+                    sortable: true,
+                },
+                {
                     text: 'Дедлайн',
                     value: 'deadline',
                     sortable: true,
@@ -1067,10 +1087,10 @@ export default {
     },
     filters: {
         deadLine: function (date) {
-            return moment(date).format('LL');
+            return moment(date).format('DD-MM-YYYY');
         },
         createDate: function (date) {
-            return moment(date).format('l');
+            return moment(date).format('DD-MM-YYYY');
         },
         messageTime: function (date) {
             return moment(date).fromNow();

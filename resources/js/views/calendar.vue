@@ -102,7 +102,9 @@
                 @click:date="viewDay"
                 @change="updateRange"
                 :key="componentKey"
-            ></v-calendar>
+                :weekdays="days"
+            >
+            </v-calendar>
             <v-menu
                 v-model="selectedOpen"
                 :close-on-content-click="false"
@@ -219,6 +221,8 @@
 <script>
     export default {
         data: () => ({
+            days: [1, 2, 3, 4, 5, 6, 0],
+
             dialogDelete: false,
             deleteId: null,
             updateId: null,
@@ -352,22 +356,22 @@
                 this.start = start;
                 this.end = end;
                 axios.post(`/api/calendar/events`, {start: start.date, end: end.date}).then(response => {
-                    this.tasks = response.data;
-                    for (let task in this.tasks) {
+                    console.log(response.data);
+                    let calendarEvents = response.data.events;
+                    for (let calendarEvent in calendarEvents) {
                         events.push({
                             isMeeting: false,
-                            id: this.tasks[task].id,
-                            name: this.tasks[task].title,
-                            text: this.tasks[task].text,
-                            start: this.tasks[task].start,
-                            end: this.tasks[task].end,
-                            color: this.tasks[task].color,
+                            id: calendarEvents[calendarEvent].id,
+                            name: calendarEvents[calendarEvent].title,
+                            text: calendarEvents[calendarEvent].text,
+                            start: calendarEvents[calendarEvent].start,
+                            end: calendarEvents[calendarEvent].end,
+                            color: calendarEvents[calendarEvent].color,
                         })
                     }
-                });
-                axios.post(`/api/calendar/meetings`, {start: start.date, end: end.date}).then(response => {
-                    // this.tasks = response.data;
-                    let meetings = response.data;
+
+
+                    let meetings = response.data.meetings;
                     for (let meeting in meetings) {
                         events.push({
                             isMeeting: true,
@@ -380,6 +384,22 @@
                             color: meetings[meeting].color,
                         })
                     }
+
+
+                    let tasks = response.data.tasks;
+                    for (let task in tasks) {
+                        events.push({
+                            isMeeting: false,
+                            isCompleted: false,
+                            name: 'Задача: ' + tasks[task].title,
+                            text: tasks[task].text,
+                            id: tasks[task].id,
+                            start: tasks[task].start,
+                            end: tasks[task].end,
+                            color: this.colors[Math.floor(Math.random()*this.colors.length)],
+                        })
+                    }
+                    console.log(end.date);
                 });
 
                 this.events = events;
