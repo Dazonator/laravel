@@ -283,8 +283,8 @@ export default {
                 },
                 {
                     text: 'Приоритет',
-                    value: 'priority.id',
-                    title: 'priority.priority',
+                    value: 'priority.priority',
+                    title: 'priority.id',
                     sortable: true,
                     sort: (a, b) => console.log(a, b)
                 },
